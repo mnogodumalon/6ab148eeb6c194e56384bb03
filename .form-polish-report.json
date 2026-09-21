@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 21,
+      "defaults_keys": ["kundentyp", "anlagedatum"],
+      "computed_keys": [],
+      "reason": "Reine Stammdaten – Name, Email, Adresse, Ansprechpartner, Kontakthistorie. Keine Preisfelder, keine Lookup-Produkte, keine berechenbaren Aggregationen."
+    },
+    "Berater": {
+      "placeholders_set": 19,
+      "defaults_keys": ["einstiegsdatum", "status"],
+      "computed_keys": [],
+      "reason": "Kontaktdaten + Stundensatz + read-only Zeiterfassungs-Statistiken (Backend-Aggregationen). Keine lokalen Berechnungen möglich."
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": ["leistungstyp"],
+      "computed_keys": [],
+      "reason": "Dienst-Stammdaten mit kostenvoranschlag (manueller Schätzwert). Multipleapplookup auf Berater existiert, aber keine Stundenanzahl im Form → keine Multiplikation möglich."
+    },
+    "Projekte": {
+      "placeholders_set": 10,
+      "defaults_keys": ["projektart", "projektstatus"],
+      "computed_keys": [],
+      "reason": "Projekt-Metadaten ohne echtes Datumspaar (nur getrennte Monat/Jahr) und keine Stunden-/Mengen-Felder → keine berechenbaren Beziehungen."
+    },
+    "Angebote": {
+      "placeholders_set": 12,
+      "defaults_keys": ["zeitrahmen_anfang", "angebotstyp", "angebotsstatus", "kostentyp"],
+      "computed_keys": [],
+      "reason": "Hat Datumspaar (anfang/ende) und kostenbetrag, aber kein Stunden- oder Mengen-Input. Dauer nur als Text-Feld (keine Berechnung). kostenbetrag manuell eingetragen."
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 9,
+      "defaults_keys": ["datum", "stunden", "abrechenbar"],
+      "computed_keys": ["_arbeitskosten"],
+      "reason": "Applookup(berater, stundensatz) × field(stunden) → Arbeitskosten-Berechnung. Virtueller Dauer-Key _arbeitskosten zeigt den Posten als berechnete Übersicht."
+    },
+    "Rechnungen": {
+      "placeholders_set": 19,
+      "defaults_keys": ["rechnungsdatum", "rechnungsstatus", "faelligkeitsdatum", "mehrwertsteuer"],
+      "computed_keys": ["_mwst_betrag", "gesamtbetrag"],
+      "reason": "Klassische Netto-Brutto-Rechnung mit nettobetrag (manuell), mehrwertsteuer (%), gesamtbetrag (Feld im Backend). Computeds: _mwst_betrag (virtuell) und gesamtbetrag (Backend-Feld, aber berechnet). Formel: netto × (mwst% / 100) → brutto = netto + mwst."
+    }
+  }
+}

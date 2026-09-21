@@ -1,0 +1,179 @@
+{
+  "version": 1,
+  "language": "de",
+  "understanding": {
+    "summary": "inclou. ERP ist eine interne Geschäftssoftware für die inclou. GmbH & Co. KG. Sie erfasst Kunden, Projekte, Berater, Leistungen, Angebote, Zeiterfassung und Rechnungen in einem zusammenhängenden System. Berater buchen Stunden auf Projekte, Angebote werden Projekten zugeordnet und nummeriert, Rechnungen entstehen auf Basis der erfassten Zeiten.",
+    "roles": [
+      "Berater/in (bucht Zeiten, wird Projekten zugewiesen)",
+      "Projektleitung (pflegt Projekte, erstellt Angebote)",
+      "Verwaltung / Buchhaltung (erstellt Rechnungen, pflegt Kunden)"
+    ],
+    "main_tasks": [
+      "Neues Projekt für einen Kunden anlegen und Projektnummer vergeben",
+      "Angebot zu einem Projekt erstellen und nummerieren",
+      "Stunden auf ein Projekt buchen",
+      "Rechnung auf Basis von Zeiterfassungseinträgen erstellen"
+    ]
+  },
+  "flows": [
+    {
+      "slug": "projekt-anlegen",
+      "label": {
+        "de": "Projekt anlegen",
+        "en": "Create project"
+      },
+      "description": "Legt ein neues Projekt für einen bestehenden Kunden an, weist eine Projektleitung zu und setzt den Anfangsstatus. Projektnummer und Projektkennung vergibt das System automatisch.",
+      "priority": "must",
+      "writes": [
+        {
+          "entity": "projekte",
+          "op": "create",
+          "when": "always",
+          "fields": {
+            "kunde": "picked",
+            "projektart": "user",
+            "projektstart_monat": "user",
+            "projektstart_jahr": "user",
+            "ansprechpartner_kunde": "user",
+            "projektleitung": "picked",
+            "projektstatus": "fixed:akquise",
+            "letzter_schritt": "user"
+          }
+        }
+      ],
+      "brief": "# Flow `projekt-anlegen` — Projekt anlegen\nLegt ein neues Projekt für einen bestehenden Kunden an, weist eine Projektleitung zu und setzt den Anfangsstatus. Projektnummer und Projektkennung vergibt das System automatisch.\n\n## Steps (in this order)\n1. Kunden aus der Liste wählen\n2. Projektart, Projektstart (Monat/Jahr) und Ansprechpartner beim Kunden eingeben\n3. Projektleitung (Berater) wählen\n4. Projekt speichern – Nummer und Kennung werden automatisch vergeben\n\n## Schreibliste — the ONLY writes this flow makes (the gate compares your plan steps with this list)\n- creates `projekte`:\n    - `kunde`: from the record the user picks in this flow\n    - `projektart`: the user enters it (bind it through the layer: form.field/…)\n    - `projektstart_monat`: the user enters it (bind it through the layer: form.field/…)\n    - `projektstart_jahr`: the user enters it (bind it through the layer: form.field/…)\n    - `ansprechpartner_kunde`: the user enters it (bind it through the layer: form.field/…)\n    - `projektleitung`: from the record the user picks in this flow\n    - `projektstatus`: fixed value `akquise` — set it in the plan step's values, never ask\n    - `letzter_schritt`: the user enters it (bind it through the layer: form.field/…)\n\n## Reads\n- `kunden` columns kundenname, email, ort\n- `berater` columns vorname, nachname, status\n\n## Success page\n- shows: `projekte.projektkennung`, `projekte.projektnummer`, `projekte.projektstatus`\n- next flows to offer: `angebot-erstellen`\n\n## Never write these — another flow or a tool owns them\n- `angebote.projekt` (owner: intent `angebot-erstellen`)\n- `angebote.berater` (owner: intent `angebot-erstellen`)\n- `angebote.angebotstyp` (owner: intent `angebot-erstellen`)\n- `angebote.zeitrahmen_anfang` (owner: intent `angebot-erstellen`)\n- `angebote.zeitrahmen_ende` (owner: intent `angebot-erstellen`)\n- `angebote.dauer` (owner: intent `angebot-erstellen`)\n- `angebote.kostentyp` (owner: intent `angebot-erstellen`)\n- `angebote.kostenbetrag` (owner: intent `angebot-erstellen`)\n- `angebote.beschreibung` (owner: intent `angebot-erstellen`)\n- `angebote.angebotsjahr` (owner: intent `angebot-erstellen`)\n- `angebote.angebotsstatus` (owner: intent `angebot-erstellen`)\n- `rechnungen.kunde` (owner: intent `rechnung-erstellen`)\n- `rechnungen.projekt` (owner: intent `rechnung-erstellen`)\n- `rechnungen.zeiterfassungseintraege` (owner: intent `rechnung-erstellen`)\n- `rechnungen.berater` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsdatum` (owner: intent `rechnung-erstellen`)\n- `rechnungen.faelligkeitsdatum` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsmonat` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsjahr` (owner: intent `rechnung-erstellen`)\n- `rechnungen.nettobetrag` (owner: intent `rechnung-erstellen`)\n- `rechnungen.mehrwertsteuer` (owner: intent `rechnung-erstellen`)\n- `rechnungen.notizen` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsstatus` (owner: intent `rechnung-erstellen`)\n- `projekte.projektnummer` (owner: tool `projektnummer-vergeben`)\n- `projekte.projektkennung` (owner: tool `projektnummer-vergeben`)\n- `angebote.angebotsnummer` (owner: tool `angebotsnummer-vergeben`)\n- `rechnungen.rechnungsnummer` (owner: tool `rechnungsnummer-vergeben`)\n"
+    },
+    {
+      "slug": "angebot-erstellen",
+      "label": {
+        "de": "Angebot erstellen",
+        "en": "Create offer"
+      },
+      "description": "Erstellt ein nummeriertes Angebot zu einem bestehenden Projekt. Angebotsnummer vergibt das System. Status startet als Entwurf.",
+      "priority": "must",
+      "writes": [
+        {
+          "entity": "angebote",
+          "op": "create",
+          "when": "always",
+          "fields": {
+            "projekt": "picked",
+            "berater": "picked",
+            "angebotstyp": "user",
+            "zeitrahmen_anfang": "user",
+            "zeitrahmen_ende": "user",
+            "dauer": "user",
+            "kostentyp": "user",
+            "kostenbetrag": "user",
+            "beschreibung": "user",
+            "angebotsjahr": "user",
+            "angebotsstatus": "fixed:entwurf"
+          }
+        }
+      ],
+      "brief": "# Flow `angebot-erstellen` — Angebot erstellen\nErstellt ein nummeriertes Angebot zu einem bestehenden Projekt. Angebotsnummer vergibt das System. Status startet als Entwurf.\n\n## Steps (in this order)\n1. Projekt aus der Liste wählen\n2. Angebotstyp, Zeitrahmen (Anfang, Ende, Dauer) eingeben\n3. Kostentyp und Kostenbetrag eingeben\n4. Verantwortlichen Berater wählen\n5. Angebot speichern – Nummer wird automatisch vergeben\n\n## Schreibliste — the ONLY writes this flow makes (the gate compares your plan steps with this list)\n- creates `angebote`:\n    - `projekt`: from the record the user picks in this flow\n    - `berater`: from the record the user picks in this flow\n    - `angebotstyp`: the user enters it (bind it through the layer: form.field/…)\n    - `zeitrahmen_anfang`: the user enters it (bind it through the layer: form.field/…)\n    - `zeitrahmen_ende`: the user enters it (bind it through the layer: form.field/…)\n    - `dauer`: the user enters it (bind it through the layer: form.field/…)\n    - `kostentyp`: the user enters it (bind it through the layer: form.field/…)\n    - `kostenbetrag`: the user enters it (bind it through the layer: form.field/…)\n    - `beschreibung`: the user enters it (bind it through the layer: form.field/…)\n    - `angebotsjahr`: the user enters it (bind it through the layer: form.field/…)\n    - `angebotsstatus`: fixed value `entwurf` — set it in the plan step's values, never ask\n\n## Reads\n- `projekte` columns projektkennung, projektstatus, kunde\n- `berater` columns vorname, nachname, status\n\n## Success page\n- shows: `angebote.angebotsnummer`, `angebote.angebotsstatus`, `angebote.kostenbetrag`\n\n## Never write these — another flow or a tool owns them\n- `projekte.kunde` (owner: intent `projekt-anlegen`)\n- `projekte.projektart` (owner: intent `projekt-anlegen`)\n- `projekte.projektstart_monat` (owner: intent `projekt-anlegen`)\n- `projekte.projektstart_jahr` (owner: intent `projekt-anlegen`)\n- `projekte.ansprechpartner_kunde` (owner: intent `projekt-anlegen`)\n- `projekte.projektleitung` (owner: intent `projekt-anlegen`)\n- `projekte.projektstatus` (owner: intent `projekt-anlegen`)\n- `projekte.letzter_schritt` (owner: intent `projekt-anlegen`)\n- `rechnungen.kunde` (owner: intent `rechnung-erstellen`)\n- `rechnungen.projekt` (owner: intent `rechnung-erstellen`)\n- `rechnungen.zeiterfassungseintraege` (owner: intent `rechnung-erstellen`)\n- `rechnungen.berater` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsdatum` (owner: intent `rechnung-erstellen`)\n- `rechnungen.faelligkeitsdatum` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsmonat` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsjahr` (owner: intent `rechnung-erstellen`)\n- `rechnungen.nettobetrag` (owner: intent `rechnung-erstellen`)\n- `rechnungen.mehrwertsteuer` (owner: intent `rechnung-erstellen`)\n- `rechnungen.notizen` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsstatus` (owner: intent `rechnung-erstellen`)\n- `projekte.projektnummer` (owner: tool `projektnummer-vergeben`)\n- `projekte.projektkennung` (owner: tool `projektnummer-vergeben`)\n- `angebote.angebotsnummer` (owner: tool `angebotsnummer-vergeben`)\n- `rechnungen.rechnungsnummer` (owner: tool `rechnungsnummer-vergeben`)\n"
+    },
+    {
+      "slug": "rechnung-erstellen",
+      "label": {
+        "de": "Rechnung erstellen",
+        "en": "Create invoice"
+      },
+      "description": "Erstellt eine Rechnung für einen Kunden auf Basis eines Projekts. Rechnungsnummer vergibt das System automatisch beim Anlegen. Der Benutzer wählt relevante Zeiterfassungseinträge und gibt Beträge ein.",
+      "priority": "must",
+      "writes": [
+        {
+          "entity": "rechnungen",
+          "op": "create",
+          "when": "always",
+          "fields": {
+            "kunde": "picked",
+            "projekt": "picked",
+            "zeiterfassungseintraege": "picked",
+            "berater": "picked",
+            "rechnungsdatum": "user",
+            "faelligkeitsdatum": "user",
+            "rechnungsmonat": "user",
+            "rechnungsjahr": "user",
+            "nettobetrag": "user",
+            "mehrwertsteuer": "user",
+            "notizen": "user",
+            "rechnungsstatus": "fixed:entwurf"
+          }
+        }
+      ],
+      "brief": "# Flow `rechnung-erstellen` — Rechnung erstellen\nErstellt eine Rechnung für einen Kunden auf Basis eines Projekts. Rechnungsnummer vergibt das System automatisch beim Anlegen. Der Benutzer wählt relevante Zeiterfassungseinträge und gibt Beträge ein.\n\n## Steps (in this order)\n1. Kunden wählen\n2. Projekt wählen\n3. Rechnungsdatum und Fälligkeitsdatum eingeben\n4. Zeiterfassungseinträge zuordnen\n5. Nettobetrag und Mehrwertsteuer eingeben\n6. Rechnung speichern – Nummer wird automatisch vergeben\n\n## Schreibliste — the ONLY writes this flow makes (the gate compares your plan steps with this list)\n- creates `rechnungen`:\n    - `kunde`: from the record the user picks in this flow\n    - `projekt`: from the record the user picks in this flow\n    - `zeiterfassungseintraege`: from the record the user picks in this flow\n    - `berater`: from the record the user picks in this flow\n    - `rechnungsdatum`: the user enters it (bind it through the layer: form.field/…)\n    - `faelligkeitsdatum`: the user enters it (bind it through the layer: form.field/…)\n    - `rechnungsmonat`: the user enters it (bind it through the layer: form.field/…)\n    - `rechnungsjahr`: the user enters it (bind it through the layer: form.field/…)\n    - `nettobetrag`: the user enters it (bind it through the layer: form.field/…)\n    - `mehrwertsteuer`: the user enters it (bind it through the layer: form.field/…)\n    - `notizen`: the user enters it (bind it through the layer: form.field/…)\n    - `rechnungsstatus`: fixed value `entwurf` — set it in the plan step's values, never ask\n\n## Reads\n- `kunden` columns kundenname, email, ort\n- `projekte` columns projektkennung, projektstatus, kunde\n- `zeiterfassung` columns datum, stunden, berater, leistung, abrechenbar, taetigkeit\n\n## Success page\n- shows: `rechnungen.rechnungsnummer`, `rechnungen.gesamtbetrag`, `rechnungen.rechnungsstatus`\n\n## Never write these — another flow or a tool owns them\n- `projekte.kunde` (owner: intent `projekt-anlegen`)\n- `projekte.projektart` (owner: intent `projekt-anlegen`)\n- `projekte.projektstart_monat` (owner: intent `projekt-anlegen`)\n- `projekte.projektstart_jahr` (owner: intent `projekt-anlegen`)\n- `projekte.ansprechpartner_kunde` (owner: intent `projekt-anlegen`)\n- `projekte.projektleitung` (owner: intent `projekt-anlegen`)\n- `projekte.projektstatus` (owner: intent `projekt-anlegen`)\n- `projekte.letzter_schritt` (owner: intent `projekt-anlegen`)\n- `angebote.projekt` (owner: intent `angebot-erstellen`)\n- `angebote.berater` (owner: intent `angebot-erstellen`)\n- `angebote.angebotstyp` (owner: intent `angebot-erstellen`)\n- `angebote.zeitrahmen_anfang` (owner: intent `angebot-erstellen`)\n- `angebote.zeitrahmen_ende` (owner: intent `angebot-erstellen`)\n- `angebote.dauer` (owner: intent `angebot-erstellen`)\n- `angebote.kostentyp` (owner: intent `angebot-erstellen`)\n- `angebote.kostenbetrag` (owner: intent `angebot-erstellen`)\n- `angebote.beschreibung` (owner: intent `angebot-erstellen`)\n- `angebote.angebotsjahr` (owner: intent `angebot-erstellen`)\n- `angebote.angebotsstatus` (owner: intent `angebot-erstellen`)\n- `projekte.projektnummer` (owner: tool `projektnummer-vergeben`)\n- `projekte.projektkennung` (owner: tool `projektnummer-vergeben`)\n- `angebote.angebotsnummer` (owner: tool `angebotsnummer-vergeben`)\n- `rechnungen.rechnungsnummer` (owner: tool `rechnungsnummer-vergeben`)\n"
+    }
+  ],
+  "public_pages": [],
+  "tools": [
+    {
+      "id": "projektnummer-vergeben",
+      "purpose": "Vergibt automatisch eine laufende Projektnummer und setzt die Projektkennung, sobald ein neues Projekt angelegt wird."
+    },
+    {
+      "id": "angebotsnummer-vergeben",
+      "purpose": "Vergibt automatisch eine laufende Angebotsnummer, sobald ein neues Angebot angelegt wird."
+    },
+    {
+      "id": "rechnungsnummer-vergeben",
+      "purpose": "Vergibt automatisch eine laufende Rechnungsnummer, sobald eine neue Rechnung angelegt wird."
+    }
+  ],
+  "ownership": {
+    "projekte": {
+      "kunde": "intent:projekt-anlegen",
+      "projektart": "intent:projekt-anlegen",
+      "projektstart_monat": "intent:projekt-anlegen",
+      "projektstart_jahr": "intent:projekt-anlegen",
+      "ansprechpartner_kunde": "intent:projekt-anlegen",
+      "projektleitung": "intent:projekt-anlegen",
+      "projektstatus": "intent:projekt-anlegen",
+      "letzter_schritt": "intent:projekt-anlegen",
+      "projektnummer": "tool:projektnummer-vergeben",
+      "projektkennung": "tool:projektnummer-vergeben"
+    },
+    "angebote": {
+      "projekt": "intent:angebot-erstellen",
+      "berater": "intent:angebot-erstellen",
+      "angebotstyp": "intent:angebot-erstellen",
+      "zeitrahmen_anfang": "intent:angebot-erstellen",
+      "zeitrahmen_ende": "intent:angebot-erstellen",
+      "dauer": "intent:angebot-erstellen",
+      "kostentyp": "intent:angebot-erstellen",
+      "kostenbetrag": "intent:angebot-erstellen",
+      "beschreibung": "intent:angebot-erstellen",
+      "angebotsjahr": "intent:angebot-erstellen",
+      "angebotsstatus": "intent:angebot-erstellen",
+      "angebotsnummer": "tool:angebotsnummer-vergeben"
+    },
+    "rechnungen": {
+      "kunde": "intent:rechnung-erstellen",
+      "projekt": "intent:rechnung-erstellen",
+      "zeiterfassungseintraege": "intent:rechnung-erstellen",
+      "berater": "intent:rechnung-erstellen",
+      "rechnungsdatum": "intent:rechnung-erstellen",
+      "faelligkeitsdatum": "intent:rechnung-erstellen",
+      "rechnungsmonat": "intent:rechnung-erstellen",
+      "rechnungsjahr": "intent:rechnung-erstellen",
+      "nettobetrag": "intent:rechnung-erstellen",
+      "mehrwertsteuer": "intent:rechnung-erstellen",
+      "notizen": "intent:rechnung-erstellen",
+      "rechnungsstatus": "intent:rechnung-erstellen",
+      "rechnungsnummer": "tool:rechnungsnummer-vergeben"
+    }
+  },
+  "dashboard": {
+    "focus": [
+      "projekte (gruppiert nach projektstatus)",
+      "rechnungen (offen: entwurf + versendet + ueberfaellig, Gesamtbetrag)",
+      "angebote (aktuelle Entwürfe und versendete Angebote)",
+      "zeiterfassung (Stunden aktueller Monat je Berater)"
+    ],
+    "hints": [
+      "Projektliste nach Status filtern (Akquise / In Bearbeitung / Abgeschlossen)",
+      "Überfällige Rechnungen farblich hervorheben",
+      "Berater-Auslastung (gebuchte Stunden aktueller Monat) als Balkenübersicht"
+    ]
+  }
+}

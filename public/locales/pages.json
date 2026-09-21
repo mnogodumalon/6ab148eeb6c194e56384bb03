@@ -1,0 +1,31 @@
+{
+  "pages": {
+    "en": {
+      "Abschließen": "Complete",
+      "Aktive Angebote": "Active Quotes",
+      "Alle Projekte im Plan — keine überfälligen Rechnungen.": "All projects on track — no overdue invoices.",
+      "Als bezahlt markieren": "Mark as Paid",
+      "Angebot": "Quote",
+      "Berater-Auslastung": "Consultant Utilization",
+      "Gebuchte Stunden im aktuellen Monat": "Booked Hours in Current Month",
+      "In Bearbeitung setzen": "Set In Progress",
+      "Keine offenen Rechnungen — alles beglichen.": "No open invoices — all settled.",
+      "Neue Rechnung": "New Invoice",
+      "Neues Projekt": "New Project",
+      "Offene Rechnungen": "Open Invoices",
+      "Ohne Kennung": "No Identifier",
+      "Ohne Kunde": "No Client",
+      "Rechnung überfällig": "Invoice Overdue",
+      "Rechnungen überfällig": "Invoices Overdue",
+      "Stunden": "Hours",
+      "Stunden diesen Monat": "Hours This Month",
+      "Versenden": "Send",
+      "fällig war": "was due",
+      "{0} aktiv — {1} Rechnung überfällig.": "{0} active — {1} invoice overdue.",
+      "{0} aktiv.": "{0} active.",
+      "{0} — Status aktualisiert": "{0} — Status Updated",
+      "{0} — versendet": "{0} — sent"
+    }
+  },
+  "v": 1
+}
