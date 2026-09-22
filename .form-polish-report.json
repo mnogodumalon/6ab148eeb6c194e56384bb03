@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 22,
+      "defaults_keys": ["kundentyp", "anlagedatum"],
+      "computed_keys": [],
+      "reason": "Reine Stammdatenverwaltung ohne berechenbare Felder. Keine numerischen Posten, keine Preise, keine Datumsbereiche mit Dauer."
+    },
+    "Berater": {
+      "placeholders_set": 17,
+      "defaults_keys": ["status"],
+      "computed_keys": [],
+      "reason": "Personenstammdaten mit Stundensatz als Referenz für andere Entities, aber keine Berechnung im Berater-Form selbst. Die Stunden-Felder sind reine Metadaten."
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": [],
+      "computed_keys": [],
+      "reason": "Leistungs-Stammdaten mit kostenvoranschlag als freie Eingabe-Preis (keine Berechnung aus Mengen/Faktoren)."
+    },
+    "Projekte": {
+      "placeholders_set": 10,
+      "defaults_keys": ["projektstatus"],
+      "computed_keys": [],
+      "reason": "Projektmetadaten ohne berechenbare Größen. Date-Felder sind Einzeldaten, kein Datumsbereich mit Dauer. Applookup auf Berater ist Referenz ohne Mengenangabe."
+    },
+    "Angebote": {
+      "placeholders_set": 12,
+      "defaults_keys": ["angebotstyp", "angebotsstatus", "zeitrahmen_anfang"],
+      "computed_keys": [],
+      "reason": "Angebots-Metadaten mit freier Dauer-Eingabe und kostenbetrag als manuelle Eingabe (nicht berechenbar ohne konkretes Stunden-/Tages-Feld)."
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 9,
+      "defaults_keys": ["datum", "stunden", "abrechenbar"],
+      "computed_keys": ["arbeitskosten"],
+      "reason": "Archetype 2 (Produkt): Stunden × applookup(Berater, stundensatz) → Arbeitskosten. Virtuelle Anzeige unten im Dialog."
+    },
+    "Rechnungen": {
+      "placeholders_set": 13,
+      "defaults_keys": ["rechnungsdatum", "faelligkeitsdatum", "rechnungsstatus", "mehrwertsteuer"],
+      "computed_keys": ["_mwst_betrag", "gesamtbetrag"],
+      "reason": "Klassisches Brutto-Rechnungs-Muster: Netto + MwSt% → MwSt-Betrag + Gesamtbetrag. Zwei computed-Einträge für transparente Zwischensummen."
+    }
+  }
+}
