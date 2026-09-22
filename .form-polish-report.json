@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 18,
+      "defaults_keys": ["anlagedatum", "kundentyp"],
+      "computed_keys": [],
+      "reason": "Reine Stammdaten ohne Geschäftszahlen oder berechenbare Relationen — Adressverwaltung, Kontakte, keine Preise oder Mengen"
+    },
+    "Berater": {
+      "placeholders_set": 18,
+      "defaults_keys": ["status"],
+      "computed_keys": [],
+      "reason": "Mitarbeiterstammdaten mit Stundensätzen und Statistik-Feldern — keine Aggregationen oder Multiplikationen in dieser Entity notwendig"
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": ["leistungstyp"],
+      "computed_keys": [],
+      "reason": "Katalog-Stammdaten für Leistungen mit statischen Preisen — kein Produkt oder Summe, da Berater nur Zuordnung ohne Verrechnung"
+    },
+    "Projekte": {
+      "placeholders_set": 9,
+      "defaults_keys": ["projektstatus"],
+      "computed_keys": [],
+      "reason": "Projektregistrierung mit Metadaten — applookup auf Berater mit stundensatz nur Referenz, keine Berechnung der Projektkosten hier"
+    },
+    "Angebote": {
+      "placeholders_set": 9,
+      "defaults_keys": ["zeitrahmen_anfang", "angebotstyp", "angebotsstatus"],
+      "computed_keys": [],
+      "reason": "Angeboterstellung mit Datumspaar und Kosten — keine Dauerfeldberechnung (dauer ist string), kostenbetrag manuell"
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 9,
+      "defaults_keys": ["datum", "abrechenbar"],
+      "computed_keys": ["_eintrag_arbeitshonorar"],
+      "reason": "Arbeitszeiterfassung mit Stundensatz aus Berater-Applookup — stunden × stundensatz = Arbeitshonorar pro Eintrag (virtuell für Dialog-Anzeige)"
+    },
+    "Rechnungen": {
+      "placeholders_set": 13,
+      "defaults_keys": ["rechnungsdatum", "faelligkeitsdatum", "rechnungsstatus", "mehrwertsteuer"],
+      "computed_keys": ["_mwst_betrag", "gesamtbetrag"],
+      "reason": "Klassische Rechnungs-Aggregation: nettobetrag + (nettobetrag × mehrwertsteuer / 100) = gesamtbetrag — drei Felder netto/mwst/brutto sind klares Signal für MwSt-Berechnung"
+    }
+  }
+}

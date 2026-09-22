@@ -1,0 +1,236 @@
+{
+  "version": 1,
+  "language": "de",
+  "understanding": {
+    "summary": "inclou. ERP ist ein internes Verwaltungssystem für die inclou. GmbH & Co. KG. Es bildet den gesamten Beratungs- und Projektbetrieb ab: von der Kundenpflege über Angebote, Projekte und Leistungskatalog bis hin zur Zeiterfassung und Rechnungsstellung. Berater werden mit ihren Leistungen, Stundensätzen und gebuchten Zeiten geführt. Angebote werden automatisch als PDF ausgegeben. Rechnungen entstehen aus Zeiterfassungseinträgen und Projekten.",
+    "roles": [
+      "Berater/in",
+      "Projektleitung",
+      "Verwaltung / Buchhaltung"
+    ],
+    "main_tasks": [
+      "Kunden anlegen und pflegen",
+      "Projekte anlegen und nach Status verwalten",
+      "Angebote erstellen und als PDF generieren",
+      "Stunden auf Projekte und Leistungen erfassen",
+      "Rechnungen auf Basis von Zeiterfassung und Projekten erstellen"
+    ]
+  },
+  "flows": [
+    {
+      "slug": "projekt-anlegen",
+      "label": {
+        "de": "Projekt anlegen",
+        "en": "Create project"
+      },
+      "description": "Legt ein neues Projekt an, wählt den Kunden und die Projektleitung aus und setzt den initialen Status auf 'Akquise'. Projektkennung und -nummer vergibt das System.",
+      "priority": "must",
+      "writes": [
+        {
+          "entity": "projekte",
+          "op": "create",
+          "when": "always",
+          "fields": {
+            "kunde": "picked",
+            "projektart": "user",
+            "projektstart_monat": "user",
+            "projektstart_jahr": "user",
+            "ansprechpartner_kunde": "user",
+            "projektleitung": "picked",
+            "projektstatus": "fixed:akquise"
+          }
+        }
+      ],
+      "brief": "# Flow `projekt-anlegen` — Projekt anlegen\nLegt ein neues Projekt an, wählt den Kunden und die Projektleitung aus und setzt den initialen Status auf 'Akquise'. Projektkennung und -nummer vergibt das System.\n\n## Steps (in this order)\n1. Kunden aus der Kundenliste auswählen\n2. Projektart, Projektstart (Monat/Jahr) und Ansprechpartner beim Kunden eingeben\n3. Projektleitung (Berater) auswählen\n4. Projekt speichern – Kennung und Nummer werden automatisch vergeben\n\n## Schreibliste — the ONLY writes this flow makes (the gate compares your plan steps with this list)\n- creates `projekte`:\n    - `kunde`: from the record the user picks in this flow\n    - `projektart`: the user enters it (bind it through the layer: form.field/…)\n    - `projektstart_monat`: the user enters it (bind it through the layer: form.field/…)\n    - `projektstart_jahr`: the user enters it (bind it through the layer: form.field/…)\n    - `ansprechpartner_kunde`: the user enters it (bind it through the layer: form.field/…)\n    - `projektleitung`: from the record the user picks in this flow\n    - `projektstatus`: fixed value `akquise` — set it in the plan step's values, never ask\n\n## Reads\n- `kunden` columns kundenname, email, ort\n- `berater` columns vorname, nachname, status\n\n## Success page\n- shows: `projekte.projektkennung`, `projekte.projektstatus`\n- next flows to offer: `angebot-erstellen`\n\n## Never write these — another flow or a tool owns them\n- `angebote.projekt` (owner: intent `angebot-erstellen`)\n- `angebote.berater` (owner: intent `angebot-erstellen`)\n- `angebote.angebotstyp` (owner: intent `angebot-erstellen`)\n- `angebote.zeitrahmen_anfang` (owner: intent `angebot-erstellen`)\n- `angebote.zeitrahmen_ende` (owner: intent `angebot-erstellen`)\n- `angebote.dauer` (owner: intent `angebot-erstellen`)\n- `angebote.kostentyp` (owner: intent `angebot-erstellen`)\n- `angebote.kostenbetrag` (owner: intent `angebot-erstellen`)\n- `angebote.beschreibung` (owner: intent `angebot-erstellen`)\n- `angebote.angebotsjahr` (owner: intent `angebot-erstellen`)\n- `angebote.angebotsstatus` (owner: intent `angebot-erstellen`)\n- `zeiterfassung.berater` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.projekt` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.leistung` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.datum` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.stunden` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.taetigkeit` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.abrechenbar` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.erfassungsmonat` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.erfassungsjahr` (owner: intent `stunden-erfassen`)\n- `rechnungen.kunde` (owner: intent `rechnung-erstellen`)\n- `rechnungen.projekt` (owner: intent `rechnung-erstellen`)\n- `rechnungen.berater` (owner: intent `rechnung-erstellen`)\n- `rechnungen.zeiterfassungseintraege` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsdatum` (owner: intent `rechnung-erstellen`)\n- `rechnungen.faelligkeitsdatum` (owner: intent `rechnung-erstellen`)\n- `rechnungen.nettobetrag` (owner: intent `rechnung-erstellen`)\n- `rechnungen.mehrwertsteuer` (owner: intent `rechnung-erstellen`)\n- `rechnungen.notizen` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsmonat` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsjahr` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsstatus` (owner: intent `rechnung-erstellen`)\n- `projekte.projektnummer` (owner: tool `projekt-kennung-nummer`)\n- `projekte.projektkennung` (owner: tool `projekt-kennung-nummer`)\n- `angebote.angebotsnummer` (owner: tool `angebotsnummer-vergeben`)\n- `angebote.anhang` (owner: tool `angebot-pdf-generieren`)\n- `rechnungen.rechnungsnummer` (owner: tool `rechnungsnummer-vergeben`)\n- `rechnungen.gesamtbetrag` (owner: tool `rechnungsnummer-vergeben`)\n- `berater.stunden_aktueller_monat` (owner: tool `berater-stunden-aggregieren`)\n- `berater.stunden_aktuelles_quartal` (owner: tool `berater-stunden-aggregieren`)\n- `berater.stunden_aktuelles_jahr` (owner: tool `berater-stunden-aggregieren`)\n- `berater.stunden_letzter_monat` (owner: tool `berater-stunden-aggregieren`)\n- `berater.stunden_letztes_quartal` (owner: tool `berater-stunden-aggregieren`)\n- `berater.stunden_letztes_jahr` (owner: tool `berater-stunden-aggregieren`)\n"
+    },
+    {
+      "slug": "angebot-erstellen",
+      "label": {
+        "de": "Angebot erstellen",
+        "en": "Create offer"
+      },
+      "description": "Erstellt ein neues Angebot zu einem Projekt, erfasst Zeitrahmen, Kosten und Angebotstyp und setzt den Status auf 'Entwurf'. Die Angebotsnummer vergibt das System.",
+      "priority": "must",
+      "writes": [
+        {
+          "entity": "angebote",
+          "op": "create",
+          "when": "always",
+          "fields": {
+            "projekt": "picked",
+            "berater": "picked",
+            "angebotstyp": "user",
+            "zeitrahmen_anfang": "user",
+            "zeitrahmen_ende": "user",
+            "dauer": "user",
+            "kostentyp": "user",
+            "kostenbetrag": "user",
+            "beschreibung": "user",
+            "angebotsjahr": "derived:computed:Jahr aus dem Feld zeitrahmen_anfang ableiten",
+            "angebotsstatus": "fixed:entwurf"
+          }
+        }
+      ],
+      "brief": "# Flow `angebot-erstellen` — Angebot erstellen\nErstellt ein neues Angebot zu einem Projekt, erfasst Zeitrahmen, Kosten und Angebotstyp und setzt den Status auf 'Entwurf'. Die Angebotsnummer vergibt das System.\n\n## Steps (in this order)\n1. Projekt aus der Projektliste auswählen\n2. Verantwortlichen Berater auswählen\n3. Angebotstyp, Zeitrahmen (Anfang, Ende, Dauer) und Kostenbetrag eingeben\n4. Beschreibung und Kostentyp eingeben\n5. Angebot speichern – Nummer wird automatisch vergeben, Status: Entwurf\n\n## Schreibliste — the ONLY writes this flow makes (the gate compares your plan steps with this list)\n- creates `angebote`:\n    - `projekt`: from the record the user picks in this flow\n    - `berater`: from the record the user picks in this flow\n    - `angebotstyp`: the user enters it (bind it through the layer: form.field/…)\n    - `zeitrahmen_anfang`: the user enters it (bind it through the layer: form.field/…)\n    - `zeitrahmen_ende`: the user enters it (bind it through the layer: form.field/…)\n    - `dauer`: the user enters it (bind it through the layer: form.field/…)\n    - `kostentyp`: the user enters it (bind it through the layer: form.field/…)\n    - `kostenbetrag`: the user enters it (bind it through the layer: form.field/…)\n    - `beschreibung`: the user enters it (bind it through the layer: form.field/…)\n    - `angebotsjahr`: derived (computed)\n    - `angebotsstatus`: fixed value `entwurf` — set it in the plan step's values, never ask\n\n## Reads\n- `projekte` columns projektkennung, projektart, projektstatus, kunde\n- `berater` columns vorname, nachname, status\n\n## Success page\n- shows: `angebote.angebotsnummer`, `angebote.angebotsstatus`\n\n## Never write these — another flow or a tool owns them\n- `projekte.kunde` (owner: intent `projekt-anlegen`)\n- `projekte.projektart` (owner: intent `projekt-anlegen`)\n- `projekte.projektstart_monat` (owner: intent `projekt-anlegen`)\n- `projekte.projektstart_jahr` (owner: intent `projekt-anlegen`)\n- `projekte.ansprechpartner_kunde` (owner: intent `projekt-anlegen`)\n- `projekte.projektleitung` (owner: intent `projekt-anlegen`)\n- `projekte.projektstatus` (owner: intent `projekt-anlegen`)\n- `zeiterfassung.berater` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.projekt` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.leistung` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.datum` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.stunden` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.taetigkeit` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.abrechenbar` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.erfassungsmonat` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.erfassungsjahr` (owner: intent `stunden-erfassen`)\n- `rechnungen.kunde` (owner: intent `rechnung-erstellen`)\n- `rechnungen.projekt` (owner: intent `rechnung-erstellen`)\n- `rechnungen.berater` (owner: intent `rechnung-erstellen`)\n- `rechnungen.zeiterfassungseintraege` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsdatum` (owner: intent `rechnung-erstellen`)\n- `rechnungen.faelligkeitsdatum` (owner: intent `rechnung-erstellen`)\n- `rechnungen.nettobetrag` (owner: intent `rechnung-erstellen`)\n- `rechnungen.mehrwertsteuer` (owner: intent `rechnung-erstellen`)\n- `rechnungen.notizen` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsmonat` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsjahr` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsstatus` (owner: intent `rechnung-erstellen`)\n- `projekte.projektnummer` (owner: tool `projekt-kennung-nummer`)\n- `projekte.projektkennung` (owner: tool `projekt-kennung-nummer`)\n- `angebote.angebotsnummer` (owner: tool `angebotsnummer-vergeben`)\n- `angebote.anhang` (owner: tool `angebot-pdf-generieren`)\n- `rechnungen.rechnungsnummer` (owner: tool `rechnungsnummer-vergeben`)\n- `rechnungen.gesamtbetrag` (owner: tool `rechnungsnummer-vergeben`)\n- `berater.stunden_aktueller_monat` (owner: tool `berater-stunden-aggregieren`)\n- `berater.stunden_aktuelles_quartal` (owner: tool `berater-stunden-aggregieren`)\n- `berater.stunden_aktuelles_jahr` (owner: tool `berater-stunden-aggregieren`)\n- `berater.stunden_letzter_monat` (owner: tool `berater-stunden-aggregieren`)\n- `berater.stunden_letztes_quartal` (owner: tool `berater-stunden-aggregieren`)\n- `berater.stunden_letztes_jahr` (owner: tool `berater-stunden-aggregieren`)\n"
+    },
+    {
+      "slug": "stunden-erfassen",
+      "label": {
+        "de": "Stunden erfassen",
+        "en": "Record hours"
+      },
+      "description": "Berater erfassen ihre geleisteten Stunden auf ein Projekt und eine Leistung. Monat und Jahr werden automatisch aus dem Datum abgeleitet.",
+      "priority": "must",
+      "writes": [
+        {
+          "entity": "zeiterfassung",
+          "op": "create",
+          "when": "always",
+          "fields": {
+            "berater": "picked",
+            "projekt": "picked",
+            "leistung": "picked",
+            "datum": "user",
+            "stunden": "user",
+            "taetigkeit": "user",
+            "abrechenbar": "user",
+            "erfassungsmonat": "derived:computed:Monat aus dem Feld datum ableiten (Monatsname als Option)",
+            "erfassungsjahr": "derived:computed:Jahr aus dem Feld datum ableiten"
+          }
+        }
+      ],
+      "brief": "# Flow `stunden-erfassen` — Stunden erfassen\nBerater erfassen ihre geleisteten Stunden auf ein Projekt und eine Leistung. Monat und Jahr werden automatisch aus dem Datum abgeleitet.\n\n## Steps (in this order)\n1. Berater auswählen\n2. Projekt auswählen\n3. Leistung aus dem Leistungskatalog auswählen\n4. Datum, Stunden, Tätigkeit und Abrechenbarkeit eingeben\n5. Zeiteintrag speichern\n\n## Schreibliste — the ONLY writes this flow makes (the gate compares your plan steps with this list)\n- creates `zeiterfassung`:\n    - `berater`: from the record the user picks in this flow\n    - `projekt`: from the record the user picks in this flow\n    - `leistung`: from the record the user picks in this flow\n    - `datum`: the user enters it (bind it through the layer: form.field/…)\n    - `stunden`: the user enters it (bind it through the layer: form.field/…)\n    - `taetigkeit`: the user enters it (bind it through the layer: form.field/…)\n    - `abrechenbar`: the user enters it (bind it through the layer: form.field/…)\n    - `erfassungsmonat`: derived (computed)\n    - `erfassungsjahr`: derived (computed)\n\n## Reads\n- `berater` columns vorname, nachname, status\n- `projekte` columns projektkennung, projektart, projektstatus\n- `leistungskatalog` columns leistungsname, leistungstyp\n\n## Success page\n- shows: `zeiterfassung.datum`, `zeiterfassung.stunden`, `zeiterfassung.projekt`\n\n## Never write these — another flow or a tool owns them\n- `projekte.kunde` (owner: intent `projekt-anlegen`)\n- `projekte.projektart` (owner: intent `projekt-anlegen`)\n- `projekte.projektstart_monat` (owner: intent `projekt-anlegen`)\n- `projekte.projektstart_jahr` (owner: intent `projekt-anlegen`)\n- `projekte.ansprechpartner_kunde` (owner: intent `projekt-anlegen`)\n- `projekte.projektleitung` (owner: intent `projekt-anlegen`)\n- `projekte.projektstatus` (owner: intent `projekt-anlegen`)\n- `angebote.projekt` (owner: intent `angebot-erstellen`)\n- `angebote.berater` (owner: intent `angebot-erstellen`)\n- `angebote.angebotstyp` (owner: intent `angebot-erstellen`)\n- `angebote.zeitrahmen_anfang` (owner: intent `angebot-erstellen`)\n- `angebote.zeitrahmen_ende` (owner: intent `angebot-erstellen`)\n- `angebote.dauer` (owner: intent `angebot-erstellen`)\n- `angebote.kostentyp` (owner: intent `angebot-erstellen`)\n- `angebote.kostenbetrag` (owner: intent `angebot-erstellen`)\n- `angebote.beschreibung` (owner: intent `angebot-erstellen`)\n- `angebote.angebotsjahr` (owner: intent `angebot-erstellen`)\n- `angebote.angebotsstatus` (owner: intent `angebot-erstellen`)\n- `rechnungen.kunde` (owner: intent `rechnung-erstellen`)\n- `rechnungen.projekt` (owner: intent `rechnung-erstellen`)\n- `rechnungen.berater` (owner: intent `rechnung-erstellen`)\n- `rechnungen.zeiterfassungseintraege` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsdatum` (owner: intent `rechnung-erstellen`)\n- `rechnungen.faelligkeitsdatum` (owner: intent `rechnung-erstellen`)\n- `rechnungen.nettobetrag` (owner: intent `rechnung-erstellen`)\n- `rechnungen.mehrwertsteuer` (owner: intent `rechnung-erstellen`)\n- `rechnungen.notizen` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsmonat` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsjahr` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsstatus` (owner: intent `rechnung-erstellen`)\n- `projekte.projektnummer` (owner: tool `projekt-kennung-nummer`)\n- `projekte.projektkennung` (owner: tool `projekt-kennung-nummer`)\n- `angebote.angebotsnummer` (owner: tool `angebotsnummer-vergeben`)\n- `angebote.anhang` (owner: tool `angebot-pdf-generieren`)\n- `rechnungen.rechnungsnummer` (owner: tool `rechnungsnummer-vergeben`)\n- `rechnungen.gesamtbetrag` (owner: tool `rechnungsnummer-vergeben`)\n- `berater.stunden_aktueller_monat` (owner: tool `berater-stunden-aggregieren`)\n- `berater.stunden_aktuelles_quartal` (owner: tool `berater-stunden-aggregieren`)\n- `berater.stunden_aktuelles_jahr` (owner: tool `berater-stunden-aggregieren`)\n- `berater.stunden_letzter_monat` (owner: tool `berater-stunden-aggregieren`)\n- `berater.stunden_letztes_quartal` (owner: tool `berater-stunden-aggregieren`)\n- `berater.stunden_letztes_jahr` (owner: tool `berater-stunden-aggregieren`)\n"
+    },
+    {
+      "slug": "rechnung-erstellen",
+      "label": {
+        "de": "Rechnung erstellen",
+        "en": "Create invoice"
+      },
+      "description": "Erstellt eine neue Rechnung zu einem Projekt und Kunden, verknüpft relevante Zeiterfassungseinträge und erfasst Nettobetrag sowie Mehrwertsteuer. Rechnungsnummer vergibt das System.",
+      "priority": "must",
+      "writes": [
+        {
+          "entity": "rechnungen",
+          "op": "create",
+          "when": "always",
+          "fields": {
+            "kunde": "picked",
+            "projekt": "picked",
+            "berater": "picked",
+            "zeiterfassungseintraege": "picked",
+            "rechnungsdatum": "user",
+            "faelligkeitsdatum": "user",
+            "nettobetrag": "user",
+            "mehrwertsteuer": "user",
+            "notizen": "user",
+            "rechnungsmonat": "derived:computed:Monat aus dem Feld rechnungsdatum ableiten (Monatsname als Option)",
+            "rechnungsjahr": "derived:computed:Jahr aus dem Feld rechnungsdatum ableiten",
+            "rechnungsstatus": "fixed:entwurf"
+          }
+        }
+      ],
+      "brief": "# Flow `rechnung-erstellen` — Rechnung erstellen\nErstellt eine neue Rechnung zu einem Projekt und Kunden, verknüpft relevante Zeiterfassungseinträge und erfasst Nettobetrag sowie Mehrwertsteuer. Rechnungsnummer vergibt das System.\n\n## Steps (in this order)\n1. Kunden auswählen\n2. Projekt auswählen\n3. Verantwortliche Berater auswählen\n4. Zeiterfassungseinträge auswählen, die abgerechnet werden sollen\n5. Rechnungsdatum, Fälligkeitsdatum, Nettobetrag und Mehrwertsteuer eingeben\n6. Rechnung speichern – Rechnungsnummer wird automatisch vergeben, Status: Entwurf\n\n## Schreibliste — the ONLY writes this flow makes (the gate compares your plan steps with this list)\n- creates `rechnungen`:\n    - `kunde`: from the record the user picks in this flow\n    - `projekt`: from the record the user picks in this flow\n    - `berater`: from the record the user picks in this flow\n    - `zeiterfassungseintraege`: from the record the user picks in this flow\n    - `rechnungsdatum`: the user enters it (bind it through the layer: form.field/…)\n    - `faelligkeitsdatum`: the user enters it (bind it through the layer: form.field/…)\n    - `nettobetrag`: the user enters it (bind it through the layer: form.field/…)\n    - `mehrwertsteuer`: the user enters it (bind it through the layer: form.field/…)\n    - `notizen`: the user enters it (bind it through the layer: form.field/…)\n    - `rechnungsmonat`: derived (computed)\n    - `rechnungsjahr`: derived (computed)\n    - `rechnungsstatus`: fixed value `entwurf` — set it in the plan step's values, never ask\n\n## Reads\n- `kunden` columns kundenname, email, ort\n- `projekte` columns projektkennung, projektart, projektstatus, kunde\n- `berater` columns vorname, nachname\n- `zeiterfassung` columns datum, stunden, taetigkeit, abrechenbar, berater, projekt\n\n## Success page\n- shows: `rechnungen.rechnungsnummer`, `rechnungen.rechnungsstatus`, `rechnungen.gesamtbetrag`\n\n## Never write these — another flow or a tool owns them\n- `projekte.kunde` (owner: intent `projekt-anlegen`)\n- `projekte.projektart` (owner: intent `projekt-anlegen`)\n- `projekte.projektstart_monat` (owner: intent `projekt-anlegen`)\n- `projekte.projektstart_jahr` (owner: intent `projekt-anlegen`)\n- `projekte.ansprechpartner_kunde` (owner: intent `projekt-anlegen`)\n- `projekte.projektleitung` (owner: intent `projekt-anlegen`)\n- `projekte.projektstatus` (owner: intent `projekt-anlegen`)\n- `angebote.projekt` (owner: intent `angebot-erstellen`)\n- `angebote.berater` (owner: intent `angebot-erstellen`)\n- `angebote.angebotstyp` (owner: intent `angebot-erstellen`)\n- `angebote.zeitrahmen_anfang` (owner: intent `angebot-erstellen`)\n- `angebote.zeitrahmen_ende` (owner: intent `angebot-erstellen`)\n- `angebote.dauer` (owner: intent `angebot-erstellen`)\n- `angebote.kostentyp` (owner: intent `angebot-erstellen`)\n- `angebote.kostenbetrag` (owner: intent `angebot-erstellen`)\n- `angebote.beschreibung` (owner: intent `angebot-erstellen`)\n- `angebote.angebotsjahr` (owner: intent `angebot-erstellen`)\n- `angebote.angebotsstatus` (owner: intent `angebot-erstellen`)\n- `zeiterfassung.berater` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.projekt` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.leistung` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.datum` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.stunden` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.taetigkeit` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.abrechenbar` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.erfassungsmonat` (owner: intent `stunden-erfassen`)\n- `zeiterfassung.erfassungsjahr` (owner: intent `stunden-erfassen`)\n- `projekte.projektnummer` (owner: tool `projekt-kennung-nummer`)\n- `projekte.projektkennung` (owner: tool `projekt-kennung-nummer`)\n- `angebote.angebotsnummer` (owner: tool `angebotsnummer-vergeben`)\n- `angebote.anhang` (owner: tool `angebot-pdf-generieren`)\n- `rechnungen.rechnungsnummer` (owner: tool `rechnungsnummer-vergeben`)\n- `rechnungen.gesamtbetrag` (owner: tool `rechnungsnummer-vergeben`)\n- `berater.stunden_aktueller_monat` (owner: tool `berater-stunden-aggregieren`)\n- `berater.stunden_aktuelles_quartal` (owner: tool `berater-stunden-aggregieren`)\n- `berater.stunden_aktuelles_jahr` (owner: tool `berater-stunden-aggregieren`)\n- `berater.stunden_letzter_monat` (owner: tool `berater-stunden-aggregieren`)\n- `berater.stunden_letztes_quartal` (owner: tool `berater-stunden-aggregieren`)\n- `berater.stunden_letztes_jahr` (owner: tool `berater-stunden-aggregieren`)\n"
+    }
+  ],
+  "public_pages": [],
+  "tools": [
+    {
+      "id": "projekt-kennung-nummer",
+      "purpose": "Vergibt beim Anlegen eines Projekts automatisch die laufende Projektnummer und berechnet die Projektkennung aus Startjahr, Projektart-Kürzel und Projektnummer (z. B. 2026-IT-0104)."
+    },
+    {
+      "id": "angebotsnummer-vergeben",
+      "purpose": "Vergibt beim Anlegen eines Angebots automatisch eine laufende Angebotsnummer."
+    },
+    {
+      "id": "angebot-pdf-generieren",
+      "purpose": "Erzeugt nach dem Anlegen eines Angebots automatisch ein PDF aus den Angebotsdaten nach der Angebotsvorlage und hängt es als Datei an das Angebot an."
+    },
+    {
+      "id": "rechnungsnummer-vergeben",
+      "purpose": "Vergibt beim Anlegen einer Rechnung automatisch eine laufende Rechnungsnummer und berechnet den Gesamtbetrag aus Nettobetrag und Mehrwertsteuer."
+    },
+    {
+      "id": "berater-stunden-aggregieren",
+      "purpose": "Aktualisiert nach jedem neuen Zeiterfassungseintrag die aggregierten Stundenfelder des jeweiligen Beraters (aktueller Monat, Quartal, Jahr sowie Vormonat, Vorquartal, Vorjahr)."
+    }
+  ],
+  "ownership": {
+    "projekte": {
+      "kunde": "intent:projekt-anlegen",
+      "projektart": "intent:projekt-anlegen",
+      "projektstart_monat": "intent:projekt-anlegen",
+      "projektstart_jahr": "intent:projekt-anlegen",
+      "ansprechpartner_kunde": "intent:projekt-anlegen",
+      "projektleitung": "intent:projekt-anlegen",
+      "projektstatus": "intent:projekt-anlegen",
+      "projektnummer": "tool:projekt-kennung-nummer",
+      "projektkennung": "tool:projekt-kennung-nummer"
+    },
+    "angebote": {
+      "projekt": "intent:angebot-erstellen",
+      "berater": "intent:angebot-erstellen",
+      "angebotstyp": "intent:angebot-erstellen",
+      "zeitrahmen_anfang": "intent:angebot-erstellen",
+      "zeitrahmen_ende": "intent:angebot-erstellen",
+      "dauer": "intent:angebot-erstellen",
+      "kostentyp": "intent:angebot-erstellen",
+      "kostenbetrag": "intent:angebot-erstellen",
+      "beschreibung": "intent:angebot-erstellen",
+      "angebotsjahr": "intent:angebot-erstellen",
+      "angebotsstatus": "intent:angebot-erstellen",
+      "angebotsnummer": "tool:angebotsnummer-vergeben",
+      "anhang": "tool:angebot-pdf-generieren"
+    },
+    "zeiterfassung": {
+      "berater": "intent:stunden-erfassen",
+      "projekt": "intent:stunden-erfassen",
+      "leistung": "intent:stunden-erfassen",
+      "datum": "intent:stunden-erfassen",
+      "stunden": "intent:stunden-erfassen",
+      "taetigkeit": "intent:stunden-erfassen",
+      "abrechenbar": "intent:stunden-erfassen",
+      "erfassungsmonat": "intent:stunden-erfassen",
+      "erfassungsjahr": "intent:stunden-erfassen"
+    },
+    "rechnungen": {
+      "kunde": "intent:rechnung-erstellen",
+      "projekt": "intent:rechnung-erstellen",
+      "berater": "intent:rechnung-erstellen",
+      "zeiterfassungseintraege": "intent:rechnung-erstellen",
+      "rechnungsdatum": "intent:rechnung-erstellen",
+      "faelligkeitsdatum": "intent:rechnung-erstellen",
+      "nettobetrag": "intent:rechnung-erstellen",
+      "mehrwertsteuer": "intent:rechnung-erstellen",
+      "notizen": "intent:rechnung-erstellen",
+      "rechnungsmonat": "intent:rechnung-erstellen",
+      "rechnungsjahr": "intent:rechnung-erstellen",
+      "rechnungsstatus": "intent:rechnung-erstellen",
+      "rechnungsnummer": "tool:rechnungsnummer-vergeben",
+      "gesamtbetrag": "tool:rechnungsnummer-vergeben"
+    },
+    "berater": {
+      "stunden_aktueller_monat": "tool:berater-stunden-aggregieren",
+      "stunden_aktuelles_quartal": "tool:berater-stunden-aggregieren",
+      "stunden_aktuelles_jahr": "tool:berater-stunden-aggregieren",
+      "stunden_letzter_monat": "tool:berater-stunden-aggregieren",
+      "stunden_letztes_quartal": "tool:berater-stunden-aggregieren",
+      "stunden_letztes_jahr": "tool:berater-stunden-aggregieren"
+    }
+  },
+  "dashboard": {
+    "focus": [
+      "projekte – nach Status gruppiert (Akquise / In Bearbeitung / Abgeschlossen)",
+      "rechnungen – offene und überfällige Rechnungen",
+      "angebote – Angebote im Status Entwurf und Versendet",
+      "zeiterfassung – abrechenbare Stunden laufender Monat"
+    ],
+    "hints": [
+      "Projektkennung wird automatisch aus Jahr, Projektart und Nummer gebildet",
+      "Angebots-PDF wird nach dem Speichern automatisch generiert",
+      "Stundenaggregation je Berater wird bei jedem neuen Zeiteintrag aktualisiert",
+      "Rechnungsnummer und Gesamtbetrag werden beim Anlegen automatisch gesetzt"
+    ]
+  }
+}
