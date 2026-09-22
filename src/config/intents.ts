@@ -20,6 +20,7 @@
 import type { ComponentType } from 'react';
 
 // <custom:intent-imports>
+import { IconClock, IconFileDescription, IconReceipt } from '@tabler/icons-react';
 // </custom:intent-imports>
 
 export interface IntentLink {
@@ -42,6 +43,9 @@ export interface IntentLink {
 
 export const INTENTS: IntentLink[] = [
   // <custom:intents>
+  { path: '/intents/zeiterfassung-buchen', label: { de: 'Zeit buchen', en: 'Log time' }, icon: IconClock, description: 'Arbeitsstunden für Berater und Projekt erfassen' },
+  { path: '/intents/angebot-erstellen', label: { de: 'Angebot erstellen', en: 'Create offer' }, icon: IconFileDescription, description: 'Neues Angebot in 3 Schritten mit Projekt- und Beraterzuordnung erstellen' },
+  { path: '/intents/rechnung-erstellen', label: { de: 'Rechnung erstellen', en: 'Create invoice' }, icon: IconReceipt, description: 'Rechnung auf Basis von Projekt, Kunde und Zeiterfassung erstellen' },
   // </custom:intents>
 ];
 
@@ -52,7 +56,7 @@ export const INTENTS: IntentLink[] = [
  * purpose — a scaffold update resets it to false (self-healing if Phase 2
  * never ran).
  */
-export const INTENTS_PENDING = true;
+export const INTENTS_PENDING = false;
 
 /**
  * When the Phase-1 bundle was deployed (ISO, set by the service together with
