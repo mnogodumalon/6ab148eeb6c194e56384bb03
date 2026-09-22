@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 18,
+      "defaults_keys": [],
+      "computed_keys": [],
+      "reason": "Reine Stammdatenverwaltung – keine berechenbaren Felder, keine Number-Felder mit Multiplikanden, keine applookup-Ketten mit Preisen"
+    },
+    "Berater": {
+      "placeholders_set": 19,
+      "defaults_keys": ["status", "einstiegsdatum"],
+      "computed_keys": [],
+      "reason": "Berater-Stammdaten mit Stundensatz; Stundenzähler sind system-aggregiert (read-only), nicht berechenbar in der Form"
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": ["leistungstyp"],
+      "computed_keys": [],
+      "reason": "Leistungs-Stammdaten mit Kostenvoranschlag als Einzelpreis; kein Multiplikator im Form (Abrechnungseinheit ist nur Info)"
+    },
+    "Projekte": {
+      "placeholders_set": 10,
+      "defaults_keys": ["projektstatus", "projektstart_jahr"],
+      "computed_keys": [],
+      "reason": "Projekt-Stammdaten ohne Zeit-Spanne (nur Startmonat+Jahr); kein Multiplikator zwischen Berater-Stundensatz und Form-Stundenfeld"
+    },
+    "Angebote": {
+      "placeholders_set": 11,
+      "defaults_keys": ["angebotsjahr", "angebotstyp", "angebotsstatus"],
+      "computed_keys": [],
+      "reason": "Angebot mit Zeitrahmen-Paar (anfang/ende) – virtuelle Dauer möglich, aber nicht zwingend da Dauer-String manuell erfasst; Kostenbetrag ist Einzelwert ohne Netto-Brutto-Struktur"
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 9,
+      "defaults_keys": ["datum", "abrechenbar", "erfassungsjahr"],
+      "computed_keys": ["_arbeitskosten_betrag"],
+      "reason": "Stundenerfassung mit Berater-Lookup (stundensatz vorhanden) × Stundenzahl → Arbeitskosten berechnet; virtueller Key für Darstellung unten im Dialog"
+    },
+    "Rechnungen": {
+      "placeholders_set": 14,
+      "defaults_keys": ["rechnungsdatum", "faelligkeitsdatum", "rechnungsstatus", "rechnungsjahr", "mehrwertsteuer"],
+      "computed_keys": ["_mwst_betrag", "gesamtbetrag"],
+      "reason": "Klassische Rechnungs-Entity mit Netto-Mwst-Brutto-Struktur; Mwst-Betrag berechnet (Netto × Mwst-Prozent / 100), Gesamtbetrag folgt (Netto + Mwst)"
+    }
+  }
+}
