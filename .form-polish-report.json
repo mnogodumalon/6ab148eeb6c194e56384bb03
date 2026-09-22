@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 21,
+      "defaults_keys": ["anlagedatum", "kundentyp"],
+      "computed_keys": [],
+      "reason": "Reine Stammdaten (Name, Kontakt, Adresse, Metadaten). Keine Number-Felder zur Berechnung, keine applookup-Ketten mit Preis-Target."
+    },
+    "Berater": {
+      "placeholders_set": 17,
+      "defaults_keys": ["status"],
+      "computed_keys": [],
+      "reason": "Stammdaten mit Stundensatz und READ-ONLY Statistik-Feldern (gebuchte Stunden). Die Stundenfelder sind Aggregate aus Zeiterfassung, nicht eigenständig berechenbar. Multipleapplookup ohne Preis-Targets."
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": ["leistungstyp"],
+      "computed_keys": [],
+      "reason": "Stammdaten-Entity mit Leistungsname, Typ und pauschaler Kostenvoranschlag (manuell gepflegt). Multipleapplookup auf Berater hat keine Abrechnungs-Formel — kostenvoranschlag ist kein echtes Preis-Target."
+    },
+    "Projekte": {
+      "placeholders_set": 10,
+      "defaults_keys": ["projektstatus", "projektstart_jahr"],
+      "computed_keys": [],
+      "reason": "Projektdaten mit Start als separate Monat/Jahr-Lookups (keine echte Datumsdifferenz). Applookups auf Kunde und Berater ohne Berechnung. Keine Number-Felder für Kosten oder Dauer."
+    },
+    "Angebote": {
+      "placeholders_set": 12,
+      "defaults_keys": ["angebotsjahr", "angebotstyp", "angebotsstatus", "zeitrahmen_anfang", "zeitrahmen_ende"],
+      "computed_keys": [],
+      "reason": "Anfangs- und Enddatum definieren ein Zeitfenster; dauer ist manuell als Text gepflegt (kein computed nötig). Kostenbetrag ist pauschal eingegeben, nicht aus Lookup-Produkt berechnet. Applookups ohne Preis-Semantik."
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 9,
+      "defaults_keys": ["datum", "abrechenbar", "erfassungsjahr"],
+      "computed_keys": ["arbeitskosten"],
+      "reason": "Stunden × Stundensatz: arbeitskosten = applookup(berater, stundensatz) * field(stunden). Dies ist ein klassisches PRODUKT-Archetyp. Berater-Applookup liefert den stundensatz, Feld stunden ist die Menge."
+    },
+    "Rechnungen": {
+      "placeholders_set": 17,
+      "defaults_keys": ["rechnungsdatum", "faelligkeitsdatum", "rechnungsstatus", "rechnungsjahr"],
+      "computed_keys": ["mwst_betrag", "gesamtbetrag"],
+      "reason": "Klassische Netto-Brutto-Rechnung: mwst_betrag = netto × (mehrwertsteuer%/100), gesamtbetrag = netto + mwst_betrag. Das ist der ARCHETYP Brutto-Total mit explizitem Mehrwertsteuer-%-Feld. Multipleapplookups auf Berater und Zeiterfassung sind referenziell, keine Aggregation in dieser Form."
+    }
+  }
+}

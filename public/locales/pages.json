@@ -1,0 +1,42 @@
+{
+  "pages": {
+    "en": {
+      "1 Rechnung ist überfällig": "1 invoice is overdue",
+      "Aktive Projekte": "Active projects",
+      "Alle Rechnungen bezahlt — super!": "All invoices paid — great!",
+      "Alles ruhig — starte mit einem neuen Projekt.": "All quiet — start a new project.",
+      "Als bezahlt markieren": "Mark as paid",
+      "Als versendet markieren": "Mark as sent",
+      "Angebot": "Quote",
+      "Angebot {0} — angenommen": "Quote {0} — accepted",
+      "Angebot {0} — versendet": "Quote {0} — sent",
+      "Angebote & Beraterauslastung": "Quotes & consultant utilization",
+      "Angebote offen": "Open quotes",
+      "Angenommen": "Accepted",
+      "Diesen Monat:": "This month:",
+      "Erstes Projekt anlegen": "Create first project",
+      "Keine offenen Angebote — erstelle ein neues.": "No open quotes — create a new one.",
+      "Lege dein erstes Projekt an und starte mit der Verwaltung.": "Create your first project and start managing.",
+      "Neue Rechnung": "New invoice",
+      "Neues Angebot": "New quote",
+      "Neues Projekt": "New project",
+      "Offene Rechnungen": "Open invoices",
+      "Ohne Kennung": "No identifier",
+      "Stunden diesen Monat": "Hours this month",
+      "Unbekannt": "Unknown",
+      "Versendet": "Sent",
+      "Willkommen im inclou. ERP": "Welcome to inclou. ERP",
+      "fällig seit": "due since",
+      "{0} Rechnungen sind überfällig": "{0} invoices are overdue",
+      "{0} — 1 aktives Projekt läuft gerade.": "{0} — 1 active project currently running.",
+      "{0} — als bezahlt markiert": "{0} — marked as paid",
+      "{0} — nach {1} verschoben": "{0} — moved to {1}",
+      "{0} — offene Rechnungen überfällig.": "{0} — open invoices overdue.",
+      "{0} — {1} aktive Projekte laufen gerade.": "{0} — {1} active projects currently running.",
+      "Überfällig": "Overdue",
+      "Überfällige Rechnungen": "Overdue invoices",
+      "✓ Bezahlt": "✓ Paid"
+    }
+  },
+  "v": 1
+}
