@@ -1,0 +1,37 @@
+{
+  "pages": {
+    "en": {
+      "Aktive Berater": "Active Consultants",
+      "Aktive Projekte": "Active Projects",
+      "Aktive Projekte: {0}.": "Active Projects: {0}.",
+      "Als bezahlt markieren": "Mark as Paid",
+      "Angebot": "Quote",
+      "Angebot versenden": "Send Quote",
+      "Angebot {0} — versendet": "Quote {0} — sent",
+      "Berater": "Consultant",
+      "In Akquise": "In Acquisition",
+      "Keine offenen Angebote — alles bearbeitet!": "No open quotes — all done!",
+      "Neues Angebot": "New Quote",
+      "Neues Projekt": "New Project",
+      "Noch keine Projekte erfasst — leg jetzt los!": "No projects recorded yet — get started now!",
+      "Noch keine Stunden diese Woche erfasst.": "No hours recorded this week yet.",
+      "Offene Angebote": "Open Quotes",
+      "Ohne Kennung": "No Identifier",
+      "Rechnung öffnen": "Open Invoice",
+      "Stunden (Monat)": "Hours (Month)",
+      "Umsatz": "Revenue",
+      "Umsatz (bezahlte Rechnungen)": "Revenue (Paid Invoices)",
+      "Versenden": "Send",
+      "Zeit erfassen": "Track Time",
+      "Zeiterfassung diese Woche": "Time Tracking This Week",
+      "{0} Projekte in Bearbeitung, {1} in Akquise.": "{0} projects in progress, {1} in acquisition.",
+      "{0} Rechnung(en) überfällig — sofort handeln.": "{0} invoice(s) overdue — take immediate action.",
+      "{0} offene Posten.": "{0} open items.",
+      "{0} — Status geändert": "{0} — Status changed",
+      "{0} — als bezahlt markiert": "{0} — marked as paid",
+      "{0} — als versendet markiert": "{0} — marked as sent",
+      "— Rechnung(en) überfällig.": "— invoice(s) overdue."
+    }
+  },
+  "v": 1
+}

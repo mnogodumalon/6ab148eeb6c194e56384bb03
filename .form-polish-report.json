@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 18,
+      "defaults_keys": ["kundentyp", "anlagedatum"],
+      "computed_keys": [],
+      "reason": "Reine Stammdaten für Kundenmanagement, keine numerischen Felder, keine applookup-Preis-Ketten, keine Dauer-Paare. Datums-Anfangswert und Standard-Kundentyp genügen."
+    },
+    "Berater": {
+      "placeholders_set": 17,
+      "defaults_keys": ["einstiegsdatum", "status"],
+      "computed_keys": [],
+      "reason": "Kontaktinformationen und Status mit read-only Stundenzählern (von außen aggregiert). Kein computed sinnvoll — stundensatz ist Basis-Rate ohne Multiplikation in diesem Formular."
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": ["leistungstyp", "einheit"],
+      "computed_keys": [],
+      "reason": "Service-Katalog mit Name, Typ, Beschreibung und Basis-Kostenvoranschlag. Kein computed — kostenvoranschlag ist manueller Input, nicht aus applookup-Feldern berechenbar."
+    },
+    "Projekte": {
+      "placeholders_set": 10,
+      "defaults_keys": ["projektart", "projektstatus"],
+      "computed_keys": [],
+      "reason": "Projekt-Stammdaten mit Kennung, Nummer, Art, Startdatum (Monat+Jahr), Kunde, Projektleitung. Kein computed — stundensatz auf Projektleiter ist vorhanden, aber keine Arbeitsstunden auf diesem Formular (Stunden sind in Zeiterfassung)."
+    },
+    "Angebote": {
+      "placeholders_set": 11,
+      "defaults_keys": ["angebotstyp", "angebotsstatus", "zeitrahmen_anfang"],
+      "computed_keys": [],
+      "reason": "Angebot mit Nummer, Datumsbereich (anfang, ende), kostenbetrag. Kein computed — dauer ist Textfeld (manuell), kostenbetrag ist manueller Input, keine Multiplikation mit Lookup-Preis."
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 9,
+      "defaults_keys": ["datum", "abrechenbar"],
+      "computed_keys": ["arbeitskosten"],
+      "reason": "Time-Tracking mit Berater (applookup + stundensatz), Stunden (number). Computed: arbeitskosten = stundensatz × stunden (MODUS 1 Formel). Virtueller Wert für Übersicht unterhalb des Dialogs."
+    },
+    "Rechnungen": {
+      "placeholders_set": 14,
+      "defaults_keys": ["rechnungsdatum", "faelligkeitsdatum", "rechnungsstatus", "mehrwertsteuer"],
+      "computed_keys": ["mwst_betrag", "gesamtbetrag"],
+      "reason": "Komplette Rechnungs-Aggregation mit netto, mwst%, brutto. Klassische Netto-Brutto-Rechnung (Signal: netto + mwst + brutto Backend-Felder vorhanden). Computed: mwst_betrag = netto × mwst% / 100, gesamtbetrag = netto + mwst_betrag (MODUS 1). Total-Pflicht erfüllt."
+    }
+  }
+}
