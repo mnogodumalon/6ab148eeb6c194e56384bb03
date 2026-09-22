@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 18,
+      "defaults_keys": ["anlagedatum"],
+      "computed_keys": [],
+      "reason": "Reine Stammdatenverwaltung ohne Mengen, Preise oder Datumspaare. Keine berechenbaren Größen vorhanden."
+    },
+    "Berater": {
+      "placeholders_set": 18,
+      "defaults_keys": ["einstiegsdatum", "status"],
+      "computed_keys": [],
+      "reason": "Stammdaten mit Stundensatz und Stunden-Statistiken. Stunden sind externe Eingaben (aus Zeiterfassung), nicht lokal berechnet. Stundensatz ist einzelner Referenzsatz ohne lokale Multiplikation."
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": ["leistungstyp", "einheit"],
+      "computed_keys": [],
+      "reason": "Stammdaten-Katalog mit einzelnem Kostenvoranschlag. Keine Mengen im Form, keine multipleapplookup-Summen oder Produktberechnungen."
+    },
+    "Projekte": {
+      "placeholders_set": 10,
+      "defaults_keys": ["projektart", "projektstatus", "projektstart_jahr"],
+      "computed_keys": [],
+      "reason": "Projekt-Stammdaten mit Referenzen auf Kunde und Projektleiter. Keine Arbeitszeiten, Stunden oder Kostenpunkte im Form selbst — die Kosten entstehen durch verknüpfte Rechnungen/Zeiterfassungen."
+    },
+    "Angebote": {
+      "placeholders_set": 12,
+      "defaults_keys": ["zeitrahmen_anfang", "angebotstyp", "angebotsstatus"],
+      "computed_keys": [],
+      "reason": "Angebots-Formular mit Datumspaar (Anfang/Ende) und einzelnem Kostenbetrag. Weder Stunden noch Positionen, die in computed multipliziert würden. Der Kostenbetrag ist eine manuell eingegebene Pauschale."
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 9,
+      "defaults_keys": ["datum", "abrechenbar"],
+      "computed_keys": ["_arbeitskosten"],
+      "reason": "Zeiterfassungssystem mit Berater (applookup), Stunden (number). Archetyp 3 (Lookup-Produkt): Arbeitskosten = Stundensatz (Berater) × Stunden. Virtueller Key _arbeitskosten für Anzeige-Aggregat."
+    },
+    "Rechnungen": {
+      "placeholders_set": 13,
+      "defaults_keys": ["rechnungsdatum", "faelligkeitsdatum", "rechnungsstatus", "mehrwertsteuer"],
+      "computed_keys": ["mwst_betrag", "gesamtbetrag"],
+      "reason": "Klassische Brutto-Rechnung mit explizitem netto_betrag + mwst_prozent + gesamtbetrag Backend-Feldern. MWST-Signal erkannt (field 'mehrwertsteuer'). Computed: mwst_betrag = netto × mwst% / 100, gesamtbetrag = netto + mwst_betrag. Fälligkeitsdatum = Rechnungsdatum + 14 Tage Standard."
+    }
+  }
+}
