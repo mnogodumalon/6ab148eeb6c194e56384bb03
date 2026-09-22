@@ -1,0 +1,40 @@
+{
+  "pages": {
+    "en": {
+      "Aktive Projekte": "Active projects",
+      "Alle Rechnungen beglichen — keine offenen Posten.": "All invoices settled — no open items.",
+      "Als angenommen markieren": "Mark as accepted",
+      "Als bezahlt markieren": "Mark as paid",
+      "Als versendet markieren": "Mark as sent",
+      "Angebot {0} — angenommen": "Quote {0} — accepted",
+      "Angebot {0} — versendet": "Quote {0} — sent",
+      "Angebote in Bearbeitung": "Quotes in progress",
+      "Angenommen": "Accepted",
+      "Bezahlt": "Paid",
+      "Entwurf": "Draft",
+      "In Akquise": "In acquisition",
+      "Kein Projekt": "No project",
+      "Kein Titel": "No title",
+      "Keine offenen Angebote.": "No open quotes.",
+      "Neue Rechnung": "New invoice",
+      "Neues Angebot": "New quote",
+      "Neues Projekt": "New project",
+      "Noch keine Projekte angelegt.": "No projects created yet.",
+      "Offene & überfällige Rechnungen": "Open & overdue invoices",
+      "Offene Rechnungen": "Open invoices",
+      "Offener Betrag": "Open amount",
+      "Stunden (Monat)": "Hours (month)",
+      "Unbekannt": "Unknown",
+      "Versenden": "Send",
+      "Versendet": "Sent",
+      "{0} Projekte in Akquise": "{0} projects in acquisition",
+      "{0} Projekte laufen — {1}": "{0} projects running — {1}",
+      "{0} — als bezahlt markiert": "{0} — marked as paid",
+      "{0} — bezahlt": "{0} — paid",
+      "{0} — nach {1} verschoben": "{0} — moved to {1}",
+      "Überfällig": "Overdue",
+      "überfällige Rechnungen": "overdue invoices"
+    }
+  },
+  "v": 1
+}

@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 21,
+      "defaults_keys": ["anlagedatum", "kundentyp"],
+      "computed_keys": [],
+      "reason": "Reine Stammdatenverwaltung ohne berechenbare Felder – kein applookup auf Preise, keine Datums-Paare, keine Mengen × Sätze"
+    },
+    "Berater": {
+      "placeholders_set": 17,
+      "defaults_keys": ["einstiegsdatum", "status"],
+      "computed_keys": [],
+      "reason": "Stammdaten mit Read-Only-Aggregationen (stunden_*) – nicht berechenbar aus Formularfeldern, kein applookup auf Preis-Target"
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": ["leistungstyp", "einheit"],
+      "computed_keys": [],
+      "reason": "Leistungs-Stammdaten – Kostenvoranschlag ist Listenpreis, nicht berechenbar; keine Datums-Paare für Dauern"
+    },
+    "Projekte": {
+      "placeholders_set": 10,
+      "defaults_keys": ["projektstatus", "projektstart_monat", "projektstart_jahr"],
+      "computed_keys": [],
+      "reason": "Projektmanagement-Stammdaten – projektstart_monat ist nur Text (Januar/Februar), nicht mit Jahr zu Dauer kombinierbar; keine Preisfelder"
+    },
+    "Angebote": {
+      "placeholders_set": 12,
+      "defaults_keys": ["angebotsstatus", "angebotstyp", "angebotsjahr", "zeitrahmen_anfang"],
+      "computed_keys": [],
+      "reason": "Angebots-Entity mit zeitrahmen_anfang/ende-Pair, aber dauer ist Text-Feld und kostenbetrag manuell – keine saubere Dauer × Preis-Berechnung möglich"
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 9,
+      "defaults_keys": ["datum", "stunden", "abrechenbar"],
+      "computed_keys": ["arbeitskosten", "_zeiterfassung_arbeitskosten"],
+      "reason": "Klassischer Archetyp: Stunden × Stundensatz (applookup Berater) – arbeitskosten berechnet Stunden × Berater-Satz; virtueller Key für Aggregat-Anzeige"
+    },
+    "Rechnungen": {
+      "placeholders_set": 17,
+      "defaults_keys": ["rechnungsdatum", "faelligkeitsdatum", "rechnungsstatus", "rechnungsjahr", "mehrwertsteuer"],
+      "computed_keys": ["mwst_betrag", "gesamtbetrag"],
+      "reason": "Klassische Netto-MwSt-Brutto-Konstellation: mwst_betrag = netto × steuer-%, gesamtbetrag = netto + mwst – explizites netto/mwst/brutto-Schema vorhanden"
+    }
+  }
+}
