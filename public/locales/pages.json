@@ -1,0 +1,40 @@
+{
+  "pages": {
+    "en": {
+      "Aktive Projekte": "Active Projects",
+      "Als bezahlt markieren": "Mark as paid",
+      "Als versendet markieren": "Mark as sent",
+      "Angebot": "Quote",
+      "Angebot erstellen": "Create quote",
+      "Angebot {0} — versendet": "Quote {0} — sent",
+      "Berater": "Consultant",
+      "Berater abwesend": "Consultant absent",
+      "Bezahlt": "Paid",
+      "Kein Fälligkeitsdatum": "No due date",
+      "Keine offenen Angebote.": "No open quotes.",
+      "Keine offenen Rechnungen — alles bezahlt.": "No open invoices — all paid.",
+      "Neues Projekt": "New Project",
+      "Offene Angebote": "Open Quotes",
+      "Offene Rechnungen": "Open Invoices",
+      "Rechnung": "Invoice",
+      "Rechnung erstellen": "Create invoice",
+      "Rechnung öffnen": "Open invoice",
+      "Stunden": "Hours",
+      "Stunden (Monat)": "Hours (Month)",
+      "Stunden pro Berater (Monat)": "Hours per Consultant (Month)",
+      "Unbekannt": "Unknown",
+      "Versenden": "Send",
+      "fällig": "due",
+      "fällig seit": "due since",
+      "{0} Projekte aktiv — alles im grünen Bereich.": "{0} projects active — all in good shape.",
+      "{0} Projekte aktiv — {1} Rechnungen überfällig.": "{0} projects active — {1} invoices overdue.",
+      "{0} Projekte aktiv — {1} abwesend, {2} Rechnungen überfällig.": "{0} projects active — {1} absent, {2} invoices overdue.",
+      "{0} Projekte aktiv — {1} derzeit abwesend.": "{0} projects active — {1} currently absent.",
+      "{0} Projekte aktiv, {1} Rechnungen offen.": "{0} projects active, {1} invoices open.",
+      "{0} — als bezahlt markiert": "{0} — marked as paid",
+      "über 30 Tage alt": "over 30 days old",
+      "— Rechnung überfällig": "— Invoice overdue"
+    }
+  },
+  "v": 1
+}

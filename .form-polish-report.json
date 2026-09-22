@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 20,
+      "defaults_keys": ["anlagedatum", "kundentyp", "bevorzugte_kontaktart"],
+      "computed_keys": [],
+      "reason": "Reine Stammdaten mit Adresse und Kontakthistorie. Keine Preis-Lookups oder Datumspaare mit Berechnung."
+    },
+    "Berater": {
+      "placeholders_set": 19,
+      "defaults_keys": ["einstiegsdatum", "status"],
+      "computed_keys": [],
+      "reason": "Stammdaten mit Stundensatz und Read-Only Stunden-Aggregaten (von Zeiterfassung extern befüllt). Keine Formeln nötig."
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": ["leistungstyp", "einheit"],
+      "computed_keys": [],
+      "reason": "Leistungs-Stammdaten mit Kostenvoranschlag (Wert, nicht Produkt). Ein einzelner Pauschalbetrag, keine Berechnung."
+    },
+    "Projekte": {
+      "placeholders_set": 9,
+      "defaults_keys": ["projektstatus", "projektart"],
+      "computed_keys": [],
+      "reason": "Projektdaten mit Startmonat/Jahr. Kein Enddatum, keine Aufenthalts-Semantik, keine Preisprodukte."
+    },
+    "Angebote": {
+      "placeholders_set": 11,
+      "defaults_keys": ["zeitrahmen_anfang", "angebotstyp", "angebotsstatus", "kostentyp"],
+      "computed_keys": [],
+      "reason": "Angebotsverwaltung mit Zeitrahmen. Nur ein Kostenbetrag-Feld ohne Multiplika­tor (Stunden, Menge). Dauer ist Textkennwort."
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 9,
+      "defaults_keys": ["datum", "stunden", "erfassungsjahr", "abrechenbar"],
+      "computed_keys": ["arbeitskosten"],
+      "reason": "Stunden × Stundensatz (applookup Berater): arbeitskosten = stunden × applookup(berater, stundensatz)"
+    },
+    "Rechnungen": {
+      "placeholders_set": 14,
+      "defaults_keys": ["rechnungsdatum", "faelligkeitsdatum", "rechnungsstatus", "mehrwertsteuer", "rechnungsjahr"],
+      "computed_keys": ["_mwst_betrag", "gesamtbetrag"],
+      "reason": "Netto + MwSt → Gesamtbetrag: _mwst_betrag = netto × mwst / 100; gesamtbetrag = netto × (1 + mwst / 100)"
+    }
+  }
+}
