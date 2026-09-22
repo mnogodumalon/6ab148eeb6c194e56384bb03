@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 20,
+      "defaults_keys": ["anlagedatum", "kundentyp"],
+      "computed_keys": [],
+      "reason": "Reine Stammdaten, keine numerischen oder Preis-Felder, keine berechenbaren Beziehungen"
+    },
+    "Berater": {
+      "placeholders_set": 19,
+      "defaults_keys": ["einstiegsdatum", "status"],
+      "computed_keys": [],
+      "reason": "Stammdaten mit Stundensatz und Statistik-Feldern (Stunden werden extern durch Zeiterfassung befüllt), keine Multiplikationen im Dialog"
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": ["leistungstyp"],
+      "computed_keys": [],
+      "reason": "Reine Referenztabelle für Leistungen mit Pauschalen-Tarif, keine internen Kalkulationen"
+    },
+    "Projekte": {
+      "placeholders_set": 10,
+      "defaults_keys": ["projektstatus"],
+      "computed_keys": [],
+      "reason": "Projektmetadaten ohne interne Preis-Kalkulationen (diese gehören in Angebote/Rechnungen), Projektleitung mit Stundensatz hat keine lokale Stundenanzahl"
+    },
+    "Angebote": {
+      "placeholders_set": 11,
+      "defaults_keys": ["zeitrahmen_anfang", "angebotsstatus", "kostentyp"],
+      "computed_keys": [],
+      "reason": "Kostenbetrag ist manuelle Pauschalentscheidung (nicht aus anderen Feldern berechenbar), keine internen Multiplikationen"
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 9,
+      "defaults_keys": ["datum", "abrechenbar", "erfassungsjahr"],
+      "computed_keys": ["arbeitskosten"],
+      "reason": "ARCHETYP 2 PRODUKT: Stunden × applookup(berater, stundensatz) = Arbeitskosten für die Zeitbuchung"
+    },
+    "Rechnungen": {
+      "placeholders_set": 13,
+      "defaults_keys": ["rechnungsdatum", "faelligkeitsdatum", "rechnungsstatus", "mehrwertsteuer", "rechnungsjahr"],
+      "computed_keys": ["gesamtbetrag"],
+      "reason": "KLASSISCHE BRUTTO-RECHNUNG: nettobetrag + mehrwertsteuer → gesamtbetrag; alle drei Felder existent (signal für MWST-Berechnung), max-constraint auf Steuersatz (0-100%)"
+    }
+  }
+}
