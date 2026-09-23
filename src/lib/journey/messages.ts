@@ -41,6 +41,13 @@ export type MessageFieldKey<E extends EntityKey> = E extends keyof MessageFields
 
 export const REQUIRED_MESSAGES: { [E in EntityKey]?: Partial<Record<MessageFieldKey<E>, string>> } = {
   // <custom:messages>
+  kunden: { kundenname: "Bitte den Namen oder die Firma eingeben.", kundentyp: "Bitte einen Kundentyp auswählen.", email: "Bitte die E-Mail-Adresse eingeben.", anlagedatum: "Bitte das Anlagedatum angeben.", strasse: "Bitte die Straße eingeben.", hausnummer: "Bitte die Hausnummer eingeben.", plz: "Bitte die Postleitzahl eingeben.", ort: "Bitte den Ort eingeben." },
+  berater: { vorname: "Bitte den Vornamen eingeben.", nachname: "Bitte den Nachnamen eingeben.", email_beruflich: "Bitte die berufliche E-Mail-Adresse eingeben.", status: "Bitte einen Status auswählen." },
+  leistungskatalog: { leistungsname: "Bitte den Namen der Leistung eingeben.", leistungstyp: "Bitte einen Leistungstyp auswählen." },
+  projekte: { projektkennung: "Bitte die Projektkennung eingeben.", projektart: "Bitte eine Projektart auswählen.", projektstatus: "Bitte einen Projektstatus auswählen.", kunde: "Bitte einen Kunden auswählen." },
+  angebote: { angebotsnummer: "Bitte die Angebotsnummer eingeben.", angebotsjahr: "Bitte das Jahr eingeben.", angebotstyp: "Bitte einen Angebotstyp auswählen.", zeitrahmen_anfang: "Bitte das Startdatum eingeben." },
+  zeiterfassung: { berater: "Bitte eine Berater:in auswählen.", projekt: "Bitte ein Projekt auswählen.", datum: "Bitte das Datum eingeben.", stunden: "Bitte die Anzahl der Stunden eingeben." },
+  rechnungen: { rechnungsnummer: "Bitte die Rechnungsnummer eingeben.", rechnungsdatum: "Bitte das Rechnungsdatum eingeben.", kunde: "Bitte einen Kunden auswählen.", projekt: "Bitte ein Projekt auswählen." },
   // </custom:messages>
 };
 
