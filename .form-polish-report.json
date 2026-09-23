@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 21,
+      "defaults_keys": ["anlagedatum", "kundentyp"],
+      "computed_keys": [],
+      "reason": "Reine Stammdaten (Name, Kontakt, Adressen). Keine numerischen Berechnungen. Keine Lookup-Ketten mit Preis-Targets. fieldOrder optimiert für Adress-Paare (Straße+Hausnummer, PLZ+Ort, Ansprechpartner Name-Pair)."
+    },
+    "Berater": {
+      "placeholders_set": 20,
+      "defaults_keys": ["einstiegsdatum", "status"],
+      "computed_keys": [],
+      "reason": "Stammdaten mit System-Statistik-Felder (Stunden_aktueller_Monat, etc.). Diese werden von außen befüllt, nicht im Dialog berechnet. Kein computed nötig. fieldOrder: Name-Pair, Adress-Paare, Staaten-Felder ans Ende."
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": ["leistungstyp", "einheit"],
+      "computed_keys": [],
+      "reason": "Stammdaten mit optionalem Kostenvoranschlag und Einheit (pro_stunde/pro_tag/pauschal). Multilookup auf Berater mit Stundensatz-Target, aber keine Formel im Dialog – Abrechnung erfolgt in Zeiterfassung/Rechnungen. fieldOrder: Name, Typ, Einheit, Kosten, Beschreibung, Berater."
+    },
+    "Projekte": {
+      "placeholders_set": 10,
+      "defaults_keys": ["projektart", "projektstatus", "projektstart_jahr"],
+      "computed_keys": [],
+      "reason": "Stammdaten mit System-Assigned Felder (projektkennung, projektnummer). Applookups auf Kunden/Berater ohne numerische Multiplikatoren. Abrechnungen erfolgen extern in Rechnungen. fieldOrder: Kennung, Nummern, Art, Status, Start-Paar, Kunde, Kontakt, Leitung, Status-Text."
+    },
+    "Angebote": {
+      "placeholders_set": 11,
+      "defaults_keys": ["angebotsjahr", "zeitrahmen_anfang", "zeitrahmen_ende", "angebotstyp", "angebotsstatus"],
+      "computed_keys": [],
+      "reason": "Zeitrahmen-basiert (anfang/ende Paar, manueller Dauer-Text). Kostenbetrag ist manuelle Eingabe (kein Produkt aus Stunden/Satz). System-Assigned angebotsjahr/angebotsnummer. Keine Berechnung nötig. fieldOrder: Nummern, Typ, Status, Zeitrahmen-Pair, Kosten, Beschreibung, Relationen."
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 9,
+      "defaults_keys": ["datum", "erfassungsjahr", "stunden", "abrechenbar"],
+      "computed_keys": ["_arbeitskosten"],
+      "reason": "Berater (applookup mit stundensatz-Target) × Stunden = Arbeitskosten. Virtuelle Berechnung _arbeitskosten = applookup(berater, stundensatz) * field(stunden). Keine Backend-Field nötig, wird als Aggregat-Hinweis angezeigt. fieldOrder: Berater, Projekt, Leistung, Datum, Stunden, Monat/Jahr, Abrechenbarkeit, Tätigkeit."
+    },
+    "Rechnungen": {
+      "placeholders_set": 15,
+      "defaults_keys": ["rechnungsdatum", "faelligkeitsdatum", "rechnungsjahr", "rechnungsstatus", "mehrwertsteuer"],
+      "computed_keys": ["_mwst_betrag", "gesamtbetrag"],
+      "reason": "Klassische Brutto-Netto-Rechnung: Nettobetrag + MwSt (%) = Gesamtbetrag. Zwei computed-Einträge: (1) virtuelle _mwst_betrag = netto × (mwst / 100), (2) gesamtbetrag = netto + _mwst_betrag. Multilookup auf Zeiterfassungseinträge (stunden-Target) ohne Aggregations-Formel (externe Logik). fieldOrder: Nummern, Daten, Status, Monat/Jahr, Kunde, Projekt, Nettoberechnung, Beteiligte, Einträge, Notizen."
+    }
+  }
+}
