@@ -1,0 +1,35 @@
+{
+  "pages": {
+    "en": {
+      "Akquise": "Acquisition",
+      "Alle Rechnungen bezahlt — keine offenen Posten.": "All invoices paid — no open items.",
+      "Als bezahlt markieren": "Mark as paid",
+      "Berater": "Consultant",
+      "Bezahlt": "Paid",
+      "Fällig seit": "Due since",
+      "In Bearbeitung setzen": "Set to in progress",
+      "Kunden": "Clients",
+      "Neue Rechnung": "New Invoice",
+      "Neues Projekt": "New Project",
+      "Noch keine Projekte erfasst — lege das erste Projekt an.": "No projects recorded yet — create the first project.",
+      "Offene & überfällige Rechnungen": "Open & overdue invoices",
+      "Ohne Kennung": "Without identifier",
+      "Projekte aktiv": "Active projects",
+      "Rechnung": "Invoice",
+      "Rechnungen offen": "Open invoices",
+      "Std. diesen Monat": "Hrs. this month",
+      "Stunden": "Hours",
+      "Stunden diesen Monat": "Hours this month",
+      "Versendet": "Sent",
+      "{0} Projekte in der Akquise.": "{0} projects in acquisition.",
+      "{0} Rechnung(en) überfällig": "{0} invoice(s) overdue",
+      "{0} in Bearbeitung — {1} Rechnung(en) überfällig.": "{0} in progress — {1} invoice(s) overdue.",
+      "{0} in Bearbeitung — {1} Std. diesen Monat erfasst.": "{0} in progress — {1} hrs. recorded this month.",
+      "{0} — Status geändert": "{0} — status changed",
+      "{0} — als bezahlt markiert": "{0} — marked as paid",
+      "{0} — in Bearbeitung": "{0} — in progress",
+      "Überfällig": "Overdue"
+    }
+  },
+  "v": 1
+}

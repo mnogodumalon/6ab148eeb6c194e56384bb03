@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 22,
+      "defaults_keys": ["anlagedatum", "kundentyp"],
+      "computed_keys": [],
+      "reason": "Reine Stammdaten (Personen, Kontakt, Adressen). Keine Mengen, Preise oder Zeiten mit Multiplikatoren. Datumsfeld erhält Default (heute). Kundentyp hat klaren Standardwert (Firma)."
+    },
+    "Berater": {
+      "placeholders_set": 17,
+      "defaults_keys": ["einstiegsdatum", "status"],
+      "computed_keys": [],
+      "reason": "Personal-Stammdaten mit Read-Only Statistik-Feldern (Stunden-Aggregationen). stundensatz ist Tarif ohne lokale Mengen. Keine computed-Formeln nötig. Einstiegsdatum + aktiver Status als Defaults."
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": ["leistungstyp"],
+      "computed_keys": [],
+      "reason": "Stamm-Leistungskatalog mit Pauschalpreis und Abrechnungseinheit. kostenvoranschlag wird manuell gepflegt, nicht berechnet. leistungstyp=Beratung als Default. Keine berechenbaren Felder (nur Lookup-Ziele, keine eigene Mengenbasis)."
+    },
+    "Projekte": {
+      "placeholders_set": 10,
+      "defaults_keys": ["projektstart_jahr", "projektstatus", "projektart"],
+      "computed_keys": [],
+      "reason": "Projekt-Metadaten mit Applookups (Kunde, Projektleitung). projektnummer ist systemAssigned. Keine Kosten- oder Zeit-Berechnungen, nur Datenverwaltung. Jahr, Status und Projektart erhalten Defaults."
+    },
+    "Angebote": {
+      "placeholders_set": 12,
+      "defaults_keys": ["angebotsjahr", "zeitrahmen_anfang", "angebotstyp", "angebotsstatus"],
+      "computed_keys": [],
+      "reason": "Angebots-Management mit Zeitrahmen (start/end) und Pauschalpreis. angebotsnummer ist systemAssigned. kostenbetrag wird manuell eingegeben (nicht aus Komponenten berechnet – kein Stundensatz × Stunden im Form). Defaults für Jahr, Datum und Status gesetzt."
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 9,
+      "defaults_keys": ["datum", "stunden", "erfassungsjahr", "abrechenbar"],
+      "computed_keys": ["arbeitskosten"],
+      "reason": "Zeit-Tracking mit Stundensatz-Lookup. arbeitskosten = applookup(berater, stundensatz) × field(stunden) – Archetyp 3 (Lookup-Produkt). Datum, Stunden (1), Jahr und abrechenbar (true) als Defaults. Arbeitskosten-Formel ist Modus 1."
+    },
+    "Rechnungen": {
+      "placeholders_set": 16,
+      "defaults_keys": ["rechnungsdatum", "faelligkeitsdatum", "rechnungsjahr", "rechnungsstatus", "mehrwertsteuer"],
+      "computed_keys": ["mwst_betrag", "gesamtbetrag"],
+      "reason": "Rechnungs-Management mit klassischer Netto+MwSt→Brutto-Logik. mwst_betrag = nettobetrag × mehrwertsteuer / 100, gesamtbetrag = nettobetrag + mwst_betrag – Archetyp 1+2 (Zwischensumme + Gesamttotal). Beide Formeln als Modus-1-Strings. Rechnungsdatum=heute, Fälligkeit=+14Tage, MwSt=19%, Status=Entwurf."
+    }
+  }
+}
