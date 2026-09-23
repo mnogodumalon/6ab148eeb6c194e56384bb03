@@ -20,6 +20,7 @@
 import type { ComponentType } from 'react';
 
 // <custom:intent-imports>
+import { IconFolderPlus, IconClock, IconFileText, IconReceipt, IconUserPlus, IconAdjustments } from '@tabler/icons-react';
 // </custom:intent-imports>
 
 export interface IntentLink {
@@ -42,6 +43,12 @@ export interface IntentLink {
 
 export const INTENTS: IntentLink[] = [
   // <custom:intents>
+  { path: '/intents/projekt-anlegen', label: { de: 'Projekt anlegen', en: 'Create project' }, icon: IconFolderPlus, description: 'Legt ein neues Projekt an, verknüpft es mit einem Kunden und einer Projektleitung und setzt den initialen Status.' },
+  { path: '/intents/stunden-buchen', label: { de: 'Stunden buchen', en: 'Log hours' }, icon: IconClock, description: 'Berater:in bucht geleistete Stunden auf ein Projekt und eine Leistung.' },
+  { path: '/intents/angebot-erstellen', label: { de: 'Angebot erstellen', en: 'Create offer' }, icon: IconFileText, description: 'Erstellt ein neues Angebot zu einem Projekt mit allen kaufmannischen Feldern. Angebotsnummer und PDF werden automatisch erzeugt.' },
+  { path: '/intents/rechnung-erstellen', label: { de: 'Rechnung erstellen', en: 'Create invoice' }, icon: IconReceipt, description: 'Erstellt eine Rechnung auf Basis eines Projekts mit Zeiterfassungseintraegen. Gesamtbetrag und Nummer werden automatisch berechnet.' },
+  { path: '/intents/kunde-anlegen', label: { de: 'Kunden anlegen', en: 'Create customer' }, icon: IconUserPlus, description: 'Legt einen neuen Kunden mit Pflichtfeldern, optionaler Rechnungsadresse und Ansprechpartnerdaten an.' },
+  { path: '/intents/projektstatus-aendern', label: { de: 'Projektstatus andern', en: 'Change project status' }, icon: IconAdjustments, description: 'Andert den Status eines Projekts und halt den letzten Stand fest.' },
   // </custom:intents>
 ];
 
@@ -52,7 +59,7 @@ export const INTENTS: IntentLink[] = [
  * purpose — a scaffold update resets it to false (self-healing if Phase 2
  * never ran).
  */
-export const INTENTS_PENDING = true;
+export const INTENTS_PENDING = false;
 
 /**
  * When the Phase-1 bundle was deployed (ISO, set by the service together with
