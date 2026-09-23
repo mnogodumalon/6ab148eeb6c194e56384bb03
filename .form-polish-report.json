@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 19,
+      "defaults_keys": ["anlagedatum", "kundentyp", "bevorzugte_kontaktart"],
+      "computed_keys": [],
+      "reason": "Reine Stammdaten mit Adressverwaltung und Kontaktperson. Keine numerischen Berechnungen, keine Preis-Applookups, daher keine computed-Einträge nötig."
+    },
+    "Berater": {
+      "placeholders_set": 18,
+      "defaults_keys": ["einstiegsdatum", "status"],
+      "computed_keys": [],
+      "reason": "Personalstamm mit Stundensätzen und Stundenaggregate. Die stunden_*-Felder sind read-only Aggregationen aus Zeiterfassung, nicht berechenbar. Stundensatz ist Eingabegröße, keine Formel nötig."
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": ["leistungstyp", "einheit"],
+      "computed_keys": [],
+      "reason": "Service-Katalog mit Preisen und Abrechnung. Kostenvoranschlag ist Eingabegröße, keine Berechnung. Ausführende Berater sind Referenzen, nicht Preisquelle für Posten-Formeln."
+    },
+    "Projekte": {
+      "placeholders_set": 10,
+      "defaults_keys": ["projektstatus", "projektstart_jahr"],
+      "computed_keys": [],
+      "reason": "Projektmetadaten ohne Preis- oder Kostenberechnung. Reine Verwaltung von Kennung, Status, Datumsbereich und Beteiligten. Keine numerischen Beziehungen zwischen Feldern."
+    },
+    "Angebote": {
+      "placeholders_set": 12,
+      "defaults_keys": ["zeitrahmen_anfang", "angebotstyp", "angebotsstatus", "kostentyp"],
+      "computed_keys": [],
+      "reason": "Angebotsdokument mit Kostenbetrag als Eingabe, nicht Ergebnis. Keine berechenbaren Posten (kein Menge × Preis, kein applookup-Produkt mit ausgewählter Leistung + Dauer). Kostenbetrag ist freie Eingabe des Angebots."
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 9,
+      "defaults_keys": ["datum", "erfassungsjahr", "abrechenbar"],
+      "computed_keys": ["arbeitskosten"],
+      "reason": "Stundenzettel mit Berater-Applookup. Berechnung: Stunden × Berater-Stundensatz = Arbeitskosten. Dies ist ARCHETYP 3 (Lookup-Produkt: applookup(berater, stundensatz) * field(stunden))."
+    },
+    "Rechnungen": {
+      "placeholders_set": 18,
+      "defaults_keys": ["rechnungsdatum", "faelligkeitsdatum", "rechnungsstatus", "mehrwertsteuer"],
+      "computed_keys": ["_mehrwertsteuer_betrag", "gesamtbetrag"],
+      "reason": "Kundenrechnung mit expliziter Netto-Brutto-Struktur. Klassische Rechnungslogik: nettobetrag + (nettobetrag × mehrwertsteuer%) = gesamtbetrag. Zwei Computeds für die MWST-Berechnung (a) betrag und (b) summe zu gesamtbetrag (ARCHETYP: Anschluss-Regeln nach Netto). Nettobetrag selbst bleibt Input, nicht Aggregation aus Zeiterfassungen (die sind Referenzen, nicht Quell-Daten)."
+    }
+  }
+}
