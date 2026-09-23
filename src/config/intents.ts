@@ -20,6 +20,7 @@
 import type { ComponentType } from 'react';
 
 // <custom:intent-imports>
+import { IconFolderPlus, IconFileText, IconClock, IconReceiptEuro } from '@tabler/icons-react';
 // </custom:intent-imports>
 
 export interface IntentLink {
@@ -42,6 +43,10 @@ export interface IntentLink {
 
 export const INTENTS: IntentLink[] = [
   // <custom:intents>
+  { path: '/intents/projekt-anlegen', label: { de: 'Projekt anlegen', en: 'Create project' }, icon: IconFolderPlus, description: 'Legt ein neues Projekt für einen Kunden an. Das System vergibt Projektnummer und Projektkennung automatisch.' },
+  { path: '/intents/angebot-erstellen', label: { de: 'Angebot erstellen', en: 'Create offer' }, icon: IconFileText, description: 'Erstellt ein neues Angebot zu einem vorhandenen Projekt. Angebotsnummer und -jahr werden automatisch vergeben.' },
+  { path: '/intents/stunden-erfassen', label: { de: 'Stunden erfassen', en: 'Log hours' }, icon: IconClock, description: 'Erfasst Arbeitsstunden eines Beraters für ein bestimmtes Projekt und eine Leistungsart.' },
+  { path: '/intents/rechnung-erstellen', label: { de: 'Rechnung erstellen', en: 'Create invoice' }, icon: IconReceiptEuro, description: 'Erstellt eine neue Rechnung für einen Kunden auf Basis eines Projekts. Rechnungsnummer wird automatisch vergeben.' },
   // </custom:intents>
 ];
 
@@ -52,7 +57,7 @@ export const INTENTS: IntentLink[] = [
  * purpose — a scaffold update resets it to false (self-healing if Phase 2
  * never ran).
  */
-export const INTENTS_PENDING = true;
+export const INTENTS_PENDING = false;
 
 /**
  * When the Phase-1 bundle was deployed (ISO, set by the service together with
