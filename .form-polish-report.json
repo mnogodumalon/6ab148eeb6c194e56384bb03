@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 20,
+      "defaults_keys": ["kundentyp", "anlagedatum"],
+      "computed_keys": [],
+      "reason": "Reine Stammdaten-Entity ohne Berechnung. Keine Number-Felder außer Datum, keine Lookup-Produkte, keine berechenbaren Aggregationen."
+    },
+    "Berater": {
+      "placeholders_set": 17,
+      "defaults_keys": ["status", "einstiegsdatum"],
+      "computed_keys": [],
+      "reason": "Stammdaten-Entity. Die Stunden-Felder (stunden_*) sind Read-Only Abrechnungs-Rollups aus der Zeiterfassung, keine Eingabefelder — nicht berechenbar aus Form-Daten."
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": ["leistungstyp", "einheit"],
+      "computed_keys": [],
+      "reason": "Katalog-Entity. kostenvoranschlag ist ein einzelner manueller Eingabewert (Stundensatz oder Pauschale pro Leistungstyp). Keine Mengen im Form, keine Multiplikation — nicht berechenbar."
+    },
+    "Projekte": {
+      "placeholders_set": 10,
+      "defaults_keys": ["projektstatus", "projektstart_jahr"],
+      "computed_keys": [],
+      "reason": "Projektmanagement-Metadaten. projektnummer und projektstart_jahr sind systemAssigned/Eingabe ohne Beziehung zu Kosten. Keine Preislogik erkennbar."
+    },
+    "Angebote": {
+      "placeholders_set": 12,
+      "defaults_keys": ["angebotsjahr", "angebotstyp", "angebotsstatus", "zeitrahmen_anfang", "zeitrahmen_ende", "kostentyp"],
+      "computed_keys": [],
+      "reason": "kostenbetrag ist manuell erfasster Pauschalbetrag ohne Multiplikations-Basis. Kein Stunden- oder Mengen-Feld im Form. dauer ist Text, nicht berechnet. Berater ist nur Zuordnung, keine Preis-Multiplikation."
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 9,
+      "defaults_keys": ["datum", "stunden", "abrechenbar"],
+      "computed_keys": ["_arbeitskosten"],
+      "reason": "stunden × applookup(berater, stundensatz) → Arbeitskosten. Virtueller Key _arbeitskosten zeigt dem User den Ertrag im Dialog, auch ohne Backend-Feld."
+    },
+    "Rechnungen": {
+      "placeholders_set": 15,
+      "defaults_keys": ["rechnungsdatum", "faelligkeitsdatum", "rechnungsstatus", "mehrwertsteuer"],
+      "computed_keys": ["_mehrwertsteuer_betrag", "gesamtbetrag"],
+      "reason": "Klassische Rechnungs-Aggregation mit Netto + MwSt-Prozentsatz → Brutto. gesamtbetrag ist systemAssigned, aber computed gibt dem User einen Vorschlag im Dialog (netto + berechneteMwSt)."
+    }
+  }
+}
