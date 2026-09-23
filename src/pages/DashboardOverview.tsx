@@ -311,7 +311,7 @@ export default function DashboardOverview({ data }: { data: DashboardData }) {
             }}
           >
             <b>{namen(ueberfaelligeRechnungen.map(r => r.kundeName ?? ''))}</b>
-            {' — '}{tx(`${ueberfaelligeRechnungen.length} Rechnung(en) überfällig`)}.
+            {' — '}{tx(tx`${ueberfaelligeRechnungen.length} Rechnung(en) überfällig`)}.
             {heroRechnung.fields.faelligkeitsdatum && (
               <> {tx('Fällig seit')} <b>{formatDate(heroRechnung.fields.faelligkeitsdatum)}</b>.</>
             )}

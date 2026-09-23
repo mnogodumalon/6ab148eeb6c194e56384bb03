@@ -94,7 +94,7 @@ export function useProjektAnlegenFlow(options: ProjektAnlegenFlowOptions = {}) {
     // the plan builds a value from these — required here, whatever the app's base view says
     required: { projektart: true, projektstart_jahr: true },
     initial: only(options.initial as FormValues | undefined, ["kunde", "projektart", "projektstart_jahr", "projektstart_monat", "ansprechpartner_kunde", "projektleitung", "letzter_schritt"]),
-    messages: only(options.messages as Record<string, string> | undefined, ["kunde", "projektart", "projektstart_jahr", "projektstart_monat", "ansprechpartner_kunde", "projektleitung", "letzter_schritt"]),
+    messages: only(options.messages as Record<string, string> | undefined, ["kunde", "projektart", "projektstart_jahr", "projektstart_monat", "ansprechpartner_kunde", "projektleitung", "letzter_schritt"]) as Record<string, string> | undefined,
   });
   const forms: ProjektAnlegenForms = { projekte };
   const formList: StepForm[] = [projekte];
@@ -128,14 +128,14 @@ export function useProjektAnlegenFlow(options: ProjektAnlegenFlowOptions = {}) {
     const search = (picks as Record<string, { labelOf(id: string): string | undefined }>)[field];
     return {
       selectedId: (typeof owner.get(field) === 'string' ? (owner.get(field) as string) : null) || null,
-      onSelect: (id: string) => owner.set(field as never, id, search?.labelOf(id)),
+      onSelect: (id: string) => (owner.set as (k: string, v: unknown, l?: string) => void)(field, id, search?.labelOf(id)),
     };
   };
   /** Props for a multi-record pick step: {...flow.picks.x.select} {...flow.pickMany('x')} */
   const pickMany = (field: ProjektAnlegenFieldKey) => {
     const owner = formList.find(f => f.keys.includes(field)) ?? formList[0];
     const search = (picks as Record<string, { labelOf(id: string): string | undefined }>)[field];
-    return owner.records(field, id => search?.labelOf(id));
+    return owner.records(field, id => search?.labelOf(id) ?? undefined);
   };
   /** Validate every field the wizard asks in step `n` — for StepNav.onNext. */
   const validateStep = (n: number): boolean =>

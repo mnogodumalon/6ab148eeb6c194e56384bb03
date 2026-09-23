@@ -105,7 +105,7 @@ export function useRechnungAnlegenFlow(options: RechnungAnlegenFlowOptions) {
     // the plan builds a value from these — required here, whatever the app's base view says
     required: { mehrwertsteuer: true, nettobetrag: true, rechnungsdatum: true },
     initial: only(options.initial as FormValues | undefined, ["projekt", "kunde", "berater", "zeiterfassungseintraege", "rechnungsdatum", "faelligkeitsdatum", "nettobetrag", "mehrwertsteuer", "notizen"]),
-    messages: only(options.messages as Record<string, string> | undefined, ["projekt", "kunde", "berater", "zeiterfassungseintraege", "rechnungsdatum", "faelligkeitsdatum", "nettobetrag", "mehrwertsteuer", "notizen"]),
+    messages: only(options.messages as Record<string, string> | undefined, ["projekt", "kunde", "berater", "zeiterfassungseintraege", "rechnungsdatum", "faelligkeitsdatum", "nettobetrag", "mehrwertsteuer", "notizen"]) as Record<string, string> | undefined,
   });
   const forms: RechnungAnlegenForms = { rechnungen };
   const formList: StepForm[] = [rechnungen];
@@ -149,14 +149,14 @@ export function useRechnungAnlegenFlow(options: RechnungAnlegenFlowOptions) {
     const search = (picks as Record<string, { labelOf(id: string): string | undefined }>)[field];
     return {
       selectedId: (typeof owner.get(field) === 'string' ? (owner.get(field) as string) : null) || null,
-      onSelect: (id: string) => owner.set(field as never, id, search?.labelOf(id)),
+      onSelect: (id: string) => (owner.set as (k: string, v: unknown, l?: string) => void)(field, id, search?.labelOf(id)),
     };
   };
   /** Props for a multi-record pick step: {...flow.picks.x.select} {...flow.pickMany('x')} */
   const pickMany = (field: RechnungAnlegenFieldKey) => {
     const owner = formList.find(f => f.keys.includes(field)) ?? formList[0];
     const search = (picks as Record<string, { labelOf(id: string): string | undefined }>)[field];
-    return owner.records(field, id => search?.labelOf(id));
+    return owner.records(field, id => search?.labelOf(id) ?? undefined);
   };
   /** Validate every field the wizard asks in step `n` — for StepNav.onNext. */
   const validateStep = (n: number): boolean =>

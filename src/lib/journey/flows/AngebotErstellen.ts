@@ -100,7 +100,7 @@ export function useAngebotErstellenFlow(options: AngebotErstellenFlowOptions) {
     fields: ["projekt", "berater", "angebotstyp", "zeitrahmen_anfang", "zeitrahmen_ende", "dauer", "kostentyp", "kostenbetrag", "beschreibung"],
     steps: only(steps, ["projekt", "berater", "angebotstyp", "zeitrahmen_anfang", "zeitrahmen_ende", "dauer", "kostentyp", "kostenbetrag", "beschreibung"]) as Record<string, number>,
     initial: only(options.initial as FormValues | undefined, ["projekt", "berater", "angebotstyp", "zeitrahmen_anfang", "zeitrahmen_ende", "dauer", "kostentyp", "kostenbetrag", "beschreibung"]),
-    messages: only(options.messages as Record<string, string> | undefined, ["projekt", "berater", "angebotstyp", "zeitrahmen_anfang", "zeitrahmen_ende", "dauer", "kostentyp", "kostenbetrag", "beschreibung"]),
+    messages: only(options.messages as Record<string, string> | undefined, ["projekt", "berater", "angebotstyp", "zeitrahmen_anfang", "zeitrahmen_ende", "dauer", "kostentyp", "kostenbetrag", "beschreibung"]) as Record<string, string> | undefined,
   });
   const forms: AngebotErstellenForms = { angebote };
   const formList: StepForm[] = [angebote];
@@ -135,14 +135,14 @@ export function useAngebotErstellenFlow(options: AngebotErstellenFlowOptions) {
     const search = (picks as Record<string, { labelOf(id: string): string | undefined }>)[field];
     return {
       selectedId: (typeof owner.get(field) === 'string' ? (owner.get(field) as string) : null) || null,
-      onSelect: (id: string) => owner.set(field as never, id, search?.labelOf(id)),
+      onSelect: (id: string) => (owner.set as (k: string, v: unknown, l?: string) => void)(field, id, search?.labelOf(id)),
     };
   };
   /** Props for a multi-record pick step: {...flow.picks.x.select} {...flow.pickMany('x')} */
   const pickMany = (field: AngebotErstellenFieldKey) => {
     const owner = formList.find(f => f.keys.includes(field)) ?? formList[0];
     const search = (picks as Record<string, { labelOf(id: string): string | undefined }>)[field];
-    return owner.records(field, id => search?.labelOf(id));
+    return owner.records(field, id => search?.labelOf(id) ?? undefined);
   };
   /** Validate every field the wizard asks in step `n` — for StepNav.onNext. */
   const validateStep = (n: number): boolean =>
