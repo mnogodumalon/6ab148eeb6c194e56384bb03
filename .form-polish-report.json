@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 21,
+      "defaults_keys": ["kundentyp", "anlagedatum"],
+      "computed_keys": [],
+      "reason": "Reine Stammdaten-Entity für Kundenverwaltung. Keine Preisfelder, keine applookup-Ziele mit Kosten, keine berechenbaren Beziehungen zwischen Feldern."
+    },
+    "Berater": {
+      "placeholders_set": 18,
+      "defaults_keys": ["status", "einstiegsdatum"],
+      "computed_keys": [],
+      "reason": "Stammdaten mit stundensatz und multipleapplookup-Feldern (leistungen, projekte). Die Stunden-Felder sind externe Aggregationen, nicht lokal berechenbar. Keine computed-Einträge da multipleapplookup nicht rechnerisch kombiniert werden."
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": ["leistungstyp"],
+      "computed_keys": [],
+      "reason": "Leistungskatalog mit kostenvoranschlag und einheit (Abrechnungsmodell). multipleapplookup auf Berater mit stundensatz ohne berechenbare Beziehung zum Kostenvoranschlag (Dauer unbekannt)."
+    },
+    "Projekte": {
+      "placeholders_set": 9,
+      "defaults_keys": ["projektstatus", "projektstart_jahr"],
+      "computed_keys": [],
+      "reason": "Projektmanagement-Entity mit applookup-Feldern (kunde, projektleitung). Die Stunden-Felder des Beraters sind externe Messungen. Keine berechenbaren Beziehungen da projektstart_jahr und stundensatz nicht kombinierbar sind."
+    },
+    "Angebote": {
+      "placeholders_set": 11,
+      "defaults_keys": ["angebotsjahr", "angebotstyp", "angebotsstatus", "zeitrahmen_anfang"],
+      "computed_keys": [],
+      "reason": "Angebots-Entity mit Datumspaar (zeitrahmen_anfang/ende) und manuell eingegebenem kostenbetrag. Die dauer ist Freitext (nicht automatisch aus Daten). Keine applookup-Ziele mit Preis-Spalten für Multiplikation."
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 9,
+      "defaults_keys": ["datum", "erfassungsjahr", "abrechenbar"],
+      "computed_keys": ["_arbeitskosten"],
+      "reason": "Stundenerfassung mit applookup auf Berater (stundensatz). Archetyp 3 (Lookup-Produkt): arbeitskosten = stunden × stundensatz des Beraters."
+    },
+    "Rechnungen": {
+      "placeholders_set": 14,
+      "defaults_keys": ["rechnungsdatum", "faelligkeitsdatum", "rechnungsstatus", "mehrwertsteuer"],
+      "computed_keys": ["_mwst_betrag", "_gesamt_inkl_mwst"],
+      "reason": "Klassische Brutto-Rechnung mit netto + mehrwertsteuer (%). Archetypen 1 (Aggregat) + Anschluss-Regel (MWST/Brutto): _mwst_betrag = netto × mwst-%, _gesamt_inkl_mwst = netto + mwst. gesamtbetrag ist systemAssigned (nicht computed). multipleapplookup-Felder sind Zuweisungen ohne lokale Berechnung."
+    }
+  }
+}
