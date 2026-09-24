@@ -13,6 +13,13 @@ import IntentFields from '@/pages/IntentFields';
 import { IntentPolicyLoader } from '@/components/IntentPolicyLoader';
 import IntentsAdmin from '@/pages/IntentsAdmin';
 // <custom:imports>
+const IntentProjektAnlegenPage = lazy(() => import('@/pages/intents/ProjektAnlegenPage'));
+import { DashboardSkeleton } from '@/components/DashboardStates';
+const IntentAngebotErstellenPage = lazy(() => import('@/pages/intents/AngebotErstellenPage'));
+const IntentZeitBuchenPage = lazy(() => import('@/pages/intents/ZeitBuchenPage'));
+const IntentRechnungErstellenPage = lazy(() => import('@/pages/intents/RechnungErstellenPage'));
+const IntentAngebotStatusAendernPage = lazy(() => import('@/pages/intents/AngebotStatusAendernPage'));
+const IntentKundeAnlegenPage = lazy(() => import('@/pages/intents/KundeAnlegenPage'));
 // </custom:imports>
 
 // Lazy: public pages live outside <Layout> and only load on /#/public/:slug —
@@ -83,6 +90,12 @@ export default function App() {
                 <Route path="verwaltung/oeffentliche-seiten" element={<PublicPagesAdmin />} />
                 <Route path="verwaltung/oeffentliche-seiten/:slug/felder" element={<PublicPageFields />} />
                 {/* <custom:routes> */}
+                <Route path="intents/projekt-anlegen" element={<Suspense fallback={<DashboardSkeleton />}><IntentProjektAnlegenPage /></Suspense>} />
+                <Route path="intents/angebot-erstellen" element={<Suspense fallback={<DashboardSkeleton />}><IntentAngebotErstellenPage /></Suspense>} />
+                <Route path="intents/zeit-buchen" element={<Suspense fallback={<DashboardSkeleton />}><IntentZeitBuchenPage /></Suspense>} />
+                <Route path="intents/rechnung-erstellen" element={<Suspense fallback={<DashboardSkeleton />}><IntentRechnungErstellenPage /></Suspense>} />
+                <Route path="intents/angebot-status-aendern" element={<Suspense fallback={<DashboardSkeleton />}><IntentAngebotStatusAendernPage /></Suspense>} />
+                <Route path="intents/kunde-anlegen" element={<Suspense fallback={<DashboardSkeleton />}><IntentKundeAnlegenPage /></Suspense>} />
                 {/* </custom:routes> */}
                 {/* An unknown hash (a bookmark from before a rebuild renamed the
                     flows, a mistyped link) must not be a blank page. */}
