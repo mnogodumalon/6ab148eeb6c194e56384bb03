@@ -20,6 +20,7 @@
 import type { ComponentType } from 'react';
 
 // <custom:intent-imports>
+import { IconFileDescription, IconClock, IconReceipt, IconRefresh, IconFileCheck } from '@tabler/icons-react';
 // </custom:intent-imports>
 
 export interface IntentLink {
@@ -42,6 +43,11 @@ export interface IntentLink {
 
 export const INTENTS: IntentLink[] = [
   // <custom:intents>
+  { path: '/intents/angebot-erstellen', label: { de: 'Angebot erstellen', en: 'Create offer' }, icon: IconFileDescription, description: 'Erstellt ein neues Angebot zu einem Projekt. Die Angebotsnummer wird automatisch vergeben. Status wird auf \'Entwurf\' gesetzt.' },
+  { path: '/intents/stunden-erfassen', label: { de: 'Stunden erfassen', en: 'Log hours' }, icon: IconClock, description: 'Erfasst geleistete Stunden eines Beraters für ein Projekt und eine Leistung.' },
+  { path: '/intents/rechnung-erstellen', label: { de: 'Rechnung erstellen', en: 'Create invoice' }, icon: IconReceipt, description: 'Erstellt eine neue Rechnung für einen Kunden und ein Projekt auf Basis ausgewählter Zeiterfassungseinträge.' },
+  { path: '/intents/projektstatus-aendern', label: { de: 'Projektstatus ändern', en: 'Change project status' }, icon: IconRefresh, description: 'Ändert den Status eines Projekts und hält den letzten Schritt fest.' },
+  { path: '/intents/angebotsstatus-aendern', label: { de: 'Angebotsstatus aktualisieren', en: 'Update offer status' }, icon: IconFileCheck, description: 'Ändert den Status eines Angebots (z. B. von Entwurf auf Versendet, Angenommen oder Abgelehnt).' },
   // </custom:intents>
 ];
 
@@ -52,7 +58,7 @@ export const INTENTS: IntentLink[] = [
  * purpose — a scaffold update resets it to false (self-healing if Phase 2
  * never ran).
  */
-export const INTENTS_PENDING = true;
+export const INTENTS_PENDING = false;
 
 /**
  * When the Phase-1 bundle was deployed (ISO, set by the service together with

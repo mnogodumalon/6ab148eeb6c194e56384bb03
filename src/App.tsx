@@ -13,6 +13,12 @@ import IntentFields from '@/pages/IntentFields';
 import { IntentPolicyLoader } from '@/components/IntentPolicyLoader';
 import IntentsAdmin from '@/pages/IntentsAdmin';
 // <custom:imports>
+const IntentAngebotErstellenPage = lazy(() => import('@/pages/intents/AngebotErstellenPage'));
+import { DashboardSkeleton } from '@/components/DashboardStates';
+const IntentStundenErfassenPage = lazy(() => import('@/pages/intents/StundenErfassenPage'));
+const IntentRechnungErstellenPage = lazy(() => import('@/pages/intents/RechnungErstellenPage'));
+const IntentProjektstatusAendernPage = lazy(() => import('@/pages/intents/ProjektstatusAendernPage'));
+const IntentAngebotsstatusAendernPage = lazy(() => import('@/pages/intents/AngebotsstatusAendernPage'));
 // </custom:imports>
 
 // Lazy: public pages live outside <Layout> and only load on /#/public/:slug —
@@ -83,6 +89,11 @@ export default function App() {
                 <Route path="verwaltung/oeffentliche-seiten" element={<PublicPagesAdmin />} />
                 <Route path="verwaltung/oeffentliche-seiten/:slug/felder" element={<PublicPageFields />} />
                 {/* <custom:routes> */}
+                <Route path="intents/angebot-erstellen" element={<Suspense fallback={<DashboardSkeleton />}><IntentAngebotErstellenPage /></Suspense>} />
+                <Route path="intents/stunden-erfassen" element={<Suspense fallback={<DashboardSkeleton />}><IntentStundenErfassenPage /></Suspense>} />
+                <Route path="intents/rechnung-erstellen" element={<Suspense fallback={<DashboardSkeleton />}><IntentRechnungErstellenPage /></Suspense>} />
+                <Route path="intents/projektstatus-aendern" element={<Suspense fallback={<DashboardSkeleton />}><IntentProjektstatusAendernPage /></Suspense>} />
+                <Route path="intents/angebotsstatus-aendern" element={<Suspense fallback={<DashboardSkeleton />}><IntentAngebotsstatusAendernPage /></Suspense>} />
                 {/* </custom:routes> */}
                 {/* An unknown hash (a bookmark from before a rebuild renamed the
                     flows, a mistyped link) must not be a blank page. */}
