@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 21,
+      "defaults_keys": ["anlagedatum", "kundentyp"],
+      "computed_keys": [],
+      "reason": "Reine Stammdatenverwaltung — Kontaktinformationen, Adressen, Ansprechpartner. Keine Preisfelder, keine numerischen Berechnungen notwendig."
+    },
+    "Berater": {
+      "placeholders_set": 18,
+      "defaults_keys": ["einstiegsdatum", "status"],
+      "computed_keys": [],
+      "reason": "Mitarbeiter-Stammdaten mit Stundenstatistik. Die Stunden-Felder (monat/quartal/jahr) sind reine Aggregationen vom Zeiterfassungs-Backend — nicht berechenbar im Dialog."
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": ["leistungstyp", "einheit"],
+      "computed_keys": [],
+      "reason": "Leistungs-Katalog als Stammdaten. Kostenvoranschlag ist ein einzelnes Preis-Feld ohne Mengen-Multiplikation oder Lookup-Abhängigkeiten."
+    },
+    "Projekte": {
+      "placeholders_set": 10,
+      "defaults_keys": ["projektstatus", "projektstart_jahr"],
+      "computed_keys": [],
+      "reason": "Projekt-Management ohne Preisfelder. Projektnummer ist systemAssigned (Backend-generiert) — kein Default nötig."
+    },
+    "Angebote": {
+      "placeholders_set": 12,
+      "defaults_keys": ["angebotsjahr", "angebotstyp", "angebotsstatus", "zeitrahmen_anfang", "kostentyp"],
+      "computed_keys": [],
+      "reason": "Angebots-Erfassung mit Kostenbetrag als Single-Value-Feld. Keine Komponenten-Aggregation nötig — User trägt Gesamtbetrag manuell ein oder über externe Logik."
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 9,
+      "defaults_keys": ["datum", "stunden", "erfassungsjahr", "abrechenbar"],
+      "computed_keys": ["arbeitskosten"],
+      "reason": "Zeiterfassungs-Eintrag: Stunden × Stundensatz des zugewiesenen Beraters (applookup). Formel: applookup(berater, stundensatz) * field(stunden)"
+    },
+    "Rechnungen": {
+      "placeholders_set": 14,
+      "defaults_keys": ["rechnungsdatum", "faelligkeitsdatum", "rechnungsstatus", "rechnungsjahr", "mehrwertsteuer"],
+      "computed_keys": ["mwst_betrag", "gesamtbetrag"],
+      "reason": "Klassische Brutto-Rechnung: Netto + MwSt% = Brutto. Zwei computed-Einträge: (1) mwst_betrag = netto * (mwst / 100), (2) gesamtbetrag = netto + mwst_betrag"
+    }
+  }
+}
