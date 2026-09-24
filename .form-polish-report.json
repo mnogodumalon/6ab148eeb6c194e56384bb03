@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 20,
+      "defaults_keys": ["anlagedatum", "kundentyp"],
+      "computed_keys": [],
+      "reason": "Reine Stammdaten ohne Preisberechnung. Keine Architektur für multiplizierte Werte. Kundentyp vorbelegt auf 'Firma', Erfassungsdatum auf heute."
+    },
+    "Berater": {
+      "placeholders_set": 17,
+      "defaults_keys": ["einstiegsdatum", "status"],
+      "computed_keys": [],
+      "reason": "Stunden-Metriken sind Read-only-Aggregationen vom System. Keine User-Input-Berechnung nötig. Status vorbelegt auf 'Aktiv', Einstiegsdatum auf heute."
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": ["leistungstyp"],
+      "computed_keys": [],
+      "reason": "Kostenvoranschlag ist Pauschalbetrag ohne Multiplikation. Typ vorbelegt auf 'Beratung'."
+    },
+    "Projekte": {
+      "placeholders_set": 10,
+      "defaults_keys": ["projektart", "projektstatus"],
+      "computed_keys": [],
+      "reason": "Projektnummer und Kennung sind systemvergeben. Stundensatz im Berater-Applookup ist nur Info. Projektart auf 'IT-Beratung', Status auf 'In Bearbeitung' vorbelegt."
+    },
+    "Angebote": {
+      "placeholders_set": 12,
+      "defaults_keys": ["angebotstyp", "angebotsstatus", "zeitrahmen_anfang"],
+      "computed_keys": [],
+      "reason": "Kostenbetrag ist manuell erfasste Pauschale ohne berechenbare Beziehung. Angebotstyp auf 'Dienstleistungsangebot', Status auf 'Entwurf', Startdatum auf heute vorbelegt."
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 9,
+      "defaults_keys": ["datum", "abrechenbar"],
+      "computed_keys": ["_arbeitskosten"],
+      "reason": "Stunden × Applookup Berater/Stundensatz = Arbeitskosten (virtuelle Anzeige). Datum auf heute, Abrechenbar auf true vorbelegt."
+    },
+    "Rechnungen": {
+      "placeholders_set": 13,
+      "defaults_keys": ["rechnungsdatum", "faelligkeitsdatum", "rechnungsstatus"],
+      "computed_keys": ["_mwst_betrag", "gesamtbetrag"],
+      "reason": "Klassische Brutto-Netto-Struktur: Netto + (Netto × MWST%) = MWST-Betrag, Netto + MWST = Gesamt. Rechnungsdatum heute, Fälligkeitsdatum +14 Tage, Status 'Entwurf' vorbelegt."
+    }
+  }
+}
