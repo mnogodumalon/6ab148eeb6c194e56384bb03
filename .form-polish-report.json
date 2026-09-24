@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 18,
+      "defaults_keys": ["anlagedatum", "kundentyp"],
+      "computed_keys": [],
+      "reason": "Reine Stammdaten-Entity ohne Berechnungen. Keine applookup auf Preise, keine Datumspaare für Dauer."
+    },
+    "Berater": {
+      "placeholders_set": 18,
+      "defaults_keys": ["einstiegsdatum", "status", "stundensatz"],
+      "computed_keys": [],
+      "reason": "Stammdaten mit statistischen Stunden-Feldern (reine Summen). Keine berechnbaren Kosten – Stundensätze und gebuchte Stunden sind Eingabe-/Lesedaten, keine Zwischen-Aggregate."
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": ["leistungstyp", "einheit", "kostenvoranschlag"],
+      "computed_keys": [],
+      "reason": "Stammdaten-Katalog für Service-Angebote. Dient als Preis-Quelle für andere Entities (applookup-Target in Zeiterfassung, Berater). Keine internen Berechnungen erforderlich."
+    },
+    "Projekte": {
+      "placeholders_set": 10,
+      "defaults_keys": ["projektstatus", "projektstart_jahr", "projektart"],
+      "computed_keys": [],
+      "reason": "Pipeline-Entity ohne Enddatum (kein Datumspaar für Dauer). Keine Kosten-Berechnung – Projekte haben keine numerischen Preis-Felder, nur applookups auf Stammdaten-Entities."
+    },
+    "Angebote": {
+      "placeholders_set": 11,
+      "defaults_keys": ["zeitrahmen_anfang", "zeitrahmen_ende", "angebotstyp", "angebotsstatus", "kostentyp"],
+      "computed_keys": ["dauer", "_angebot_dauer_tage"],
+      "reason": "Datumspaar zeitrahmen_anfang/zeitrahmen_ende → dauer in Tagen (zwei separate computed-Keys: ein berechnet ins Dauer-Textfeld, einer virtuell für die Aggregat-Anzeige). Kein applookup auf Leistungskatalog mit Preis im Form, daher kein Gesamtpreis-Computed."
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 10,
+      "defaults_keys": ["datum", "erfassungsjahr", "abrechenbar", "stunden"],
+      "computed_keys": ["arbeitskosten"],
+      "reason": "Transaktions-Entity: applookup(berater, stundensatz) × field(stunden) → arbeitskosten. Dies ist das ARCHETYP-3-Muster (Stammdaten-Preis × eigene Menge)."
+    },
+    "Rechnungen": {
+      "placeholders_set": 14,
+      "defaults_keys": ["rechnungsdatum", "faelligkeitsdatum", "rechnungsstatus", "rechnungsjahr", "mehrwertsteuer"],
+      "computed_keys": ["_mehrwertsteuer_betrag", "gesamtbetrag"],
+      "reason": "Klassische Netto-Brutto-Struktur mit expliziten Feldern nettobetrag, mehrwertsteuer (%), gesamtbetrag. Computed: ARCHETYP-1 (Aggregat) mit Zwischensumme _mehrwertsteuer_betrag (virtuell) + Gesamt (brutto = netto + mwst_betrag). Drei separate Computed-Einträge: mwst_betrag (virtuell), gesamtbetrag (Backend-Feld)."
+    }
+  }
+}
