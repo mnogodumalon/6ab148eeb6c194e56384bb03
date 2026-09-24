@@ -1,0 +1,78 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 23,
+      "defaults_keys": [
+        "anlagedatum",
+        "kundentyp"
+      ],
+      "computed_keys": [],
+      "reason": "Reine Stammdatenverwaltung — keine berechenbaren Felder. Adressfelder optimiert in Spalten-Paare (Straße+Hausnummer, PLZ+Ort). Anlagedatum heute vorbelegung, kundentyp Firma als Standard."
+    },
+    "Berater": {
+      "placeholders_set": 16,
+      "defaults_keys": [
+        "status"
+      ],
+      "computed_keys": [],
+      "reason": "Stammdaten mit read-only Stundenzählern (vom Backend aggregiert). Status als Default aktiv. Keine Berechnungen — Stunden-Aggregation ist Backend-Sache."
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": [
+        "leistungstyp"
+      ],
+      "computed_keys": [],
+      "reason": "Katalog-Entity mit Pauschalpreisen (kostenvoranschlag) und applookup-Berater (read-only). Keine Formeln — Preise sind Geschäftsentscheidungen. Leistungstyp Beratung als Default."
+    },
+    "Projekte": {
+      "placeholders_set": 9,
+      "defaults_keys": [
+        "projektstart_jahr",
+        "projektstatus"
+      ],
+      "computed_keys": [],
+      "reason": "Projekt-Stammdaten mit systemAssigned-Feldern (projektkennung, projektnummer). Applookups Kunde + Projektleitung haben keine numerischen Zwecke hier. Status In-Bearbeitung, Jahr aktuell."
+    },
+    "Angebote": {
+      "placeholders_set": 10,
+      "defaults_keys": [
+        "angebotsjahr",
+        "angebotsstatus",
+        "zeitrahmen_anfang"
+      ],
+      "computed_keys": [
+        "_angebot_dauer_tage"
+      ],
+      "reason": "Angebots-Entity mit Datumspaar (anfang/ende). Virtueller Dauer-Key für Anzeige — ermöglicht Transparenz auf die Angebotsdauer ohne Eingabefeld. Kostenbetrag bleibt manuell (Business-Decision). Status Entwurf, Jahr aktuell, Start heute."
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 9,
+      "defaults_keys": [
+        "datum",
+        "stunden",
+        "erfassungsjahr",
+        "abrechenbar"
+      ],
+      "computed_keys": [
+        "_zeiterfassung_arbeitskosten"
+      ],
+      "reason": "Zeitbuchungs-Entity mit applookup Berater→stundensatz. Arbeitskosten (Stunden × Stundensatz) als virtuelle Berechnung (ARCHETYP 2 — Produkt). Virtuelles Feld für Transparenz im Aggregat-Block. Stunden Default 1, Datum heute, Jahr aktuell, Abrechenbar true."
+    },
+    "Rechnungen": {
+      "placeholders_set": 18,
+      "defaults_keys": [
+        "rechnungsdatum",
+        "faelligkeitsdatum",
+        "rechnungsjahr",
+        "rechnungsstatus",
+        "mehrwertsteuer"
+      ],
+      "computed_keys": [
+        "mwst_betrag",
+        "_gesamtbetrag_berechnet"
+      ],
+      "reason": "Rechnungs-Entity mit klassischer Netto+Mwst+Brutto-Struktur (ARCHETYP-1-Sequenz). Netto eingeben → MwSt automatisch (% × Netto / 100) → Brutto (Netto + MwSt). Virtueller Gesamtbetrag-Key zeigt Endsumme in Aggregat. MwSt-Satz Standard 19%. Status Entwurf, Rechnungsdatum heute, Fälligkeit +14 Tage, Jahr aktuell. Systemassigned: [rechnungsnummer, gesamtbetrag] — diese Felder schreibt das Backend; Berechnung zeigt dem User die Logik."
+    }
+  }
+}

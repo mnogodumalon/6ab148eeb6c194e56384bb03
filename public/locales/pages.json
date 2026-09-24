@@ -1,0 +1,38 @@
+{
+  "pages": {
+    "en": {
+      " (fällig seit {0})": " (due since {0})",
+      "Aktive Projekte": "Active projects",
+      "Als angenommen markieren": "Mark as accepted",
+      "Als bezahlt markieren": "Mark as paid",
+      "Als versendet markieren": "Mark as shipped",
+      "Angebot {0} — angenommen": "Quote {0} — accepted",
+      "Angebot {0} — versendet": "Quote {0} — shipped",
+      "Bezahlt": "Paid",
+      "In Akquise": "In acquisition",
+      "Keine offenen Rechnungen — alles bezahlt.": "No open invoices — everything paid.",
+      "Neue Rechnung": "New invoice",
+      "Neues Angebot": "New quote",
+      "Neues Projekt": "New project",
+      "Noch keine Stunden für diesen Monat erfasst.": "No hours logged for this month yet.",
+      "Noch keine aktiven Projekte — leg das erste Projekt an.": "No active projects yet — create the first project.",
+      "Nr. {0} · ": "No. {0} · ",
+      "Offene Angebote": "Open quotes",
+      "Offene Rechnungen": "Open invoices",
+      "Ohne Berater": "Without consultant",
+      "Ohne Kennung": "Without identifier",
+      "Ohne Kunde": "Without client",
+      "Ohne Projekt": "Without project",
+      "Projektstatus auf {0} gesetzt": "Project status set to {0}",
+      "Rechnung {0} ist überfällig": "Invoice {0} is overdue",
+      "Rechnung öffnen": "Open invoice",
+      "Stunden buchen": "Log hours",
+      "Stunden diesen Monat": "Hours this month",
+      "Zeiterfassung diesen Monat": "Time tracking this month",
+      "{0} Projekte aktiv — Kunden: {1}": "{0} projects active — clients: {1}",
+      "{0} Rechnungen sind überfällig": "{0} invoices are overdue",
+      "{0} — bezahlt": "{0} — paid"
+    }
+  },
+  "v": 1
+}
