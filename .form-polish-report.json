@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 19,
+      "defaults_keys": ["kundentyp", "anlagedatum"],
+      "computed_keys": [],
+      "reason": "Reine Stammdatenverwaltung; keine Numerik, keine Produkte, keine Preisbeziehungen."
+    },
+    "Berater": {
+      "placeholders_set": 19,
+      "defaults_keys": ["status"],
+      "computed_keys": [],
+      "reason": "Personenstammdaten mit Stunden-Metriken (Read-only); keine berechenbaren Beziehungen."
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": ["leistungstyp", "einheit"],
+      "computed_keys": [],
+      "reason": "Stammdaten-Katalog; Kostenvoranschlag und Abrechnungseinheit sind separate Dimensionen ohne Multiplier-Feld in der Form."
+    },
+    "Projekte": {
+      "placeholders_set": 10,
+      "defaults_keys": ["projektstatus"],
+      "computed_keys": [],
+      "reason": "Projektstammdaten; Start ist Monat/Jahr (keine Datumsberechnung); keine numerischen Beziehungen."
+    },
+    "Angebote": {
+      "placeholders_set": 11,
+      "defaults_keys": ["angebotsjahr", "angebotstyp", "angebotsstatus", "zeitrahmen_anfang", "zeitrahmen_ende"],
+      "computed_keys": ["_dauer_tage"],
+      "reason": "Datumspaar (zeitrahmen_anfang/zeitrahmen_ende) → Dauer-Berechnung in Tagen als virtueller Key für Aggregat-Hinweis; kein Netto-Brutto-Schema vorhanden."
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 9,
+      "defaults_keys": ["datum", "stunden", "abrechenbar"],
+      "computed_keys": ["_arbeitswert"],
+      "reason": "Archetyp 3: applookup(berater, stundensatz) × field(stunden) = Arbeitswert pro Eintrag; keine Gesamtsumme über Multilookup nötig, da dies Einzeleinträge sind."
+    },
+    "Rechnungen": {
+      "placeholders_set": 14,
+      "defaults_keys": ["rechnungsdatum", "rechnungsjahr", "rechnungsstatus"],
+      "computed_keys": [],
+      "reason": "Gesamtbetrag und Fälligkeitsdatum sind systemAssigned (backend-berechnet); keine MWST/Brutto-Formel nötig, da computed nicht die systemAssigned überschreiben darf."
+    }
+  }
+}
