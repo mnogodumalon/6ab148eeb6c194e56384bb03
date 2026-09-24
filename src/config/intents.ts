@@ -20,6 +20,7 @@
 import type { ComponentType } from 'react';
 
 // <custom:intent-imports>
+import { IconFolderPlus, IconFileText, IconClock, IconReceiptEuro, IconUserPlus, IconRefresh } from '@tabler/icons-react';
 // </custom:intent-imports>
 
 export interface IntentLink {
@@ -42,6 +43,12 @@ export interface IntentLink {
 
 export const INTENTS: IntentLink[] = [
   // <custom:intents>
+  { path: '/intents/projekt-anlegen', label: { de: 'Projekt anlegen', en: 'Create project' }, icon: IconFolderPlus, description: 'Legt ein neues Projekt an und wählt Kunden, Projektart und Startdatum' },
+  { path: '/intents/angebot-erstellen', label: { de: 'Angebot erstellen', en: 'Create offer' }, icon: IconFileText, description: 'Erstellt ein Angebot zu einem bestehenden Projekt mit Typ, Zeitrahmen und Kosten' },
+  { path: '/intents/zeit-buchen', label: { de: 'Stunden buchen', en: 'Log hours' }, icon: IconClock, description: 'Erfasst einen Zeiterfassungseintrag für einen Berater auf einem Projekt' },
+  { path: '/intents/rechnung-erstellen', label: { de: 'Rechnung erstellen', en: 'Create invoice' }, icon: IconReceiptEuro, description: 'Erstellt eine Rechnung für einen Kunden zu einem Projekt mit Zeiterfassungseinträgen' },
+  { path: '/intents/kunden-anlegen', label: { de: 'Kunden anlegen', en: 'Create customer' }, icon: IconUserPlus, description: 'Legt einen neuen Kunden mit Stammdaten, Adresse und Ansprechpartner an' },
+  { path: '/intents/projektstatus-aendern', label: { de: 'Projektstatus ändern', en: 'Change project status' }, icon: IconRefresh, description: 'Ändert den Status eines Projekts und aktualisiert den letzten Stand' },
   // </custom:intents>
 ];
 
@@ -52,7 +59,7 @@ export const INTENTS: IntentLink[] = [
  * purpose — a scaffold update resets it to false (self-healing if Phase 2
  * never ran).
  */
-export const INTENTS_PENDING = true;
+export const INTENTS_PENDING = false;
 
 /**
  * When the Phase-1 bundle was deployed (ISO, set by the service together with
