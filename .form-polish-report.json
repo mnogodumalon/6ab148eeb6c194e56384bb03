@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 18,
+      "defaults_keys": ["anlagedatum", "kundentyp"],
+      "computed_keys": [],
+      "reason": "Reine Stammdaten: Kontaktinformationen, Adressen, Ansprechpartner. Keine numerischen Felder oder Beziehungen, die berechenbar wären."
+    },
+    "Berater": {
+      "placeholders_set": 18,
+      "defaults_keys": ["einstiegsdatum", "status"],
+      "computed_keys": [],
+      "reason": "Personenstammdaten mit Performance-Metriken (Stundenzähler). Die Stunden sind nur Display und stammen aus Zeiterfassung. Keine lokale Berechnung sinnvoll."
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": ["leistungstyp"],
+      "computed_keys": [],
+      "reason": "Service-Master mit pauschalen Kosten pro Leistung. Der Kostenvoranschlag ist Manual-Entry, nicht berechenbar. Keine applookup mit Preis-Zielfeld in dieser Entity."
+    },
+    "Projekte": {
+      "placeholders_set": 9,
+      "defaults_keys": ["projektart", "projektstatus", "projektstart_jahr"],
+      "computed_keys": [],
+      "reason": "Projekt-Master mit Metadaten. Projektnummer ist systemAssigned, Startjahr ist Manual. Keine Berechnung, nur Stammdaten und Lookups."
+    },
+    "Angebote": {
+      "placeholders_set": 11,
+      "defaults_keys": ["zeitrahmen_anfang", "zeitrahmen_ende", "angebotstyp", "angebotsstatus"],
+      "computed_keys": [],
+      "reason": "Angebots-Dokument mit manuellen Kosten. Kostenbetrag wird vom Nutzer eingegeben (verhandelt), nicht aus Stundensatz×Stunden berechnet. Daher keine computed-Formel."
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 8,
+      "defaults_keys": ["datum", "stunden", "abrechenbar"],
+      "computed_keys": ["arbeitskosten"],
+      "reason": "Zeiteintrag mit direkter Berechnung: Stunden × Stundensatz (applookup Berater). Die arbeitskosten sind das Produkt zweier Quellen und als virtuelle Anzeige berechenbar."
+    },
+    "Rechnungen": {
+      "placeholders_set": 14,
+      "defaults_keys": ["rechnungsdatum", "faelligkeitsdatum", "rechnungsstatus", "mehrwertsteuer"],
+      "computed_keys": ["_mwst_betrag", "gesamtbetrag"],
+      "reason": "Klassische Netto-Brutto-Rechnung mit klaren Signalen: nettobetrag + mehrwertsteuer + gesamtbetrag-Felder im Backend. MwSt-Betrag und Gesamtbetrag berechnen sich aus Netto × Satz und Netto + MwSt."
+    }
+  }
+}

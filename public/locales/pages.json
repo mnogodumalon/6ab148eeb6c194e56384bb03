@@ -1,0 +1,35 @@
+{
+  "pages": {
+    "en": {
+      "Alles im Griff — kein dringender Handlungsbedarf.": "All under control — no urgent action required.",
+      "Als bezahlt markieren": "Mark as Paid",
+      "Als versendet markieren": "Mark as Sent",
+      "Bezahlt": "Paid",
+      "Fällig war {0}.": "Due date was {0}.",
+      "Kein Projekt": "No Project",
+      "Keine offenen Angebote.": "No open quotes.",
+      "Keine offenen Rechnungen — alles beglichen.": "No open invoices — everything settled.",
+      "Neue Rechnung": "New Invoice",
+      "Neues Angebot": "New Quote",
+      "Neues Projekt": "New Project",
+      "Noch keine Projekte angelegt — leg gleich los.": "No projects created yet — get started now.",
+      "Offene Angebote": "Open Quotes",
+      "Offene Rechnungen": "Open Invoices",
+      "Ohne Kunde": "No Client",
+      "Ohne Projekt": "No Project",
+      "Rechnungsstatus — Verteilung": "Invoice Status — Distribution",
+      "Stunden": "Hours",
+      "Stunden aktueller Monat": "Hours Current Month",
+      "Stunden nach Berater (aktueller Monat)": "Hours by Consultant (Current Month)",
+      "Unbekannt": "Unknown",
+      "Versenden": "Send",
+      "{0} — Angebot als versendet markiert": "{0} — Quote marked as sent",
+      "{0} — Status geändert": "{0} — Status changed",
+      "{0} — aktuelle Übersicht": "{0} — Current Overview",
+      "{0} — als bezahlt markiert": "{0} — marked as paid",
+      "Überfällige Rechnungen": "Overdue Invoices",
+      "— Rechnung überfällig": "— Invoice overdue"
+    }
+  },
+  "v": 1
+}
