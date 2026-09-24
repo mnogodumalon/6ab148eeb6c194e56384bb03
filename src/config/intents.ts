@@ -20,6 +20,7 @@
 import type { ComponentType } from 'react';
 
 // <custom:intent-imports>
+import { IconUserPlus, IconFolderPlus, IconFileText, IconClockPlus, IconReceiptEuro, IconRefresh } from '@tabler/icons-react';
 // </custom:intent-imports>
 
 export interface IntentLink {
@@ -42,6 +43,12 @@ export interface IntentLink {
 
 export const INTENTS: IntentLink[] = [
   // <custom:intents>
+  { path: '/intents/kunde-anlegen', label: { de: 'Kunden anlegen', en: 'Create customer' }, icon: IconUserPlus, description: 'Legt einen neuen Kunden mit allen Stammdaten an, inkl. Rechnungsadresse und Ansprechpartner.' },
+  { path: '/intents/projekt-anlegen', label: { de: 'Projekt anlegen', en: 'Create project' }, icon: IconFolderPlus, description: 'Legt ein neues Projekt an, verknüpft es mit einem Kunden und einer Projektleitung, und setzt den Anfangsstatus.' },
+  { path: '/intents/angebot-erstellen', label: { de: 'Angebot erstellen', en: 'Create offer' }, icon: IconFileText, description: 'Erstellt ein Angebot zu einem Projekt mit Typ, Zeitrahmen, Kosten und zuständigem Berater. Die Angebotsnummer wird automatisch vergeben.' },
+  { path: '/intents/zeit-buchen', label: { de: 'Zeit buchen', en: 'Log time' }, icon: IconClockPlus, description: 'Erfasst geleistete Stunden eines Beraters auf ein Projekt und eine Leistung.' },
+  { path: '/intents/rechnung-erstellen', label: { de: 'Rechnung erstellen', en: 'Create invoice' }, icon: IconReceiptEuro, description: 'Erstellt eine Rechnung auf Basis von Zeiterfassungseinträgen, Projekt und Kunde. Nettobetrag, MwSt. und Gesamtbetrag werden eingetragen.' },
+  { path: '/intents/projektstatus-aendern', label: { de: 'Projektstatus ändern', en: 'Change project status' }, icon: IconRefresh, description: 'Ändert den Status eines Projekts (Akquise → In Bearbeitung → Abgeschlossen) und aktualisiert den letzten Stand.' },
   // </custom:intents>
 ];
 
@@ -52,7 +59,7 @@ export const INTENTS: IntentLink[] = [
  * purpose — a scaffold update resets it to false (self-healing if Phase 2
  * never ran).
  */
-export const INTENTS_PENDING = true;
+export const INTENTS_PENDING = false;
 
 /**
  * When the Phase-1 bundle was deployed (ISO, set by the service together with
