@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Kunden": {
+      "placeholders_set": 18,
+      "defaults_keys": ["anlagedatum", "kundentyp"],
+      "computed_keys": [],
+      "reason": "Reine Stammdaten – Kontaktinformationen und Adressen ohne Rechenpflicht"
+    },
+    "Berater": {
+      "placeholders_set": 18,
+      "defaults_keys": ["einstiegsdatum", "status"],
+      "computed_keys": [],
+      "reason": "Stammdaten mit Stundentracking-Felder – externe Systeme befüllen Stunden, keine Berechnungen im Dialog erforderlich"
+    },
+    "Leistungskatalog": {
+      "placeholders_set": 6,
+      "defaults_keys": ["leistungstyp"],
+      "computed_keys": [],
+      "reason": "Stammdaten-Katalog – Kostenvoranschlag ist Referenzbetrag, nicht berechenbar; Abrechnungseinheit ist nur Klassifikator"
+    },
+    "Projekte": {
+      "placeholders_set": 10,
+      "defaults_keys": ["projektstatus"],
+      "computed_keys": [],
+      "reason": "Projekt-Metadata ohne berechenbare Felder – Startmonat/Jahr sind separate Klassifikatoren, keine echte Datumspaare für dateDiff"
+    },
+    "Angebote": {
+      "placeholders_set": 12,
+      "defaults_keys": ["angebotsjahr", "angebotsstatus"],
+      "computed_keys": [],
+      "reason": "Angebotsverwaltung – Zeitrahmen beschreibt nur Geltungsdauer, nicht Leistungsvolumen; Kostenbetrag ist manuell eingetragen (keine Menge/Preis-Paare)"
+    },
+    "Zeiterfassung": {
+      "placeholders_set": 9,
+      "defaults_keys": ["datum", "erfassungsjahr", "abrechenbar"],
+      "computed_keys": [],
+      "reason": "Reiner Eingabedialog für Stundenerfassung – kein Enddatum/Pairing, keine Aggregationen notwendig"
+    },
+    "Rechnungen": {
+      "placeholders_set": 14,
+      "defaults_keys": ["rechnungsdatum", "faelligkeitsdatum", "rechnungsstatus", "rechnungsjahr", "mehrwertsteuer"],
+      "computed_keys": ["gesamtbetrag"],
+      "reason": "Klassische Brutto-Rechnung – gesamtbetrag = nettobetrag × (1 + mehrwertsteuer / 100); echte Netto/MwSt/Brutto-Triplet im Schema vorhanden"
+    }
+  }
+}
