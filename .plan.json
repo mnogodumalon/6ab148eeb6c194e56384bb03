@@ -1,0 +1,389 @@
+{
+  "version": 1,
+  "language": "de",
+  "understanding": {
+    "summary": "inclou ist ein ERP für die Beratungsfirma inclou GmbH & Co. KG. Es verwaltet Kunden, Berater, den Leistungskatalog und Projekte. Angebote werden jahresweise nummeriert, Arbeitsstunden erfasst und daraus Rechnungen erstellt.",
+    "roles": [
+      "Geschäftsführung",
+      "Projektleitung",
+      "Berater",
+      "Buchhaltung"
+    ],
+    "main_tasks": [
+      "Angebot für ein Projekt erstellen",
+      "Projekt anlegen und dem Kunden zuordnen",
+      "Stunden erfassen",
+      "Rechnung aus den Zeiteinträgen eines Monats erstellen",
+      "Kunden und Berater pflegen"
+    ],
+    "platform_roles": [
+      {
+        "persona": "Geschäftsführung",
+        "role": "administrator",
+        "apps": [
+          "kunden",
+          "berater",
+          "leistungskatalog",
+          "projekte",
+          "angebote",
+          "zeiterfassung",
+          "rechnungen"
+        ]
+      },
+      {
+        "persona": "Projektleitung",
+        "role": "datenverarbeitung",
+        "apps": [
+          "projekte",
+          "angebote",
+          "kunden",
+          "zeiterfassung",
+          "leistungskatalog",
+          "berater"
+        ]
+      },
+      {
+        "persona": "Berater",
+        "role": "standard",
+        "apps": [
+          "zeiterfassung",
+          "projekte",
+          "kunden",
+          "berater",
+          "leistungskatalog"
+        ]
+      },
+      {
+        "persona": "Buchhaltung",
+        "role": "datenverarbeitung",
+        "apps": [
+          "rechnungen",
+          "zeiterfassung",
+          "kunden",
+          "projekte",
+          "berater",
+          "leistungskatalog"
+        ]
+      }
+    ]
+  },
+  "flows": [
+    {
+      "slug": "angebot-erstellen",
+      "label": {
+        "de": "Angebot erstellen",
+        "en": "Create offer"
+      },
+      "description": "Ein Angebot für ein Projekt anlegen: Projekt wählen, Typ, Zeitrahmen und Kosten erfassen. Nummer und Jahr werden vom System vergeben.",
+      "priority": "must",
+      "writes": [
+        {
+          "entity": "angebote",
+          "op": "create",
+          "when": "always",
+          "fields": {
+            "dauer": "user",
+            "berater": "picked",
+            "projekt": "picked",
+            "kostentyp": "user",
+            "angebotstyp": "user",
+            "beschreibung": "user",
+            "kostenbetrag": "user",
+            "angebotsstatus": "fixed:entwurf",
+            "zeitrahmen_ende": "user",
+            "zeitrahmen_anfang": "user"
+          },
+          "needs": {}
+        }
+      ],
+      "required": [
+        "angebote.zeitrahmen_anfang"
+      ],
+      "brief": "# Flow `angebot-erstellen` — Angebot erstellen\nEin Angebot für ein Projekt anlegen: Projekt wählen, Typ, Zeitrahmen und Kosten erfassen. Nummer und Jahr werden vom System vergeben.\n\n## Your hook — import it, never rebuild what it owns\n`import { useAngebotErstellenFlow } from '@/lib/journey/flows/AngebotErstellen';` — generated from the Schreibliste below. It OWNS the form(s), one record search per picked field (columns and filter from the plan) and the submit plan with every fixed and derived value. You compose: `flow.forms.<entity>` for <Bound>/<Field>, `{...flow.picks.<field>.select} {...flow.pick('<field>')}` (or `flow.pickMany` for a multi pick) for <EntitySelectStep>, `flow.validateStep(n)` in StepNav.onNext, `flow.submit` + `flow.formList` for SummaryStep/SuccessStep, `flow.reset()`. Options: `steps` (field → step), `items` (how a hit reads, per pick: berater, projekt), `initial`, `messages`. The hook's docblock in .lane-context.md shows the exact call. Never import servicePort, useStepForm, useJourneySubmit, useRecordSearch or useDashboardData in this page — check-intents refuses a page that uses the hook and any of them.\n\n## Steps (in this order)\n1. Projekt wählen\n2. Zuständigen Berater wählen\n3. Angebotstyp, Zeitrahmen und Kosten eingeben\n4. Beschreibung eingeben und speichern\n\n## Schreibliste — the ONLY writes this flow makes (the gate compares your plan steps with this list)\n- creates `angebote`:\n    - `dauer`: the user enters it (bind it through the layer: form.field/…)\n    - `berater`: from the record the user picks in this flow\n    - `projekt`: from the record the user picks in this flow\n    - `kostentyp`: the user enters it (bind it through the layer: form.field/…)\n    - `angebotstyp`: the user enters it (bind it through the layer: form.field/…)\n    - `beschreibung`: the user enters it (bind it through the layer: form.field/…)\n    - `kostenbetrag`: the user enters it (bind it through the layer: form.field/…)\n    - `angebotsstatus`: fixed value `entwurf` — set it in the plan step's values, never ask\n    - `zeitrahmen_ende`: the user enters it (bind it through the layer: form.field/…)\n    - `zeitrahmen_anfang`: the user enters it (bind it through the layer: form.field/…) — **REQUIRED in this flow** (mark it required and validate it before the step advances, whatever the app's base view says): tool `angebotsnummer-vergeben` → `angebotsjahr` cannot be built without it\n\n## Reads\n- `projekte` columns projektkennung, kunde, projektstatus\n- `berater` columns vorname, nachname\n\n## Success page\n- shows: `angebote.angebotsnummer`, `angebote.angebotsstatus`\n- next flows to offer: `zeit-erfassen`\n\n## Never write these — another flow or a tool owns them\n- `projekte.kunde` (owner: intent `projekt-anlegen`)\n- `projekte.projektart` (owner: intent `projekt-anlegen`)\n- `projekte.kostenstelle` (owner: intent `projekt-anlegen`)\n- `projekte.projektstatus` (owner: intent `projekt-anlegen`)\n- `projekte.projektkennung` (owner: intent `projekt-anlegen`)\n- `projekte.projektleitung` (owner: intent `projekt-anlegen`)\n- `projekte.letzter_schritt` (owner: intent `projekt-anlegen`)\n- `projekte.projektstart_jahr` (owner: intent `projekt-anlegen`)\n- `projekte.projektstart_monat` (owner: intent `projekt-anlegen`)\n- `projekte.ansprechpartner_kunde` (owner: intent `projekt-anlegen`)\n- `zeiterfassung.datum` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.berater` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.projekt` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.stunden` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.leistung` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.taetigkeit` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.abrechenbar` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.erfassungsjahr` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.erfassungsmonat` (owner: intent `zeit-erfassen`)\n- `rechnungen.kunde` (owner: intent `rechnung-erstellen`)\n- `rechnungen.berater` (owner: intent `rechnung-erstellen`)\n- `rechnungen.notizen` (owner: intent `rechnung-erstellen`)\n- `rechnungen.projekt` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsjahr` (owner: intent `rechnung-erstellen`)\n- `rechnungen.mehrwertsteuer` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsdatum` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsmonat` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsstatus` (owner: intent `rechnung-erstellen`)\n- `rechnungen.faelligkeitsdatum` (owner: intent `rechnung-erstellen`)\n- `rechnungen.zeiterfassungseintraege` (owner: intent `rechnung-erstellen`)\n- `angebote.angebotsjahr` (owner: tool `angebotsnummer-vergeben`)\n- `angebote.angebotsnummer` (owner: tool `angebotsnummer-vergeben`)\n- `projekte.projektnummer` (owner: tool `projektnummer-vergeben`)\n- `rechnungen.nettobetrag` (owner: tool `rechnung-nummer-betraege`)\n- `rechnungen.gesamtbetrag` (owner: tool `rechnung-nummer-betraege`)\n- `rechnungen.rechnungsnummer` (owner: tool `rechnung-nummer-betraege`)\n- `berater.stunden_letztes_jahr` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_letzter_monat` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_aktuelles_jahr` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_aktueller_monat` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_letztes_quartal` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_aktuelles_quartal` (owner: tool `berater-stunden-aktualisieren`)\n- `angebote.anhang` (owner: tool `angebot-pdf-erzeugen`)\n- `rechnungen.anhang` (owner: tool `rechnung-pdf-erzeugen`)\n"
+    },
+    {
+      "slug": "projekt-anlegen",
+      "label": {
+        "de": "Projekt anlegen",
+        "en": "Create project"
+      },
+      "description": "Ein neues Projekt für einen Kunden mit Art, Start, Kostenstelle und Projektleitung anlegen. Die Kennung wird aus Startjahr, Projektart und Nummer gebildet.",
+      "priority": "must",
+      "writes": [
+        {
+          "entity": "projekte",
+          "op": "create",
+          "when": "always",
+          "fields": {
+            "kunde": "picked",
+            "projektart": "user",
+            "kostenstelle": "user",
+            "projektstatus": "fixed:akquise",
+            "projektkennung": "derived:computed:Startjahr, Kürzel der Projektart und laufende Projektnummer, z. B. 2026-IT-0104",
+            "projektleitung": "picked",
+            "letzter_schritt": "user",
+            "projektstart_jahr": "user",
+            "projektstart_monat": "user",
+            "ansprechpartner_kunde": "user"
+          },
+          "needs": {
+            "projektkennung": [
+              "projektstart_jahr",
+              "projektart"
+            ]
+          }
+        }
+      ],
+      "required": [
+        "projekte.projektart",
+        "projekte.projektstart_jahr"
+      ],
+      "brief": "# Flow `projekt-anlegen` — Projekt anlegen\nEin neues Projekt für einen Kunden mit Art, Start, Kostenstelle und Projektleitung anlegen. Die Kennung wird aus Startjahr, Projektart und Nummer gebildet.\n\n## Your hook — import it, never rebuild what it owns\n`import { useProjektAnlegenFlow } from '@/lib/journey/flows/ProjektAnlegen';` — generated from the Schreibliste below. It OWNS the form(s), one record search per picked field (columns and filter from the plan) and the submit plan with every fixed and derived value. You compose: `flow.forms.<entity>` for <Bound>/<Field>, `{...flow.picks.<field>.select} {...flow.pick('<field>')}` (or `flow.pickMany` for a multi pick) for <EntitySelectStep>, `flow.validateStep(n)` in StepNav.onNext, `flow.submit` + `flow.formList` for SummaryStep/SuccessStep, `flow.reset()`. Options: `steps` (field → step), `items` (how a hit reads, per pick: kunde, projektleitung), `initial`, `messages`, and `compute` — REQUIRED, the plan leaves these rules to you: projektkennung. The hook's docblock in .lane-context.md shows the exact call. Never import servicePort, useStepForm, useJourneySubmit, useRecordSearch or useDashboardData in this page — check-intents refuses a page that uses the hook and any of them.\n\n## Steps (in this order)\n1. Kunden wählen\n2. Projektart und Startmonat/-jahr eingeben\n3. Kostenstelle eintragen (optional)\n4. Projektleitung wählen\n5. Ansprechpartner beim Kunden eintragen und speichern\n\n## Schreibliste — the ONLY writes this flow makes (the gate compares your plan steps with this list)\n- creates `projekte`:\n    - `kunde`: from the record the user picks in this flow\n    - `projektart`: the user enters it (bind it through the layer: form.field/…) — **REQUIRED in this flow** (mark it required and validate it before the step advances, whatever the app's base view says): intent `projekt-anlegen` → `projektkennung` cannot be built without it\n    - `kostenstelle`: the user enters it (bind it through the layer: form.field/…)\n    - `projektstatus`: fixed value `akquise` — set it in the plan step's values, never ask\n    - `projektkennung`: derived (computed)\n    - `projektleitung`: from the record the user picks in this flow\n    - `letzter_schritt`: the user enters it (bind it through the layer: form.field/…)\n    - `projektstart_jahr`: the user enters it (bind it through the layer: form.field/…) — **REQUIRED in this flow** (mark it required and validate it before the step advances, whatever the app's base view says): intent `projekt-anlegen` → `projektkennung` cannot be built without it\n    - `projektstart_monat`: the user enters it (bind it through the layer: form.field/…)\n    - `ansprechpartner_kunde`: the user enters it (bind it through the layer: form.field/…)\n\n## Reads\n- `kunden` columns kundenname, kundentyp, ort\n- `berater` columns vorname, nachname\n\n## Success page\n- shows: `projekte.projektkennung`, `projekte.projektstatus`\n- next flows to offer: `angebot-erstellen`, `zeit-erfassen`\n\n## Never write these — another flow or a tool owns them\n- `angebote.dauer` (owner: intent `angebot-erstellen`)\n- `angebote.berater` (owner: intent `angebot-erstellen`)\n- `angebote.projekt` (owner: intent `angebot-erstellen`)\n- `angebote.kostentyp` (owner: intent `angebot-erstellen`)\n- `angebote.angebotstyp` (owner: intent `angebot-erstellen`)\n- `angebote.beschreibung` (owner: intent `angebot-erstellen`)\n- `angebote.kostenbetrag` (owner: intent `angebot-erstellen`)\n- `angebote.angebotsstatus` (owner: intent `angebot-erstellen`)\n- `angebote.zeitrahmen_ende` (owner: intent `angebot-erstellen`)\n- `angebote.zeitrahmen_anfang` (owner: intent `angebot-erstellen`)\n- `zeiterfassung.datum` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.berater` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.projekt` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.stunden` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.leistung` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.taetigkeit` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.abrechenbar` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.erfassungsjahr` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.erfassungsmonat` (owner: intent `zeit-erfassen`)\n- `rechnungen.kunde` (owner: intent `rechnung-erstellen`)\n- `rechnungen.berater` (owner: intent `rechnung-erstellen`)\n- `rechnungen.notizen` (owner: intent `rechnung-erstellen`)\n- `rechnungen.projekt` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsjahr` (owner: intent `rechnung-erstellen`)\n- `rechnungen.mehrwertsteuer` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsdatum` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsmonat` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsstatus` (owner: intent `rechnung-erstellen`)\n- `rechnungen.faelligkeitsdatum` (owner: intent `rechnung-erstellen`)\n- `rechnungen.zeiterfassungseintraege` (owner: intent `rechnung-erstellen`)\n- `angebote.angebotsjahr` (owner: tool `angebotsnummer-vergeben`)\n- `angebote.angebotsnummer` (owner: tool `angebotsnummer-vergeben`)\n- `projekte.projektnummer` (owner: tool `projektnummer-vergeben`)\n- `rechnungen.nettobetrag` (owner: tool `rechnung-nummer-betraege`)\n- `rechnungen.gesamtbetrag` (owner: tool `rechnung-nummer-betraege`)\n- `rechnungen.rechnungsnummer` (owner: tool `rechnung-nummer-betraege`)\n- `berater.stunden_letztes_jahr` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_letzter_monat` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_aktuelles_jahr` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_aktueller_monat` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_letztes_quartal` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_aktuelles_quartal` (owner: tool `berater-stunden-aktualisieren`)\n- `angebote.anhang` (owner: tool `angebot-pdf-erzeugen`)\n- `rechnungen.anhang` (owner: tool `rechnung-pdf-erzeugen`)\n"
+    },
+    {
+      "slug": "zeit-erfassen",
+      "label": {
+        "de": "Stunden erfassen",
+        "en": "Log hours"
+      },
+      "description": "Stunden eines Beraters auf ein Projekt und eine Leistung buchen, mit Abrechnungsmonat und -jahr.",
+      "priority": "must",
+      "writes": [
+        {
+          "entity": "zeiterfassung",
+          "op": "create",
+          "when": "always",
+          "fields": {
+            "datum": "user",
+            "berater": "picked",
+            "projekt": "picked",
+            "stunden": "user",
+            "leistung": "picked",
+            "taetigkeit": "user",
+            "abrechenbar": "user",
+            "erfassungsjahr": "derived:computed:Jahr des eingegebenen Datums",
+            "erfassungsmonat": "derived:computed:Monat des eingegebenen Datums als Monatsoption"
+          },
+          "needs": {
+            "erfassungsjahr": [
+              "datum"
+            ],
+            "erfassungsmonat": [
+              "datum"
+            ]
+          }
+        }
+      ],
+      "required": [
+        "zeiterfassung.datum"
+      ],
+      "brief": "# Flow `zeit-erfassen` — Stunden erfassen\nStunden eines Beraters auf ein Projekt und eine Leistung buchen, mit Abrechnungsmonat und -jahr.\n\n## Your hook — import it, never rebuild what it owns\n`import { useZeitErfassenFlow } from '@/lib/journey/flows/ZeitErfassen';` — generated from the Schreibliste below. It OWNS the form(s), one record search per picked field (columns and filter from the plan) and the submit plan with every fixed and derived value. You compose: `flow.forms.<entity>` for <Bound>/<Field>, `{...flow.picks.<field>.select} {...flow.pick('<field>')}` (or `flow.pickMany` for a multi pick) for <EntitySelectStep>, `flow.validateStep(n)` in StepNav.onNext, `flow.submit` + `flow.formList` for SummaryStep/SuccessStep, `flow.reset()`. Options: `steps` (field → step), `items` (how a hit reads, per pick: berater, projekt, leistung), `initial`, `messages`, and `compute` — REQUIRED, the plan leaves these rules to you: erfassungsjahr, erfassungsmonat. The hook's docblock in .lane-context.md shows the exact call. Never import servicePort, useStepForm, useJourneySubmit, useRecordSearch or useDashboardData in this page — check-intents refuses a page that uses the hook and any of them.\n\n## Steps (in this order)\n1. Berater wählen\n2. Projekt wählen\n3. Leistung wählen\n4. Datum, Stunden und Tätigkeit eingeben\n\n## Schreibliste — the ONLY writes this flow makes (the gate compares your plan steps with this list)\n- creates `zeiterfassung`:\n    - `datum`: the user enters it (bind it through the layer: form.field/…) — **REQUIRED in this flow** (mark it required and validate it before the step advances, whatever the app's base view says): intent `zeit-erfassen` → `erfassungsjahr`, intent `zeit-erfassen` → `erfassungsmonat` cannot be built without it\n    - `berater`: from the record the user picks in this flow\n    - `projekt`: from the record the user picks in this flow\n    - `stunden`: the user enters it (bind it through the layer: form.field/…)\n    - `leistung`: from the record the user picks in this flow\n    - `taetigkeit`: the user enters it (bind it through the layer: form.field/…)\n    - `abrechenbar`: the user enters it (bind it through the layer: form.field/…)\n    - `erfassungsjahr`: derived (computed)\n    - `erfassungsmonat`: derived (computed)\n\n## Reads\n- `projekte` columns projektkennung, kunde\n- `leistungskatalog` columns leistungsname, leistungstyp\n\n## Success page\n- shows: `zeiterfassung.stunden`, `zeiterfassung.projekt`\n- next flows to offer: `rechnung-erstellen`\n\n## Never write these — another flow or a tool owns them\n- `angebote.dauer` (owner: intent `angebot-erstellen`)\n- `angebote.berater` (owner: intent `angebot-erstellen`)\n- `angebote.projekt` (owner: intent `angebot-erstellen`)\n- `angebote.kostentyp` (owner: intent `angebot-erstellen`)\n- `angebote.angebotstyp` (owner: intent `angebot-erstellen`)\n- `angebote.beschreibung` (owner: intent `angebot-erstellen`)\n- `angebote.kostenbetrag` (owner: intent `angebot-erstellen`)\n- `angebote.angebotsstatus` (owner: intent `angebot-erstellen`)\n- `angebote.zeitrahmen_ende` (owner: intent `angebot-erstellen`)\n- `angebote.zeitrahmen_anfang` (owner: intent `angebot-erstellen`)\n- `projekte.kunde` (owner: intent `projekt-anlegen`)\n- `projekte.projektart` (owner: intent `projekt-anlegen`)\n- `projekte.kostenstelle` (owner: intent `projekt-anlegen`)\n- `projekte.projektstatus` (owner: intent `projekt-anlegen`)\n- `projekte.projektkennung` (owner: intent `projekt-anlegen`)\n- `projekte.projektleitung` (owner: intent `projekt-anlegen`)\n- `projekte.letzter_schritt` (owner: intent `projekt-anlegen`)\n- `projekte.projektstart_jahr` (owner: intent `projekt-anlegen`)\n- `projekte.projektstart_monat` (owner: intent `projekt-anlegen`)\n- `projekte.ansprechpartner_kunde` (owner: intent `projekt-anlegen`)\n- `rechnungen.kunde` (owner: intent `rechnung-erstellen`)\n- `rechnungen.berater` (owner: intent `rechnung-erstellen`)\n- `rechnungen.notizen` (owner: intent `rechnung-erstellen`)\n- `rechnungen.projekt` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsjahr` (owner: intent `rechnung-erstellen`)\n- `rechnungen.mehrwertsteuer` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsdatum` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsmonat` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsstatus` (owner: intent `rechnung-erstellen`)\n- `rechnungen.faelligkeitsdatum` (owner: intent `rechnung-erstellen`)\n- `rechnungen.zeiterfassungseintraege` (owner: intent `rechnung-erstellen`)\n- `angebote.angebotsjahr` (owner: tool `angebotsnummer-vergeben`)\n- `angebote.angebotsnummer` (owner: tool `angebotsnummer-vergeben`)\n- `projekte.projektnummer` (owner: tool `projektnummer-vergeben`)\n- `rechnungen.nettobetrag` (owner: tool `rechnung-nummer-betraege`)\n- `rechnungen.gesamtbetrag` (owner: tool `rechnung-nummer-betraege`)\n- `rechnungen.rechnungsnummer` (owner: tool `rechnung-nummer-betraege`)\n- `berater.stunden_letztes_jahr` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_letzter_monat` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_aktuelles_jahr` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_aktueller_monat` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_letztes_quartal` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_aktuelles_quartal` (owner: tool `berater-stunden-aktualisieren`)\n- `angebote.anhang` (owner: tool `angebot-pdf-erzeugen`)\n- `rechnungen.anhang` (owner: tool `rechnung-pdf-erzeugen`)\n"
+    },
+    {
+      "slug": "rechnung-erstellen",
+      "label": {
+        "de": "Rechnung aus Zeiteinträgen erstellen",
+        "en": "Create invoice from time entries"
+      },
+      "description": "Für ein Projekt und einen Monat die abrechenbaren Zeiteinträge auswählen und daraus eine Rechnung im Entwurf anlegen. Nummer und Beträge setzt das System.",
+      "priority": "must",
+      "writes": [
+        {
+          "entity": "rechnungen",
+          "op": "create",
+          "when": "always",
+          "fields": {
+            "kunde": "derived:from_pick:projekte.kunde",
+            "berater": "picked",
+            "notizen": "user",
+            "projekt": "picked",
+            "rechnungsjahr": "user",
+            "mehrwertsteuer": "user",
+            "rechnungsdatum": "derived:today",
+            "rechnungsmonat": "user",
+            "rechnungsstatus": "fixed:entwurf",
+            "faelligkeitsdatum": "user",
+            "zeiterfassungseintraege": "picked"
+          },
+          "needs": {}
+        }
+      ],
+      "required": [
+        "rechnungen.berater",
+        "rechnungen.mehrwertsteuer",
+        "rechnungen.zeiterfassungseintraege"
+      ],
+      "brief": "# Flow `rechnung-erstellen` — Rechnung aus Zeiteinträgen erstellen\nFür ein Projekt und einen Monat die abrechenbaren Zeiteinträge auswählen und daraus eine Rechnung im Entwurf anlegen. Nummer und Beträge setzt das System.\n\n## Your hook — import it, never rebuild what it owns\n`import { useRechnungErstellenFlow } from '@/lib/journey/flows/RechnungErstellen';` — generated from the Schreibliste below. It OWNS the form(s), one record search per picked field (columns and filter from the plan) and the submit plan with every fixed and derived value. You compose: `flow.forms.<entity>` for <Bound>/<Field>, `{...flow.picks.<field>.select} {...flow.pick('<field>')}` (or `flow.pickMany` for a multi pick) for <EntitySelectStep>, `flow.validateStep(n)` in StepNav.onNext, `flow.submit` + `flow.formList` for SummaryStep/SuccessStep, `flow.reset()`. Options: `steps` (field → step), `items` (how a hit reads, per pick: berater, projekt, zeiterfassungseintraege), `initial`, `messages`. The hook's docblock in .lane-context.md shows the exact call. Never import servicePort, useStepForm, useJourneySubmit, useRecordSearch or useDashboardData in this page — check-intents refuses a page that uses the hook and any of them.\n\n## Steps (in this order)\n1. Projekt wählen\n2. Abrechnungsmonat und -jahr wählen\n3. Abrechenbare Zeiteinträge auswählen\n4. Rechnungsdatum, Fälligkeit und Mehrwertsteuer eingeben und speichern\n\n## Schreibliste — the ONLY writes this flow makes (the gate compares your plan steps with this list)\n- creates `rechnungen`:\n    - `kunde`: derived from the picked record's `projekte.kunde` — never ask\n    - `berater`: from the record the user picks in this flow — **REQUIRED in this flow** (mark it required and validate it before the step advances, whatever the app's base view says): tool `rechnung-nummer-betraege` → `nettobetrag` cannot be built without it\n    - `notizen`: the user enters it (bind it through the layer: form.field/…)\n    - `projekt`: from the record the user picks in this flow\n    - `rechnungsjahr`: the user enters it (bind it through the layer: form.field/…)\n    - `mehrwertsteuer`: the user enters it (bind it through the layer: form.field/…) — **REQUIRED in this flow** (mark it required and validate it before the step advances, whatever the app's base view says): tool `rechnung-nummer-betraege` → `gesamtbetrag` cannot be built without it\n    - `rechnungsdatum`: derived: today() — set it in the plan step, never ask\n    - `rechnungsmonat`: the user enters it (bind it through the layer: form.field/…)\n    - `rechnungsstatus`: fixed value `entwurf` — set it in the plan step's values, never ask\n    - `faelligkeitsdatum`: the user enters it (bind it through the layer: form.field/…)\n    - `zeiterfassungseintraege`: from the record the user picks in this flow — **REQUIRED in this flow** (mark it required and validate it before the step advances, whatever the app's base view says): tool `rechnung-nummer-betraege` → `nettobetrag` cannot be built without it\n\n## Reads\n- `projekte` columns projektkennung, kunde\n- `zeiterfassung` columns berater, datum, stunden, leistung, erfassungsmonat, erfassungsjahr\n\n## Success page\n- shows: `rechnungen.rechnungsnummer`, `rechnungen.gesamtbetrag`\n- next flows to offer: `rechnung-versenden`\n\n## Never write these — another flow or a tool owns them\n- `angebote.dauer` (owner: intent `angebot-erstellen`)\n- `angebote.berater` (owner: intent `angebot-erstellen`)\n- `angebote.projekt` (owner: intent `angebot-erstellen`)\n- `angebote.kostentyp` (owner: intent `angebot-erstellen`)\n- `angebote.angebotstyp` (owner: intent `angebot-erstellen`)\n- `angebote.beschreibung` (owner: intent `angebot-erstellen`)\n- `angebote.kostenbetrag` (owner: intent `angebot-erstellen`)\n- `angebote.angebotsstatus` (owner: intent `angebot-erstellen`)\n- `angebote.zeitrahmen_ende` (owner: intent `angebot-erstellen`)\n- `angebote.zeitrahmen_anfang` (owner: intent `angebot-erstellen`)\n- `projekte.kunde` (owner: intent `projekt-anlegen`)\n- `projekte.projektart` (owner: intent `projekt-anlegen`)\n- `projekte.kostenstelle` (owner: intent `projekt-anlegen`)\n- `projekte.projektstatus` (owner: intent `projekt-anlegen`)\n- `projekte.projektkennung` (owner: intent `projekt-anlegen`)\n- `projekte.projektleitung` (owner: intent `projekt-anlegen`)\n- `projekte.letzter_schritt` (owner: intent `projekt-anlegen`)\n- `projekte.projektstart_jahr` (owner: intent `projekt-anlegen`)\n- `projekte.projektstart_monat` (owner: intent `projekt-anlegen`)\n- `projekte.ansprechpartner_kunde` (owner: intent `projekt-anlegen`)\n- `zeiterfassung.datum` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.berater` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.projekt` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.stunden` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.leistung` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.taetigkeit` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.abrechenbar` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.erfassungsjahr` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.erfassungsmonat` (owner: intent `zeit-erfassen`)\n- `angebote.angebotsjahr` (owner: tool `angebotsnummer-vergeben`)\n- `angebote.angebotsnummer` (owner: tool `angebotsnummer-vergeben`)\n- `projekte.projektnummer` (owner: tool `projektnummer-vergeben`)\n- `rechnungen.nettobetrag` (owner: tool `rechnung-nummer-betraege`)\n- `rechnungen.gesamtbetrag` (owner: tool `rechnung-nummer-betraege`)\n- `rechnungen.rechnungsnummer` (owner: tool `rechnung-nummer-betraege`)\n- `berater.stunden_letztes_jahr` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_letzter_monat` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_aktuelles_jahr` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_aktueller_monat` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_letztes_quartal` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_aktuelles_quartal` (owner: tool `berater-stunden-aktualisieren`)\n- `angebote.anhang` (owner: tool `angebot-pdf-erzeugen`)\n- `rechnungen.anhang` (owner: tool `rechnung-pdf-erzeugen`)\n"
+    },
+    {
+      "slug": "rechnung-versenden",
+      "label": {
+        "de": "Rechnung versenden",
+        "en": "Send invoice"
+      },
+      "description": "Eine Rechnung im Entwurf prüfen und auf Versendet setzen, bzw. nach Zahlungseingang auf Bezahlt.",
+      "priority": "nice",
+      "writes": [
+        {
+          "entity": "rechnungen",
+          "op": "update",
+          "when": "always",
+          "fields": {
+            "rechnungsstatus": "user"
+          },
+          "needs": {}
+        }
+      ],
+      "required": [],
+      "brief": "# Flow `rechnung-versenden` — Rechnung versenden\nEine Rechnung im Entwurf prüfen und auf Versendet setzen, bzw. nach Zahlungseingang auf Bezahlt.\n\n## Your hook — import it, never rebuild what it owns\n`import { useRechnungVersendenFlow } from '@/lib/journey/flows/RechnungVersenden';` — generated from the Schreibliste below. It OWNS the form(s), one record search per picked field (columns and filter from the plan) and the submit plan with every fixed and derived value. You compose: `flow.forms.<entity>` for <Bound>/<Field>, `{...flow.picks.<field>.select} {...flow.pick('<field>')}` (or `flow.pickMany` for a multi pick) for <EntitySelectStep>, `flow.validateStep(n)` in StepNav.onNext, `flow.submit` + `flow.formList` for SummaryStep/SuccessStep, `flow.reset()`. Options: `steps` (field → step), `items` (how a hit reads, per pick), `initial`, `messages`. The hook's docblock in .lane-context.md shows the exact call. This flow CHANGES a record of `rechnungen`: `{...flow.picks.rechnungen.select} {...flow.pick('rechnungen')}` picks it, the hook prefills the form with its current values and updates THAT record — never a create step, never a list from useDashboardData. Never import servicePort, useStepForm, useJourneySubmit, useRecordSearch or useDashboardData in this page — check-intents refuses a page that uses the hook and any of them.\n\n## Steps (in this order)\n1. Rechnung im Entwurf wählen\n2. Daten prüfen\n3. Status setzen\n\n## Schreibliste — the ONLY writes this flow makes (the gate compares your plan steps with this list)\n- updates `rechnungen`:\n    - `rechnungsstatus`: the user enters it (bind it through the layer: form.field/…)\n\n## Reads\n- `rechnungen` columns rechnungsnummer, kunde, gesamtbetrag, rechnungsstatus\n\n## Success page\n- shows: `rechnungen.rechnungsstatus`\n\n## Never write these — another flow or a tool owns them\n- `angebote.dauer` (owner: intent `angebot-erstellen`)\n- `angebote.berater` (owner: intent `angebot-erstellen`)\n- `angebote.projekt` (owner: intent `angebot-erstellen`)\n- `angebote.kostentyp` (owner: intent `angebot-erstellen`)\n- `angebote.angebotstyp` (owner: intent `angebot-erstellen`)\n- `angebote.beschreibung` (owner: intent `angebot-erstellen`)\n- `angebote.kostenbetrag` (owner: intent `angebot-erstellen`)\n- `angebote.angebotsstatus` (owner: intent `angebot-erstellen`)\n- `angebote.zeitrahmen_ende` (owner: intent `angebot-erstellen`)\n- `angebote.zeitrahmen_anfang` (owner: intent `angebot-erstellen`)\n- `projekte.kunde` (owner: intent `projekt-anlegen`)\n- `projekte.projektart` (owner: intent `projekt-anlegen`)\n- `projekte.kostenstelle` (owner: intent `projekt-anlegen`)\n- `projekte.projektstatus` (owner: intent `projekt-anlegen`)\n- `projekte.projektkennung` (owner: intent `projekt-anlegen`)\n- `projekte.projektleitung` (owner: intent `projekt-anlegen`)\n- `projekte.letzter_schritt` (owner: intent `projekt-anlegen`)\n- `projekte.projektstart_jahr` (owner: intent `projekt-anlegen`)\n- `projekte.projektstart_monat` (owner: intent `projekt-anlegen`)\n- `projekte.ansprechpartner_kunde` (owner: intent `projekt-anlegen`)\n- `zeiterfassung.datum` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.berater` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.projekt` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.stunden` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.leistung` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.taetigkeit` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.abrechenbar` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.erfassungsjahr` (owner: intent `zeit-erfassen`)\n- `zeiterfassung.erfassungsmonat` (owner: intent `zeit-erfassen`)\n- `rechnungen.kunde` (owner: intent `rechnung-erstellen`)\n- `rechnungen.berater` (owner: intent `rechnung-erstellen`)\n- `rechnungen.notizen` (owner: intent `rechnung-erstellen`)\n- `rechnungen.projekt` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsjahr` (owner: intent `rechnung-erstellen`)\n- `rechnungen.mehrwertsteuer` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsdatum` (owner: intent `rechnung-erstellen`)\n- `rechnungen.rechnungsmonat` (owner: intent `rechnung-erstellen`)\n- `rechnungen.faelligkeitsdatum` (owner: intent `rechnung-erstellen`)\n- `rechnungen.zeiterfassungseintraege` (owner: intent `rechnung-erstellen`)\n- `angebote.angebotsjahr` (owner: tool `angebotsnummer-vergeben`)\n- `angebote.angebotsnummer` (owner: tool `angebotsnummer-vergeben`)\n- `projekte.projektnummer` (owner: tool `projektnummer-vergeben`)\n- `rechnungen.nettobetrag` (owner: tool `rechnung-nummer-betraege`)\n- `rechnungen.gesamtbetrag` (owner: tool `rechnung-nummer-betraege`)\n- `rechnungen.rechnungsnummer` (owner: tool `rechnung-nummer-betraege`)\n- `berater.stunden_letztes_jahr` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_letzter_monat` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_aktuelles_jahr` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_aktueller_monat` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_letztes_quartal` (owner: tool `berater-stunden-aktualisieren`)\n- `berater.stunden_aktuelles_quartal` (owner: tool `berater-stunden-aktualisieren`)\n- `angebote.anhang` (owner: tool `angebot-pdf-erzeugen`)\n- `rechnungen.anhang` (owner: tool `rechnung-pdf-erzeugen`)\n"
+    }
+  ],
+  "public_pages": [],
+  "tools": [
+    {
+      "id": "angebotsnummer-vergeben",
+      "purpose": "Vergibt bei neuem Angebot Jahr und fortlaufende Nummer innerhalb des Jahres."
+    },
+    {
+      "id": "projektnummer-vergeben",
+      "purpose": "Vergibt bei neuem Projekt die laufende Projektnummer."
+    },
+    {
+      "id": "rechnung-nummer-betraege",
+      "purpose": "Vergibt bei neuer Rechnung die Rechnungsnummer und berechnet Netto- und Gesamtbetrag aus den gewählten Zeiteinträgen."
+    },
+    {
+      "id": "ueberfaellige-rechnungen-markieren",
+      "purpose": "Setzt versendete Rechnungen mit vergangenem Fälligkeitsdatum auf Überfällig."
+    },
+    {
+      "id": "berater-stunden-aktualisieren",
+      "purpose": "Summiert die Stunden aller Zeiteinträge je Berater für aktuellen und letzten Monat, Quartal und Jahr."
+    },
+    {
+      "id": "angebot-pdf-erzeugen",
+      "purpose": "Überträgt die Angebotsdaten in das Angebots-Template und hängt das PDF an das Angebot."
+    },
+    {
+      "id": "rechnung-pdf-erzeugen",
+      "purpose": "Erzeugt das Rechnungsdokument als PDF und hängt es an die Rechnung."
+    },
+    {
+      "id": "rechnungsuebersicht-excel",
+      "purpose": "Erzeugt eine Excel-Arbeitsmappe über alle Rechnungen mit einem Blatt je Jahr, nach Monaten gegliedert, als App-Datei."
+    }
+  ],
+  "covered_by_platform": [
+    {
+      "wish": "Projekte nach Status in einer Projektliste darstellen",
+      "feature": "list_page"
+    },
+    {
+      "wish": "Projekte nach Status gruppiert (in Bearbeitung, Akquise, abgeschlossen)",
+      "feature": "distribution_view"
+    },
+    {
+      "wish": "Angebote in einer Liste für jedes Jahr einordnen",
+      "feature": "search_filter"
+    },
+    {
+      "wish": "Kunden mit Auftragshistorie erfassen",
+      "feature": "record_form"
+    },
+    {
+      "wish": "Berater mit Leistungen im Leistungskatalog verknüpfen",
+      "feature": "record_form"
+    },
+    {
+      "wish": "Rechnungen als Excel-Tabelle darstellen",
+      "feature": "csv_json_export"
+    },
+    {
+      "wish": "Angebots-Template und Dokumente anhängen",
+      "feature": "record_attachments"
+    },
+    {
+      "wish": "Zugriff für Mitarbeitende regeln",
+      "feature": "user_roles"
+    }
+  ],
+  "ownership": {
+    "angebote": {
+      "dauer": "intent:angebot-erstellen",
+      "berater": "intent:angebot-erstellen",
+      "projekt": "intent:angebot-erstellen",
+      "kostentyp": "intent:angebot-erstellen",
+      "angebotstyp": "intent:angebot-erstellen",
+      "beschreibung": "intent:angebot-erstellen",
+      "kostenbetrag": "intent:angebot-erstellen",
+      "angebotsstatus": "intent:angebot-erstellen",
+      "zeitrahmen_ende": "intent:angebot-erstellen",
+      "zeitrahmen_anfang": "intent:angebot-erstellen",
+      "angebotsjahr": "tool:angebotsnummer-vergeben",
+      "angebotsnummer": "tool:angebotsnummer-vergeben",
+      "anhang": "tool:angebot-pdf-erzeugen"
+    },
+    "projekte": {
+      "kunde": "intent:projekt-anlegen",
+      "projektart": "intent:projekt-anlegen",
+      "kostenstelle": "intent:projekt-anlegen",
+      "projektstatus": "intent:projekt-anlegen",
+      "projektkennung": "intent:projekt-anlegen",
+      "projektleitung": "intent:projekt-anlegen",
+      "letzter_schritt": "intent:projekt-anlegen",
+      "projektstart_jahr": "intent:projekt-anlegen",
+      "projektstart_monat": "intent:projekt-anlegen",
+      "ansprechpartner_kunde": "intent:projekt-anlegen",
+      "projektnummer": "tool:projektnummer-vergeben"
+    },
+    "zeiterfassung": {
+      "datum": "intent:zeit-erfassen",
+      "berater": "intent:zeit-erfassen",
+      "projekt": "intent:zeit-erfassen",
+      "stunden": "intent:zeit-erfassen",
+      "leistung": "intent:zeit-erfassen",
+      "taetigkeit": "intent:zeit-erfassen",
+      "abrechenbar": "intent:zeit-erfassen",
+      "erfassungsjahr": "intent:zeit-erfassen",
+      "erfassungsmonat": "intent:zeit-erfassen"
+    },
+    "rechnungen": {
+      "kunde": "intent:rechnung-erstellen",
+      "berater": "intent:rechnung-erstellen",
+      "notizen": "intent:rechnung-erstellen",
+      "projekt": "intent:rechnung-erstellen",
+      "rechnungsjahr": "intent:rechnung-erstellen",
+      "mehrwertsteuer": "intent:rechnung-erstellen",
+      "rechnungsdatum": "intent:rechnung-erstellen",
+      "rechnungsmonat": "intent:rechnung-erstellen",
+      "rechnungsstatus": "tool:ueberfaellige-rechnungen-markieren",
+      "faelligkeitsdatum": "intent:rechnung-erstellen",
+      "zeiterfassungseintraege": "intent:rechnung-erstellen",
+      "nettobetrag": "tool:rechnung-nummer-betraege",
+      "gesamtbetrag": "tool:rechnung-nummer-betraege",
+      "rechnungsnummer": "tool:rechnung-nummer-betraege",
+      "anhang": "tool:rechnung-pdf-erzeugen"
+    },
+    "berater": {
+      "stunden_letztes_jahr": "tool:berater-stunden-aktualisieren",
+      "stunden_letzter_monat": "tool:berater-stunden-aktualisieren",
+      "stunden_aktuelles_jahr": "tool:berater-stunden-aktualisieren",
+      "stunden_aktueller_monat": "tool:berater-stunden-aktualisieren",
+      "stunden_letztes_quartal": "tool:berater-stunden-aktualisieren",
+      "stunden_aktuelles_quartal": "tool:berater-stunden-aktualisieren"
+    }
+  },
+  "dashboard": {
+    "focus": [
+      "Offene Angebote nach Status",
+      "Projekte in Bearbeitung",
+      "Gebuchte Stunden im aktuellen Monat",
+      "Unbezahlte und überfällige Rechnungen"
+    ],
+    "hints": [
+      "Berater-Stunden pro Monat, Quartal und Jahr prominent zeigen",
+      "Projekte nach Status gruppieren",
+      "Überfällige Rechnungen hervorheben"
+    ]
+  }
+}

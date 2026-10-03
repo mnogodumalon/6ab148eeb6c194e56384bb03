@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "flows": [
+    {
+      "path": "/intents/angebot-erstellen",
+      "label": "Angebot erstellen",
+      "description": "Ein Angebot für ein Projekt anlegen: Projekt wählen, Typ, Zeitrahmen und Kosten erfassen.",
+      "file": "src/pages/intents/AngebotErstellenPage.tsx",
+      "summary": "/**\n * Angebot erstellen — 4-Schritt-Wizard.\n * Steps: 1) Projekt wählen → 2) Berater wählen → 3) Typ, Zeitrahmen, Kosten & Beschreibung → 4) Prüfen & anlegen.\n * Reads: projekte, berater. Writes: angebote (via useAngebotErstellenFlow; Status „Entwurf“ setzt der Ablauf selbst).\n * Composes: IntentWizardShell, EntitySelectStep, Bound, StepNav, SummaryStep, SuccessStep.\n */",
+      "components": [
+        "Bound",
+        "EntitySelectStep",
+        "IntentWizardShell",
+        "StepNav",
+        "SuccessStep",
+        "SummaryStep",
+        "WizardStep"
+      ],
+      "writes": []
+    },
+    {
+      "path": "/intents/projekt-anlegen",
+      "label": "Projekt anlegen",
+      "description": "Ein neues Projekt für einen Kunden mit Art, Start und Projektleitung anlegen.",
+      "file": "src/pages/intents/ProjektAnlegenPage.tsx",
+      "summary": "/**\n * Projekt anlegen — 4-Schritt-Wizard.\n * Steps: 1) Kunden wählen → 2) Projektart und Start → 3) Projektleitung wählen → 4) Ansprechpartner eintragen → Prüfen & anlegen.\n * Reads: kunden, berater. Writes: projekte (via useProjektAnlegenFlow; Status „Akquise“ fix, Kennung berechnet).\n * Composes: IntentWizardShell, EntitySelectStep, Bound, StepNav, SummaryStep, SuccessStep.\n */",
+      "components": [
+        "Bound",
+        "EntitySelectStep",
+        "IntentWizardShell",
+        "StepNav",
+        "SuccessStep",
+        "SummaryStep",
+        "WizardStep"
+      ],
+      "writes": []
+    },
+    {
+      "path": "/intents/zeit-erfassen",
+      "label": "Stunden erfassen",
+      "description": "Stunden eines Beraters auf ein Projekt und eine Leistung buchen.",
+      "file": "src/pages/intents/ZeitErfassenPage.tsx",
+      "summary": "/**\n * Stunden erfassen — 5-Schritt-Wizard.\n * Steps: 1) Berater wählen → 2) Projekt wählen → 3) Leistung wählen → 4) Datum, Stunden und Tätigkeit → 5) Prüfen & buchen.\n * Reads: berater, projekte, leistungskatalog. Writes: zeiterfassung (Abrechnungsmonat/-jahr aus dem Datum abgeleitet).\n * Composes: IntentWizardShell, EntitySelectStep, Bound, StepNav, SummaryStep, SuccessStep.\n */",
+      "components": [
+        "Bound",
+        "EntitySelectStep",
+        "IntentWizardShell",
+        "StepNav",
+        "SuccessStep",
+        "SummaryStep",
+        "WizardStep"
+      ],
+      "writes": []
+    },
+    {
+      "path": "/intents/rechnung-erstellen",
+      "label": "Rechnung aus Zeiteinträgen erstellen",
+      "description": "Abrechenbare Zeiteinträge eines Projekts auswählen und daraus eine Rechnung im Entwurf anlegen.",
+      "file": "src/pages/intents/RechnungErstellenPage.tsx",
+      "summary": "/**\n * Rechnung erstellen — 5-Schritt-Wizard.\n * Steps: 1) Projekt wählen → 2) Abrechnungsmonat und -jahr → 3) Berater und Zeiteinträge auswählen\n *        → 4) Fälligkeit, Mehrwertsteuer und Notizen → 5) Prüfen & als Entwurf anlegen.\n * Reads: projekte, berater, zeiterfassung. Writes: rechnungen (Entwurf; Kunde, Datum, Status setzt der Ablauf,\n * Nummer und Beträge das System).\n * Composes: IntentWizardShell, EntitySelectStep, Bound, Field, StepNav, SummaryStep, SuccessStep.\n */",
+      "components": [
+        "Bound",
+        "EntitySelectStep",
+        "Field",
+        "IntentWizardShell",
+        "StepNav",
+        "SuccessStep",
+        "SummaryStep",
+        "WizardStep"
+      ],
+      "writes": []
+    },
+    {
+      "path": "/intents/rechnung-versenden",
+      "label": "Rechnung versenden",
+      "description": "Eine Rechnung im Entwurf prüfen und auf Versendet bzw. Bezahlt setzen.",
+      "file": "src/pages/intents/RechnungVersendenPage.tsx",
+      "summary": "/**\n * Rechnung versenden — 3-Schritt-Wizard.\n * Steps: 1) Rechnung wählen → 2) Daten prüfen & Status wählen → 3) Status setzen (Prüfen & speichern).\n * Reads: rechnungen (rechnungsnummer, kunde, gesamtbetrag, rechnungsstatus). Writes: rechnungen.rechnungsstatus (Update über useRechnungVersendenFlow).\n * Composes: IntentWizardShell, EntitySelectStep, Field, ChoiceGroup, StepNav, SummaryStep, SuccessStep, StatusBadge.\n */",
+      "components": [
+        "ChoiceGroup",
+        "EntitySelectStep",
+        "Field",
+        "IntentWizardShell",
+        "StatusBadge",
+        "StepNav",
+        "SuccessStep",
+        "SummaryStep",
+        "WizardStep"
+      ],
+      "writes": []
+    }
+  ],
+  "unregistered_pages": []
+}

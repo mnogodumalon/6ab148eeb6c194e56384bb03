@@ -1,6 +1,6 @@
 /**
- * Projekt anlegen — 4-Schritt-Wizard.
- * Steps: 1) Kunden wählen → 2) Projektart und Start → 3) Projektleitung wählen → 4) Ansprechpartner eintragen → Prüfen & anlegen.
+ * Projekt anlegen — 5-Schritt-Wizard.
+ * Steps: 1) Kunden wählen → 2) Projektart und Start → 3) Kostenstelle → 4) Projektleitung wählen → 5) Ansprechpartner eintragen → Prüfen & anlegen.
  * Reads: kunden, berater. Writes: projekte (via useProjektAnlegenFlow; Status „Akquise“ fix, Kennung berechnet).
  * Composes: IntentWizardShell, EntitySelectStep, Bound, StepNav, SummaryStep, SuccessStep.
  */
@@ -15,14 +15,11 @@ import { fieldText } from '@/lib/journey';
 import { useProjektAnlegenFlow } from '@/lib/journey/flows/ProjektAnlegen';
 import { tx } from '@/i18n';
 
-const KUERZEL: Record<string, string> = {
-  it_beratung: 'IT',
-  entwicklung: 'EN',
-  schulung: 'SC',
-  konzeption: 'KO',
-  support: 'SU',
-  sonstiges: 'SO',
-};
+// Kürzel aus dem Schlüssel der Projektart: Initialen bei mehreren Wörtern (it_beratung → IT), sonst die ersten zwei Buchstaben.
+function artKuerzel(art: string): string {
+  const parts = art.split('_').filter(Boolean);
+  return (parts.length > 1 ? parts.map(p => p[0]).join('') : art.slice(0, 2)).toUpperCase();
+}
 
 export default function ProjektAnlegenPage() {
   const [step, setStep] = useState(1);
@@ -32,9 +29,10 @@ export default function ProjektAnlegenPage() {
       projektart: 2,
       projektstart_monat: 2,
       projektstart_jahr: 2,
-      projektleitung: 3,
-      ansprechpartner_kunde: 4,
-      letzter_schritt: 4,
+      kostenstelle: 3,
+      projektleitung: 4,
+      ansprechpartner_kunde: 5,
+      letzter_schritt: 5,
     },
     items: {
       kunde: k => ({
@@ -52,7 +50,7 @@ export default function ProjektAnlegenPage() {
       projektkennung: forms => {
         const jahr = String(forms.projekte.get('projektstart_jahr') ?? '');
         const art = String(forms.projekte.get('projektart') ?? '');
-        const kuerzel = KUERZEL[art] ?? '';
+        const kuerzel = art ? artKuerzel(art) : '';
         return [jahr, kuerzel].filter(Boolean).join('-');
       },
     },
@@ -67,8 +65,8 @@ export default function ProjektAnlegenPage() {
       forms={flow.formList}
       draftKey={flow.draftKey}
       intro={{
-        description: tx('Ein neues Projekt für einen Kunden mit Art, Start und Projektleitung anlegen.'),
-        needs: [tx('Kunde'), tx('Projektart und Startjahr'), tx('Projektleitung')],
+        description: tx('Ein neues Projekt für einen Kunden mit Art, Start, Kostenstelle und Projektleitung anlegen.'),
+        needs: [tx('Kunde'), tx('Projektart und Startjahr'), tx('Kostenstelle'), tx('Projektleitung')],
       }}
     >
       <WizardStep label={tx('Kunde')} description={tx('Für welchen Kunden ist das Projekt?')}>
@@ -87,6 +85,17 @@ export default function ProjektAnlegenPage() {
           <StepNav
             onBack={() => setStep(1)}
             onNext={() => f.validate(['projektart', 'projektstart_monat', 'projektstart_jahr'])}
+            nextStepLabel={tx('Kostenstelle')}
+          />
+        </div>
+      </WizardStep>
+
+      <WizardStep label={tx('Kostenstelle')} description={tx('Optional: unter welcher Kostenstelle wird das Projekt geführt?')}>
+        <div className="space-y-4">
+          <Bound form={f} name="kostenstelle" />
+          <StepNav
+            onBack={() => setStep(2)}
+            onNext={() => flow.validateStep(3)}
             nextStepLabel={tx('Projektleitung')}
           />
         </div>
@@ -99,6 +108,7 @@ export default function ProjektAnlegenPage() {
           avatar="initials"
           searchPlaceholder={tx('Berater suchen …')}
         />
+        <StepNav onBack={() => setStep(3)} nextStepLabel={tx('Ansprechpartner')} />
       </WizardStep>
 
       <WizardStep label={tx('Ansprechpartner')} description={tx('Wer ist beim Kunden zuständig und wie ist der Stand?')}>
@@ -106,8 +116,8 @@ export default function ProjektAnlegenPage() {
           <Bound form={f} name="ansprechpartner_kunde" />
           <Bound form={f} name="letzter_schritt" rows={3} />
           <StepNav
-            onBack={() => setStep(3)}
-            onNext={() => flow.validateStep(4)}
+            onBack={() => setStep(4)}
+            onNext={() => flow.validateStep(5)}
             nextStepLabel={tx('Prüfen')}
           />
         </div>
@@ -118,7 +128,6 @@ export default function ProjektAnlegenPage() {
           <SummaryStep
             forms={flow.formList}
             submit={flow.submit}
-            items={[{ key: 'projektstatus', label: tx('Projektstatus'), value: tx('Akquise') }]}
             whatHappensNext={tx('Das Projekt startet in der Akquise; die Projektnummer vergibt das System.')}
           />
         )}

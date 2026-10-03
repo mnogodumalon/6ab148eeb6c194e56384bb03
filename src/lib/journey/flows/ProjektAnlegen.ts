@@ -1,7 +1,7 @@
 /**
  * useProjektAnlegenFlow — the plumbing of the flow « Projekt anlegen », generated from the plan.
  *
- * Writes `projekte`: asks `kunde`, `projektart`, `projektleitung`, `letzter_schritt`, `projektstart_jahr`, `projektstart_monat`, `ansprechpartner_kunde`; sets `projektstatus` itself.
+ * Writes `projekte`: asks `kunde`, `projektart`, `kostenstelle`, `projektleitung`, `letzter_schritt`, `projektstart_jahr`, `projektstart_monat`, `ansprechpartner_kunde`; sets `projektstatus` itself.
  * The hook OWNS: the form(s) with exactly these fields and the plan's required
  * ingredients, one record search per picked field (columns and filter from
  * the plan), and the submit plan with its fixed and derived values. A page
@@ -17,7 +17,7 @@
  *   compute   REQUIRED — the plan says these values are computed in the flow
  *             but leaves the rule to you: `projektkennung` (derived:computed:Startjahr, Kürzel der Projektart und laufende Projektnummer, z. B. 2026-IT-0104) *
  *   const flow = useProjektAnlegenFlow({
- *     steps: { kunde: 1, projektleitung: 2, projektart: 3, letzter_schritt: 3, projektstart_jahr: 3, projektstart_monat: 3, ansprechpartner_kunde: 3 },
+ *     steps: { kunde: 1, projektleitung: 2, projektart: 3, kostenstelle: 3, letzter_schritt: 3, projektstart_jahr: 3, projektstart_monat: 3, ansprechpartner_kunde: 3 },
  *     items: { kunde: r => ({ id: r.id, title: fieldText(r, 'kundenname') }) },
  *     compute: { projektkennung: forms => null },
  *   });
@@ -25,6 +25,7 @@
  *     <EntitySelectStep {...flow.picks.kunde.select} {...flow.pick('kunde')} />
  *     <EntitySelectStep {...flow.picks.projektleitung.select} {...flow.pick('projektleitung')} />
  *     <Bound form={flow.forms.projekte} name="projektart" />
+ *     <Bound form={flow.forms.projekte} name="kostenstelle" />
  *     <Bound form={flow.forms.projekte} name="letzter_schritt" />
  *     <Bound form={flow.forms.projekte} name="projektstart_jahr" />
  *     <Bound form={flow.forms.projekte} name="projektstart_monat" />
@@ -42,7 +43,7 @@ import {
 import { servicePort } from '@/services/journeyPort';
 import { pickHint, whereSentence, type PickWhere } from '@/lib/journey/policy';
 import { labelOf, optionsOf, type EntityKey } from '@/lib/journey/rules';
-export type ProjektAnlegenFieldKey = 'ansprechpartner_kunde' | 'kunde' | 'letzter_schritt' | 'projektart' | 'projektleitung' | 'projektstart_jahr' | 'projektstart_monat';
+export type ProjektAnlegenFieldKey = 'ansprechpartner_kunde' | 'kostenstelle' | 'kunde' | 'letzter_schritt' | 'projektart' | 'projektleitung' | 'projektstart_jahr' | 'projektstart_monat';
 
 export interface ProjektAnlegenForms {
   projekte: StepForm<'projekte'>;
@@ -67,7 +68,7 @@ export interface ProjektAnlegenFlowOptions {
   };
 }
 
-const DEFAULT_STEPS: Record<string, number> = {"ansprechpartner_kunde": 3, "kunde": 1, "letzter_schritt": 3, "projektart": 3, "projektleitung": 2, "projektstart_jahr": 3, "projektstart_monat": 3};
+const DEFAULT_STEPS: Record<string, number> = {"ansprechpartner_kunde": 3, "kostenstelle": 3, "kunde": 1, "letzter_schritt": 3, "projektart": 3, "projektleitung": 2, "projektstart_jahr": 3, "projektstart_monat": 3};
 export const PROJEKTANLEGEN_REVIEW_STEP = 4;
 
 function fromPick<T>(pick: { recordOf(id: string): JourneyRecord | undefined }, form: StepForm, field: string, read: (r: JourneyRecord) => T): T | undefined {
@@ -99,12 +100,12 @@ function hasValues(form: StepForm): boolean {
 export function useProjektAnlegenFlow(options: ProjektAnlegenFlowOptions) {
   const steps = { ...DEFAULT_STEPS, ...(options.steps ?? {}) } as Record<string, number>;
   const projekte = useStepForm('projekte', {
-    fields: ["kunde", "projektart", "projektleitung", "letzter_schritt", "projektstart_jahr", "projektstart_monat", "ansprechpartner_kunde"],
-    steps: only(steps, ["kunde", "projektart", "projektleitung", "letzter_schritt", "projektstart_jahr", "projektstart_monat", "ansprechpartner_kunde"]) as Record<string, number>,
+    fields: ["kunde", "projektart", "kostenstelle", "projektleitung", "letzter_schritt", "projektstart_jahr", "projektstart_monat", "ansprechpartner_kunde"],
+    steps: only(steps, ["kunde", "projektart", "kostenstelle", "projektleitung", "letzter_schritt", "projektstart_jahr", "projektstart_monat", "ansprechpartner_kunde"]) as Record<string, number>,
     // the plan builds a value from these — required here, whatever the app's base view says
     required: { projektart: true, projektstart_jahr: true },
-    initial: only(options.initial as FormValues | undefined, ["kunde", "projektart", "projektleitung", "letzter_schritt", "projektstart_jahr", "projektstart_monat", "ansprechpartner_kunde"]),
-    messages: only(options.messages as Record<string, string> | undefined, ["kunde", "projektart", "projektleitung", "letzter_schritt", "projektstart_jahr", "projektstart_monat", "ansprechpartner_kunde"]),
+    initial: only(options.initial as FormValues | undefined, ["kunde", "projektart", "kostenstelle", "projektleitung", "letzter_schritt", "projektstart_jahr", "projektstart_monat", "ansprechpartner_kunde"]),
+    messages: only(options.messages as Record<string, string> | undefined, ["kunde", "projektart", "kostenstelle", "projektleitung", "letzter_schritt", "projektstart_jahr", "projektstart_monat", "ansprechpartner_kunde"]),
   });
   const forms: ProjektAnlegenForms = { projekte };
   const formList: StepForm[] = [projekte];
