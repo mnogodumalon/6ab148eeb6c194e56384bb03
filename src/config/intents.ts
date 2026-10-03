@@ -20,6 +20,7 @@
 import type { ComponentType } from 'react';
 
 // <custom:intent-imports>
+import { IconFileText, IconBriefcase, IconClockPlus, IconFileInvoice, IconSend } from '@tabler/icons-react';
 // </custom:intent-imports>
 
 export interface IntentLink {
@@ -42,6 +43,11 @@ export interface IntentLink {
 
 export const INTENTS: IntentLink[] = [
   // <custom:intents>
+  { path: '/intents/angebot-erstellen', label: { de: 'Angebot erstellen', en: 'Create offer' }, icon: IconFileText, description: 'Ein Angebot für ein Projekt anlegen: Projekt wählen, Typ, Zeitrahmen und Kosten erfassen.' },
+  { path: '/intents/projekt-anlegen', label: { de: 'Projekt anlegen', en: 'Create project' }, icon: IconBriefcase, description: 'Ein neues Projekt für einen Kunden mit Art, Start und Projektleitung anlegen.' },
+  { path: '/intents/zeit-erfassen', label: { de: 'Stunden erfassen', en: 'Log hours' }, icon: IconClockPlus, description: 'Stunden eines Beraters auf ein Projekt und eine Leistung buchen.' },
+  { path: '/intents/rechnung-erstellen', label: { de: 'Rechnung aus Zeiteinträgen erstellen', en: 'Create invoice from time entries' }, icon: IconFileInvoice, description: 'Abrechenbare Zeiteinträge eines Projekts auswählen und daraus eine Rechnung im Entwurf anlegen.' },
+  { path: '/intents/rechnung-versenden', label: { de: 'Rechnung versenden', en: 'Send invoice' }, icon: IconSend, description: 'Eine Rechnung im Entwurf prüfen und auf Versendet bzw. Bezahlt setzen.' },
   // </custom:intents>
 ];
 
@@ -52,7 +58,7 @@ export const INTENTS: IntentLink[] = [
  * purpose — a scaffold update resets it to false (self-healing if Phase 2
  * never ran).
  */
-export const INTENTS_PENDING = true;
+export const INTENTS_PENDING = false;
 
 /**
  * When the Phase-1 bundle was deployed (ISO, set by the service together with
