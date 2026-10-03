@@ -43,11 +43,11 @@ export interface IntentLink {
 
 export const INTENTS: IntentLink[] = [
   // <custom:intents>
-  { path: '/intents/angebot-erstellen', label: { de: 'Angebot erstellen', en: 'Create offer' }, icon: IconFileText, description: 'Ein Angebot für ein Projekt anlegen: Projekt wählen, Typ, Zeitrahmen und Kosten erfassen.' },
-  { path: '/intents/projekt-anlegen', label: { de: 'Projekt anlegen', en: 'Create project' }, icon: IconBriefcase, description: 'Ein neues Projekt für einen Kunden mit Art, Start und Projektleitung anlegen.' },
-  { path: '/intents/zeit-erfassen', label: { de: 'Stunden erfassen', en: 'Log hours' }, icon: IconClockPlus, description: 'Stunden eines Beraters auf ein Projekt und eine Leistung buchen.' },
-  { path: '/intents/rechnung-erstellen', label: { de: 'Rechnung aus Zeiteinträgen erstellen', en: 'Create invoice from time entries' }, icon: IconFileInvoice, description: 'Abrechenbare Zeiteinträge eines Projekts auswählen und daraus eine Rechnung im Entwurf anlegen.' },
-  { path: '/intents/rechnung-versenden', label: { de: 'Rechnung versenden', en: 'Send invoice' }, icon: IconSend, description: 'Eine Rechnung im Entwurf prüfen und auf Versendet bzw. Bezahlt setzen.' },
+  { path: '/intents/angebot-erstellen', label: { de: 'Angebot erstellen', en: 'Create offer' }, icon: IconFileText, description: { de: 'Ein Angebot für ein Projekt anlegen: Projekt wählen, Typ, Zeitrahmen und Kosten erfassen.', en: 'Create a quote for a project: select the project, then enter type, timeframe and costs.' } },
+  { path: '/intents/projekt-anlegen', label: { de: 'Projekt anlegen', en: 'Create project' }, icon: IconBriefcase, description: { de: 'Ein neues Projekt für einen Kunden mit Art, Start und Projektleitung anlegen.', en: 'Create a new project for a customer with type, start, and project manager.' } },
+  { path: '/intents/zeit-erfassen', label: { de: 'Stunden erfassen', en: 'Log hours' }, icon: IconClockPlus, description: { de: 'Stunden eines Beraters auf ein Projekt und eine Leistung buchen.', en: 'Book a consultant\'s hours to a project and a service.' } },
+  { path: '/intents/rechnung-erstellen', label: { de: 'Rechnung aus Zeiteinträgen erstellen', en: 'Create invoice from time entries' }, icon: IconFileInvoice, description: { de: 'Abrechenbare Zeiteinträge eines Projekts auswählen und daraus eine Rechnung im Entwurf anlegen.', en: 'Select billable time entries of a project and create a draft invoice from them.' } },
+  { path: '/intents/rechnung-versenden', label: { de: 'Rechnung versenden', en: 'Send invoice' }, icon: IconSend, description: { de: 'Eine Rechnung im Entwurf prüfen und auf Versendet bzw. Bezahlt setzen.', en: 'Review a draft invoice and set it to Sent or Paid.' } },
   // </custom:intents>
 ];
 
@@ -67,5 +67,5 @@ export const INTENTS_PENDING = false;
  * pulsing "werden erstellt …" in every deployed Phase-1 bundle forever — no
  * code path redeploys Phase 1 without the flag (live 03.09.2026).
  */
-export const INTENTS_PENDING_SINCE: string | null = '2026-10-03T11:56:36+00:00';
+export const INTENTS_PENDING_SINCE: string | null = null;
 export const PENDING_MAX_MINUTES = 30;

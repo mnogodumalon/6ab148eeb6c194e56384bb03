@@ -71,6 +71,7 @@ export function ProjekteDetails({
   return (
     <>
       <RecordSection title={t('details')} cols={2}>
+        <RecordField label={fieldLabel('projekte', 'kostenstelle')} value={record.fields.kostenstelle} format="text" />
         <RecordField label={fieldLabel('projekte', 'projektkennung')} value={record.fields.projektkennung} format="text" />
         <RecordField label={fieldLabel('projekte', 'projektnummer')} value={record.fields.projektnummer} format="text" />
         <RecordField label={fieldLabel('projekte', 'projektart')} value={record.fields.projektart} format="pill" />

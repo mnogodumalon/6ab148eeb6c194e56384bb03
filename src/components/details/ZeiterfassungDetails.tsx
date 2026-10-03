@@ -70,7 +70,7 @@ export function ZeiterfassungDetails({
         <RecordRelation
           label={fieldLabel('zeiterfassung', 'projekt')}
           name={projektTarget?.fields.projektkennung ?? '—'}
-          meta={[projektTarget?.fields.ansprechpartner_kunde].filter(Boolean).join(' · ') || undefined}
+          meta={[projektTarget?.fields.kostenstelle, projektTarget?.fields.ansprechpartner_kunde].filter(Boolean).join(' · ') || undefined}
           onClick={projektTarget && onOpenProjekte ? () => onOpenProjekte!(projektTarget!) : undefined}
         />
         <RecordRelation

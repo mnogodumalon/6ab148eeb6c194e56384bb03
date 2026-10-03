@@ -1616,10 +1616,10 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
         },
         "lookups": {
           "kundentyp": {
+            "einzelperson": "Einzelperson",
             "firma": "Firma",
             "behoerde": "Behörde",
-            "sonstiges": "Sonstiges",
-            "einzelperson": "Einzelperson"
+            "sonstiges": "Sonstiges"
           },
           "bevorzugte_kontaktart": {
             "email": "E-Mail",
@@ -1696,6 +1696,7 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
         "name": "Projekte",
         "app_id": "6ab148af36b757073eb3183a",
         "fields": {
+          "kostenstelle": "Kostenstelle",
           "projektkennung": "Projektkennung",
           "projektnummer": "Projektnummer",
           "projektart": "Projektart",
@@ -1709,12 +1710,12 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
         },
         "lookups": {
           "projektart": {
-            "it_beratung": "IT-Beratung",
             "entwicklung": "Entwicklung",
             "schulung": "Schulung",
             "konzeption": "Konzeption",
             "support": "Support",
-            "sonstiges": "Sonstiges"
+            "sonstiges": "Sonstiges",
+            "it_beratung": "IT-Beratung"
           },
           "projektstatus": {
             "in_bearbeitung": "In Bearbeitung",
@@ -1794,6 +1795,7 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
         },
         "lookups": {
           "erfassungsmonat": {
+            "januar": "Januar",
             "februar": "Februar",
             "maerz": "März",
             "april": "April",
@@ -1804,8 +1806,7 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
             "september": "September",
             "oktober": "Oktober",
             "november": "November",
-            "dezember": "Dezember",
-            "januar": "Januar"
+            "dezember": "Dezember"
           }
         }
       },
@@ -1870,7 +1871,7 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
           "hausnummer": "House Number",
           "plz": "Postal Code",
           "ort": "City",
-          "rechnungsadresse_gleich": "Billing address is identical to address",
+          "rechnungsadresse_gleich": "Billing address is the same as the address",
           "rechnungsstrasse": "Billing Street",
           "rechnungshausnummer": "Billing House Number",
           "rechnungsplz": "Billing Postal Code",
@@ -1886,10 +1887,10 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
         },
         "lookups": {
           "kundentyp": {
+            "einzelperson": "Individual",
             "firma": "Company",
-            "behoerde": "Authority",
-            "sonstiges": "Other",
-            "einzelperson": "Individual"
+            "behoerde": "Government Agency",
+            "sonstiges": "Other"
           },
           "bevorzugte_kontaktart": {
             "email": "Email",
@@ -1966,25 +1967,26 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
         "name": "Projects",
         "app_id": "6ab148af36b757073eb3183a",
         "fields": {
-          "projektkennung": "Project ID",
+          "kostenstelle": "Cost Center",
+          "projektkennung": "Project Identifier",
           "projektnummer": "Project Number",
           "projektart": "Project Type",
           "projektstatus": "Project Status",
           "projektstart_monat": "Start Month",
           "projektstart_jahr": "Start Year",
           "kunde": "Customer",
-          "ansprechpartner_kunde": "Customer Contact Person",
+          "ansprechpartner_kunde": "Contact Person at Customer",
           "letzter_schritt": "Last Step / Current Status",
           "projektleitung": "Project Manager"
         },
         "lookups": {
           "projektart": {
-            "it_beratung": "IT Consulting",
             "entwicklung": "Development",
             "schulung": "Training",
             "konzeption": "Conceptual Design",
             "support": "Support",
-            "sonstiges": "Other"
+            "sonstiges": "Other",
+            "it_beratung": "IT Consulting"
           },
           "projektstatus": {
             "in_bearbeitung": "In Progress",
@@ -2042,7 +2044,7 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
           "kostentyp": {
             "einmalig": "One-time",
             "monatlich": "Monthly",
-            "jaehrlich": "Yearly",
+            "jaehrlich": "Annual",
             "quartalsweise": "Quarterly",
             "sonstiges": "Other"
           }
@@ -2064,6 +2066,7 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
         },
         "lookups": {
           "erfassungsmonat": {
+            "januar": "January",
             "februar": "February",
             "maerz": "March",
             "april": "April",
@@ -2074,8 +2077,7 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
             "september": "September",
             "oktober": "October",
             "november": "November",
-            "dezember": "December",
-            "januar": "January"
+            "dezember": "December"
           }
         }
       },

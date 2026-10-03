@@ -1,7 +1,7 @@
 /**
  * useZeitErfassenFlow — the plumbing of the flow « Stunden erfassen », generated from the plan.
  *
- * Writes `zeiterfassung`: asks `berater`, `projekt`, `leistung`, `datum`, `stunden`, `taetigkeit`, `abrechenbar`.
+ * Writes `zeiterfassung`: asks `datum`, `berater`, `projekt`, `stunden`, `leistung`, `taetigkeit`, `abrechenbar`.
  * The hook OWNS: the form(s) with exactly these fields and the plan's required
  * ingredients, one record search per picked field (columns and filter from
  * the plan), and the submit plan with its fixed and derived values. A page
@@ -15,11 +15,11 @@
  *   initial   prefills for typed fields
  *   messages  the sentence for an empty required field, per field
  *   compute   REQUIRED — the plan says these values are computed in the flow
- *             but leaves the rule to you: `erfassungsmonat` (derived:computed:Monat des eingegebenen Datums als Monatsoption), `erfassungsjahr` (derived:computed:Jahr des eingegebenen Datums) *
+ *             but leaves the rule to you: `erfassungsjahr` (derived:computed:Jahr des eingegebenen Datums), `erfassungsmonat` (derived:computed:Monat des eingegebenen Datums als Monatsoption) *
  *   const flow = useZeitErfassenFlow({
  *     steps: { berater: 1, projekt: 2, leistung: 3, datum: 4, stunden: 4, taetigkeit: 4, abrechenbar: 4 },
  *     items: { berater: r => ({ id: r.id, title: fieldText(r, 'vorname') }) },
- *     compute: { erfassungsmonat: forms => null, erfassungsjahr: forms => null },
+ *     compute: { erfassungsjahr: forms => null, erfassungsmonat: forms => null },
  *   });
  *   <IntentWizardShell forms={flow.forms} draftKey={flow.draftKey} …>
  *     <EntitySelectStep {...flow.picks.berater.select} {...flow.pick('berater')} />
@@ -64,8 +64,8 @@ export interface ZeitErfassenFlowOptions {
   };
   /** The plan computes these in the flow but leaves the rule to the page. */
   compute: {
-    erfassungsmonat: (forms: ZeitErfassenForms) => unknown;   // derived:computed:Monat des eingegebenen Datums als Monatsoption
     erfassungsjahr: (forms: ZeitErfassenForms) => unknown;   // derived:computed:Jahr des eingegebenen Datums
+    erfassungsmonat: (forms: ZeitErfassenForms) => unknown;   // derived:computed:Monat des eingegebenen Datums als Monatsoption
   };
 }
 
@@ -101,12 +101,12 @@ function hasValues(form: StepForm): boolean {
 export function useZeitErfassenFlow(options: ZeitErfassenFlowOptions) {
   const steps = { ...DEFAULT_STEPS, ...(options.steps ?? {}) } as Record<string, number>;
   const zeiterfassung = useStepForm('zeiterfassung', {
-    fields: ["berater", "projekt", "leistung", "datum", "stunden", "taetigkeit", "abrechenbar"],
-    steps: only(steps, ["berater", "projekt", "leistung", "datum", "stunden", "taetigkeit", "abrechenbar"]) as Record<string, number>,
+    fields: ["datum", "berater", "projekt", "stunden", "leistung", "taetigkeit", "abrechenbar"],
+    steps: only(steps, ["datum", "berater", "projekt", "stunden", "leistung", "taetigkeit", "abrechenbar"]) as Record<string, number>,
     // the plan builds a value from these — required here, whatever the app's base view says
     required: { datum: true },
-    initial: only(options.initial as FormValues | undefined, ["berater", "projekt", "leistung", "datum", "stunden", "taetigkeit", "abrechenbar"]),
-    messages: only(options.messages as Record<string, string> | undefined, ["berater", "projekt", "leistung", "datum", "stunden", "taetigkeit", "abrechenbar"]),
+    initial: only(options.initial as FormValues | undefined, ["datum", "berater", "projekt", "stunden", "leistung", "taetigkeit", "abrechenbar"]),
+    messages: only(options.messages as Record<string, string> | undefined, ["datum", "berater", "projekt", "stunden", "leistung", "taetigkeit", "abrechenbar"]),
   });
   const forms: ZeitErfassenForms = { zeiterfassung };
   const formList: StepForm[] = [zeiterfassung];
@@ -149,8 +149,8 @@ export function useZeitErfassenFlow(options: ZeitErfassenFlowOptions) {
     {
       key: 'zeiterfassung', entity: 'zeiterfassung', form: zeiterfassung, primary: true,
       values: (): FormValues => ({
-        erfassungsmonat: options.compute.erfassungsmonat(forms),
         erfassungsjahr: options.compute.erfassungsjahr(forms),
+        erfassungsmonat: options.compute.erfassungsmonat(forms),
       }),
     },
   ];

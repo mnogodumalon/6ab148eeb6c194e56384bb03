@@ -358,7 +358,7 @@ export function LeistungskatalogDialog({ open, onClose, onSubmit, defaultValues,
         <Label htmlFor="leistungsname">{fieldLabel('leistungskatalog', 'leistungsname')} <span className="text-destructive" aria-hidden="true">*</span></Label>
         <Input
           id="leistungsname"
-          placeholder="z. B. Prozessberatung"
+          placeholder=""
           value={fields.leistungsname ?? ''}
           onChange={e => setFields(f => ({ ...f, leistungsname: e.target.value }))}
           required
@@ -375,7 +375,7 @@ export function LeistungskatalogDialog({ open, onClose, onSubmit, defaultValues,
           value={lookupKey(fields.leistungstyp) ?? ''}
           onValueChange={v => setFields(f => ({ ...f, leistungstyp: v === 'none' ? undefined : v as any }))}
         >
-          <SelectTrigger id="leistungstyp" className="max-sm:h-11"><SelectValue placeholder="z. B. Beratung, Schulung" /></SelectTrigger>
+          <SelectTrigger id="leistungstyp" className="max-sm:h-11"><SelectValue placeholder="" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="none">—</SelectItem>
             <SelectItem value="beratung">{lookupLabel('leistungskatalog', 'leistungstyp', 'beratung') ?? 'Beratung'}</SelectItem>
@@ -396,7 +396,7 @@ export function LeistungskatalogDialog({ open, onClose, onSubmit, defaultValues,
         <Label htmlFor="beschreibung">{fieldLabel('leistungskatalog', 'beschreibung')}</Label>
         <Textarea
           id="beschreibung"
-          placeholder="Was umfasst die Leistung?"
+          placeholder=""
           value={fields.beschreibung ?? ''}
           onChange={e => setFields(f => ({ ...f, beschreibung: e.target.value }))}
           rows={3}
@@ -412,7 +412,7 @@ export function LeistungskatalogDialog({ open, onClose, onSubmit, defaultValues,
           inputMode="decimal"
           step="any"
           {...numberInputProps(formEnhancements, 'kostenvoranschlag')}
-          placeholder="z. B. 1200"
+          placeholder=""
           value={fields.kostenvoranschlag !== undefined ? fields.kostenvoranschlag : (computedValues['kostenvoranschlag'] ?? '')}
           onChange={e => setFields(f => ({ ...f, kostenvoranschlag: clampNumberValue(formEnhancements, 'kostenvoranschlag', e.target.value) }))}
         />
@@ -482,7 +482,7 @@ export function LeistungskatalogDialog({ open, onClose, onSubmit, defaultValues,
         <Label htmlFor="ausfuehrende_berater">{fieldLabel('leistungskatalog', 'ausfuehrende_berater')}</Label>
         <MultiCombobox
           id="ausfuehrende_berater"
-          placeholder="Welche Berater?"
+          placeholder=""
           items={beraterListAll.map(r => ({
             id: r.record_id,
             label: String(r.fields.vorname ?? r.record_id),

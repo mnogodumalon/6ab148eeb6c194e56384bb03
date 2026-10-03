@@ -72,7 +72,7 @@ export function RechnungenDetails({
         <RecordRelation
           label={fieldLabel('rechnungen', 'projekt')}
           name={projektTarget?.fields.projektkennung ?? '—'}
-          meta={[projektTarget?.fields.ansprechpartner_kunde].filter(Boolean).join(' · ') || undefined}
+          meta={[projektTarget?.fields.kostenstelle, projektTarget?.fields.ansprechpartner_kunde].filter(Boolean).join(' · ') || undefined}
           onClick={projektTarget && onOpenProjekte ? () => onOpenProjekte!(projektTarget!) : undefined}
         />
       </RecordSection>

@@ -396,7 +396,7 @@ export function AngeboteDialog({ open, onClose, onSubmit, defaultValues, recordI
           inputMode="decimal"
           step="any"
           {...numberInputProps(formEnhancements, 'angebotsnummer')}
-          placeholder="z. B. 2026001"
+          placeholder=""
           value={fields.angebotsnummer !== undefined ? fields.angebotsnummer : (computedValues['angebotsnummer'] ?? '')}
           onChange={e => setFields(f => ({ ...f, angebotsnummer: clampNumberValue(formEnhancements, 'angebotsnummer', e.target.value) }))}
         />
@@ -414,7 +414,7 @@ export function AngeboteDialog({ open, onClose, onSubmit, defaultValues, recordI
           inputMode="decimal"
           step="any"
           {...numberInputProps(formEnhancements, 'angebotsjahr')}
-          placeholder="z. B. 2026"
+          placeholder=""
           value={fields.angebotsjahr !== undefined ? fields.angebotsjahr : (computedValues['angebotsjahr'] ?? '')}
           onChange={e => setFields(f => ({ ...f, angebotsjahr: clampNumberValue(formEnhancements, 'angebotsjahr', e.target.value) }))}
         />
@@ -562,7 +562,7 @@ export function AngeboteDialog({ open, onClose, onSubmit, defaultValues, recordI
         <Label htmlFor="zeitrahmen_anfang">{fieldLabel('angebote', 'zeitrahmen_anfang')} <span className="text-destructive" aria-hidden="true">*</span></Label>
         <DatePicker
           id="zeitrahmen_anfang"
-          placeholder="Wann beginnt das Angebot?"
+          placeholder=""
           mode="date"
           value={fields.zeitrahmen_anfang ?? null}
           onChange={v => setFields(f => ({ ...f, zeitrahmen_anfang: v ?? undefined }))}
@@ -578,7 +578,7 @@ export function AngeboteDialog({ open, onClose, onSubmit, defaultValues, recordI
         <Label htmlFor="zeitrahmen_ende">{fieldLabel('angebote', 'zeitrahmen_ende')}</Label>
         <DatePicker
           id="zeitrahmen_ende"
-          placeholder="Wann endet es?"
+          placeholder=""
           mode="date"
           value={fields.zeitrahmen_ende ?? null}
           onChange={v => setFields(f => ({ ...f, zeitrahmen_ende: v ?? undefined }))}
@@ -590,7 +590,7 @@ export function AngeboteDialog({ open, onClose, onSubmit, defaultValues, recordI
         <Label htmlFor="dauer">{fieldLabel('angebote', 'dauer')}</Label>
         <Input
           id="dauer"
-          placeholder="z. B. 3 Monate"
+          placeholder=""
           value={fields.dauer ?? ''}
           onChange={e => setFields(f => ({ ...f, dauer: e.target.value }))}
         />
@@ -677,7 +677,7 @@ export function AngeboteDialog({ open, onClose, onSubmit, defaultValues, recordI
           inputMode="decimal"
           step="any"
           {...numberInputProps(formEnhancements, 'kostenbetrag')}
-          placeholder="z. B. 4500"
+          placeholder=""
           value={fields.kostenbetrag !== undefined ? fields.kostenbetrag : (computedValues['kostenbetrag'] ?? '')}
           onChange={e => setFields(f => ({ ...f, kostenbetrag: clampNumberValue(formEnhancements, 'kostenbetrag', e.target.value) }))}
         />
@@ -688,7 +688,7 @@ export function AngeboteDialog({ open, onClose, onSubmit, defaultValues, recordI
         <Label htmlFor="beschreibung">{fieldLabel('angebote', 'beschreibung')}</Label>
         <Textarea
           id="beschreibung"
-          placeholder="Was umfasst das Angebot?"
+          placeholder=""
           value={fields.beschreibung ?? ''}
           onChange={e => setFields(f => ({ ...f, beschreibung: e.target.value }))}
           rows={3}
@@ -770,7 +770,7 @@ export function AngeboteDialog({ open, onClose, onSubmit, defaultValues, recordI
         <Label htmlFor="projekt">{fieldLabel('angebote', 'projekt')}</Label>
         <Combobox
           id="projekt"
-          placeholder="Welches Projekt?"
+          placeholder=""
           items={projekteListAll.map(r => ({
             id: r.record_id,
             label: String(r.fields.projektkennung ?? r.record_id),
@@ -787,7 +787,7 @@ export function AngeboteDialog({ open, onClose, onSubmit, defaultValues, recordI
         <Label htmlFor="berater">{fieldLabel('angebote', 'berater')}</Label>
         <Combobox
           id="berater"
-          placeholder="Welcher Berater?"
+          placeholder=""
           items={beraterListAll.map(r => ({
             id: r.record_id,
             label: String(r.fields.vorname ?? r.record_id),
@@ -819,7 +819,7 @@ export function AngeboteDialog({ open, onClose, onSubmit, defaultValues, recordI
   // eine Map { lookupKey: label } für ALLE Felder des Target-Schemas. Wird
   // beim Render-Walk gefiltert auf die in der computed-Formel tatsächlich
   // referenzierten lookupKeys (siehe applookupRefs unten).
-  const APPLOOKUP_LABELS: Record<string, Record<string, string>> = {"projekt": {"projektkennung": "Projektkennung", "projektnummer": "Projektnummer", "projektart": "Projektart", "projektstatus": "Projektstatus", "projektstart_monat": "Startmonat", "projektstart_jahr": "Startjahr", "kunde": "Kunde", "ansprechpartner_kunde": "Ansprechpartner beim Kunden", "letzter_schritt": "Letzter Schritt / aktueller Stand", "projektleitung": "Projektleitung"}, "berater": {"vorname": "Vorname", "nachname": "Nachname", "titel": "Titel (optional)", "strasse": "Straße", "hausnummer": "Hausnummer", "plz": "Postleitzahl", "ort": "Ort", "email_beruflich": "E-Mail (beruflich)", "email_privat": "E-Mail (privat)", "einstiegsdatum": "Einstiegsdatum", "status": "Status", "stundensatz": "Stundensatz (€/h)", "stunden_aktueller_monat": "Gebuchte Stunden – aktueller Monat", "stunden_aktuelles_quartal": "Gebuchte Stunden – aktuelles Quartal", "stunden_aktuelles_jahr": "Gebuchte Stunden – aktuelles Jahr", "stunden_letzter_monat": "Gebuchte Stunden – letzter Monat", "stunden_letztes_quartal": "Gebuchte Stunden – letztes Quartal", "stunden_letztes_jahr": "Gebuchte Stunden – letztes Jahr", "sonstiges": "Sonstige Anmerkungen", "leistungen": "Zugeordnete Leistungen", "zugewiesene_projekte": "Aktuell zugewiesene Projekte"}};
+  const APPLOOKUP_LABELS: Record<string, Record<string, string>> = {"projekt": {"kostenstelle": "Kostenstelle", "projektkennung": "Projektkennung", "projektnummer": "Projektnummer", "projektart": "Projektart", "projektstatus": "Projektstatus", "projektstart_monat": "Startmonat", "projektstart_jahr": "Startjahr", "kunde": "Kunde", "ansprechpartner_kunde": "Ansprechpartner beim Kunden", "letzter_schritt": "Letzter Schritt / aktueller Stand", "projektleitung": "Projektleitung"}, "berater": {"vorname": "Vorname", "nachname": "Nachname", "titel": "Titel (optional)", "strasse": "Straße", "hausnummer": "Hausnummer", "plz": "Postleitzahl", "ort": "Ort", "email_beruflich": "E-Mail (beruflich)", "email_privat": "E-Mail (privat)", "einstiegsdatum": "Einstiegsdatum", "status": "Status", "stundensatz": "Stundensatz (€/h)", "stunden_aktueller_monat": "Gebuchte Stunden – aktueller Monat", "stunden_aktuelles_quartal": "Gebuchte Stunden – aktuelles Quartal", "stunden_aktuelles_jahr": "Gebuchte Stunden – aktuelles Jahr", "stunden_letzter_monat": "Gebuchte Stunden – letzter Monat", "stunden_letztes_quartal": "Gebuchte Stunden – letztes Quartal", "stunden_letztes_jahr": "Gebuchte Stunden – letztes Jahr", "sonstiges": "Sonstige Anmerkungen", "leistungen": "Zugeordnete Leistungen", "zugewiesene_projekte": "Aktuell zugewiesene Projekte"}};
   const inputFields = useMemo(() => flattenFieldOrder(orderedFields), [orderedFieldsKey]);
   const backendFieldSet = useMemo(() => new Set(inputFields), [inputFields.join(',')]);
   const virtualComputed = useMemo(

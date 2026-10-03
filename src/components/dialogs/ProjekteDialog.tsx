@@ -306,7 +306,7 @@ export function ProjekteDialog({ open, onClose, onSubmit, defaultValues, recordI
         }
       }
       const photoContext = contextParts.length ? contextParts.join('\n') : undefined;
-      const schema = `{\n  "projektkennung": string | null, // Projektkennung\n  "projektnummer": number | null, // Projektnummer\n  "projektart": LookupValue | null, // Projektart (select one key: "it_beratung" | "entwicklung" | "schulung" | "konzeption" | "support" | "sonstiges") mapping: it_beratung=IT-Beratung, entwicklung=Entwicklung, schulung=Schulung, konzeption=Konzeption, support=Support, sonstiges=Sonstiges\n  "projektstatus": LookupValue | null, // Projektstatus (select one key: "in_bearbeitung" | "akquise" | "abgeschlossen") mapping: in_bearbeitung=In Bearbeitung, akquise=Akquise, abgeschlossen=Abgeschlossen\n  "projektstart_monat": LookupValue | null, // Startmonat (select one key: "januar" | "februar" | "maerz" | "april" | "mai" | "juni" | "juli" | "august" | "september" | "oktober" | "november" | "dezember") mapping: januar=Januar, februar=Februar, maerz=März, april=April, mai=Mai, juni=Juni, juli=Juli, august=August, september=September, oktober=Oktober, november=November, dezember=Dezember\n  "projektstart_jahr": number | null, // Startjahr\n  "kunde": string | null, // Display name from Kunden (see <available-records>)\n  "ansprechpartner_kunde": string | null, // Ansprechpartner beim Kunden\n  "letzter_schritt": string | null, // Letzter Schritt / aktueller Stand\n  "projektleitung": string | null, // Display name from Berater (see <available-records>)\n}`;
+      const schema = `{\n  "kostenstelle": string | null, // Kostenstelle\n  "projektkennung": string | null, // Projektkennung\n  "projektnummer": number | null, // Projektnummer\n  "projektart": LookupValue | null, // Projektart (select one key: "entwicklung" | "schulung" | "konzeption" | "support" | "sonstiges" | "it_beratung") mapping: entwicklung=Entwicklung, schulung=Schulung, konzeption=Konzeption, support=Support, sonstiges=Sonstiges, it_beratung=IT-Beratung\n  "projektstatus": LookupValue | null, // Projektstatus (select one key: "in_bearbeitung" | "akquise" | "abgeschlossen") mapping: in_bearbeitung=In Bearbeitung, akquise=Akquise, abgeschlossen=Abgeschlossen\n  "projektstart_monat": LookupValue | null, // Startmonat (select one key: "januar" | "februar" | "maerz" | "april" | "mai" | "juni" | "juli" | "august" | "september" | "oktober" | "november" | "dezember") mapping: januar=Januar, februar=Februar, maerz=März, april=April, mai=Mai, juni=Juni, juli=Juli, august=August, september=September, oktober=Oktober, november=November, dezember=Dezember\n  "projektstart_jahr": number | null, // Startjahr\n  "kunde": string | null, // Display name from Kunden (see <available-records>)\n  "ansprechpartner_kunde": string | null, // Ansprechpartner beim Kunden\n  "letzter_schritt": string | null, // Letzter Schritt / aktueller Stand\n  "projektleitung": string | null, // Display name from Berater (see <available-records>)\n}`;
       const raw = await extractFromInput<Record<string, unknown>>(schema, {
         dataUri: uri,
         userText: aiText.trim() || undefined,
@@ -380,12 +380,23 @@ export function ProjekteDialog({ open, onClose, onSubmit, defaultValues, recordI
     : t('new_entity', { entity: appLabel('projekte') });
 
   const fieldBlocks: Record<string, React.ReactNode> = {
+    'kostenstelle': (
+      <div key="kostenstelle" className="space-y-1.5">
+        <Label htmlFor="kostenstelle">{fieldLabel('projekte', 'kostenstelle')}</Label>
+        <Input
+          id="kostenstelle"
+          placeholder=""
+          value={fields.kostenstelle ?? ''}
+          onChange={e => setFields(f => ({ ...f, kostenstelle: e.target.value }))}
+        />
+      </div>
+    ),
     'projektkennung': (
       <div key="projektkennung" className="space-y-1.5">
         <Label htmlFor="projektkennung">{fieldLabel('projekte', 'projektkennung')} <span className="text-destructive" aria-hidden="true">*</span></Label>
         <Input
           id="projektkennung"
-          placeholder="z. B. PRJ-2026-001"
+          placeholder=""
           value={fields.projektkennung ?? ''}
           onChange={e => setFields(f => ({ ...f, projektkennung: e.target.value }))}
           required
@@ -404,7 +415,7 @@ export function ProjekteDialog({ open, onClose, onSubmit, defaultValues, recordI
           inputMode="decimal"
           step="any"
           {...numberInputProps(formEnhancements, 'projektnummer')}
-          placeholder="z. B. 1001"
+          placeholder=""
           value={fields.projektnummer !== undefined ? fields.projektnummer : (computedValues['projektnummer'] ?? '')}
           onChange={e => setFields(f => ({ ...f, projektnummer: clampNumberValue(formEnhancements, 'projektnummer', e.target.value) }))}
         />
@@ -420,15 +431,15 @@ export function ProjekteDialog({ open, onClose, onSubmit, defaultValues, recordI
           value={lookupKey(fields.projektart) ?? ''}
           onValueChange={v => setFields(f => ({ ...f, projektart: v === 'none' ? undefined : v as any }))}
         >
-          <SelectTrigger id="projektart" className="max-sm:h-11"><SelectValue placeholder="z. B. Entwicklung, Schulung" /></SelectTrigger>
+          <SelectTrigger id="projektart" className="max-sm:h-11"><SelectValue placeholder="" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="none">—</SelectItem>
-            <SelectItem value="it_beratung">{lookupLabel('projekte', 'projektart', 'it_beratung') ?? 'IT-Beratung'}</SelectItem>
             <SelectItem value="entwicklung">{lookupLabel('projekte', 'projektart', 'entwicklung') ?? 'Entwicklung'}</SelectItem>
             <SelectItem value="schulung">{lookupLabel('projekte', 'projektart', 'schulung') ?? 'Schulung'}</SelectItem>
             <SelectItem value="konzeption">{lookupLabel('projekte', 'projektart', 'konzeption') ?? 'Konzeption'}</SelectItem>
             <SelectItem value="support">{lookupLabel('projekte', 'projektart', 'support') ?? 'Support'}</SelectItem>
             <SelectItem value="sonstiges">{lookupLabel('projekte', 'projektart', 'sonstiges') ?? 'Sonstiges'}</SelectItem>
+            <SelectItem value="it_beratung">{lookupLabel('projekte', 'projektart', 'it_beratung') ?? 'IT-Beratung'}</SelectItem>
           </SelectContent>
         </Select>
         {showErrors && !fields.projektart && (
@@ -492,7 +503,7 @@ export function ProjekteDialog({ open, onClose, onSubmit, defaultValues, recordI
           value={lookupKey(fields.projektstart_monat) ?? ''}
           onValueChange={v => setFields(f => ({ ...f, projektstart_monat: v === 'none' ? undefined : v as any }))}
         >
-          <SelectTrigger id="projektstart_monat" className="max-sm:h-11"><SelectValue placeholder="Welcher Startmonat?" /></SelectTrigger>
+          <SelectTrigger id="projektstart_monat" className="max-sm:h-11"><SelectValue placeholder="" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="none">—</SelectItem>
             <SelectItem value="januar">{lookupLabel('projekte', 'projektstart_monat', 'januar') ?? 'Januar'}</SelectItem>
@@ -520,7 +531,7 @@ export function ProjekteDialog({ open, onClose, onSubmit, defaultValues, recordI
           inputMode="decimal"
           step="any"
           {...numberInputProps(formEnhancements, 'projektstart_jahr')}
-          placeholder="z. B. 2026"
+          placeholder=""
           value={fields.projektstart_jahr !== undefined ? fields.projektstart_jahr : (computedValues['projektstart_jahr'] ?? '')}
           onChange={e => setFields(f => ({ ...f, projektstart_jahr: clampNumberValue(formEnhancements, 'projektstart_jahr', e.target.value) }))}
         />
@@ -531,7 +542,7 @@ export function ProjekteDialog({ open, onClose, onSubmit, defaultValues, recordI
         <Label htmlFor="kunde">{fieldLabel('projekte', 'kunde')} <span className="text-destructive" aria-hidden="true">*</span></Label>
         <Combobox
           id="kunde"
-          placeholder="Welcher Kunde?"
+          placeholder=""
           items={kundenListAll.map(r => ({
             id: r.record_id,
             label: String(r.fields.kundenname ?? r.record_id),
@@ -551,7 +562,7 @@ export function ProjekteDialog({ open, onClose, onSubmit, defaultValues, recordI
         <Label htmlFor="ansprechpartner_kunde">{fieldLabel('projekte', 'ansprechpartner_kunde')}</Label>
         <Input
           id="ansprechpartner_kunde"
-          placeholder="z. B. Anna Schmidt"
+          placeholder=""
           value={fields.ansprechpartner_kunde ?? ''}
           onChange={e => setFields(f => ({ ...f, ansprechpartner_kunde: e.target.value }))}
         />
@@ -562,7 +573,7 @@ export function ProjekteDialog({ open, onClose, onSubmit, defaultValues, recordI
         <Label htmlFor="letzter_schritt">{fieldLabel('projekte', 'letzter_schritt')}</Label>
         <Textarea
           id="letzter_schritt"
-          placeholder="Was ist zuletzt passiert?"
+          placeholder=""
           value={fields.letzter_schritt ?? ''}
           onChange={e => setFields(f => ({ ...f, letzter_schritt: e.target.value }))}
           rows={3}
@@ -574,7 +585,7 @@ export function ProjekteDialog({ open, onClose, onSubmit, defaultValues, recordI
         <Label htmlFor="projektleitung">{fieldLabel('projekte', 'projektleitung')}</Label>
         <Combobox
           id="projektleitung"
-          placeholder="Wer leitet das Projekt?"
+          placeholder=""
           items={beraterListAll.map(r => ({
             id: r.record_id,
             label: String(r.fields.vorname ?? r.record_id),
@@ -600,7 +611,7 @@ export function ProjekteDialog({ open, onClose, onSubmit, defaultValues, recordI
   //     kein passendes Backend-Feld in orderedFields) erscheinen NICHT als
   //     Input, sondern unten als kompakte 'Berechnungen'-Übersicht oder als
   //     Inline-Hint unter dem letzten beitragenden Input.
-  const FIELD_LABELS: Record<string, string> = {"projektkennung": "Projektkennung", "projektnummer": "Projektnummer", "projektart": "Projektart", "projektstatus": "Projektstatus", "projektstart_monat": "Startmonat", "projektstart_jahr": "Startjahr", "kunde": "Kunde", "ansprechpartner_kunde": "Ansprechpartner beim Kunden", "letzter_schritt": "Letzter Schritt / aktueller Stand", "projektleitung": "Projektleitung"};
+  const FIELD_LABELS: Record<string, string> = {"kostenstelle": "Kostenstelle", "projektkennung": "Projektkennung", "projektnummer": "Projektnummer", "projektart": "Projektart", "projektstatus": "Projektstatus", "projektstart_monat": "Startmonat", "projektstart_jahr": "Startjahr", "kunde": "Kunde", "ansprechpartner_kunde": "Ansprechpartner beim Kunden", "letzter_schritt": "Letzter Schritt / aktueller Stand", "projektleitung": "Projektleitung"};
   const CURRENCY_KEYS = new Set<string>([]);
   // Applookup-Referenz-Labels: pro applookup-Feld in dieser Form (ownKey)
   // eine Map { lookupKey: label } für ALLE Felder des Target-Schemas. Wird

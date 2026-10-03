@@ -384,7 +384,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
         <Label htmlFor="vorname">{fieldLabel('berater', 'vorname')} <span className="text-destructive" aria-hidden="true">*</span></Label>
         <Input
           id="vorname"
-          placeholder="z. B. Anna"
+          placeholder=""
           value={fields.vorname ?? ''}
           onChange={e => setFields(f => ({ ...f, vorname: e.target.value }))}
           required
@@ -399,7 +399,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
         <Label htmlFor="nachname">{fieldLabel('berater', 'nachname')} <span className="text-destructive" aria-hidden="true">*</span></Label>
         <Input
           id="nachname"
-          placeholder="z. B. Müller"
+          placeholder=""
           value={fields.nachname ?? ''}
           onChange={e => setFields(f => ({ ...f, nachname: e.target.value }))}
           required
@@ -414,7 +414,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
         <Label htmlFor="titel">{fieldLabel('berater', 'titel')}</Label>
         <Input
           id="titel"
-          placeholder="z. B. Dr."
+          placeholder=""
           value={fields.titel ?? ''}
           onChange={e => setFields(f => ({ ...f, titel: e.target.value }))}
         />
@@ -425,7 +425,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
         <Label htmlFor="strasse">{fieldLabel('berater', 'strasse')}</Label>
         <Input
           id="strasse"
-          placeholder="z. B. Hauptstraße"
+          placeholder=""
           value={fields.strasse ?? ''}
           onChange={e => setFields(f => ({ ...f, strasse: e.target.value }))}
         />
@@ -436,7 +436,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
         <Label htmlFor="hausnummer">{fieldLabel('berater', 'hausnummer')}</Label>
         <Input
           id="hausnummer"
-          placeholder="z. B. 12a"
+          placeholder=""
           value={fields.hausnummer ?? ''}
           onChange={e => setFields(f => ({ ...f, hausnummer: e.target.value }))}
         />
@@ -447,7 +447,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
         <Label htmlFor="plz">{fieldLabel('berater', 'plz')}</Label>
         <Input
           id="plz"
-          placeholder="z. B. 10115"
+          placeholder=""
           value={fields.plz ?? ''}
           onChange={e => setFields(f => ({ ...f, plz: e.target.value }))}
         />
@@ -458,7 +458,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
         <Label htmlFor="ort">{fieldLabel('berater', 'ort')}</Label>
         <Input
           id="ort"
-          placeholder="z. B. Berlin"
+          placeholder=""
           value={fields.ort ?? ''}
           onChange={e => setFields(f => ({ ...f, ort: e.target.value }))}
         />
@@ -471,7 +471,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
           id="email_beruflich"
           type="email"
           inputMode="email"
-          placeholder="z. B. anna@firma.de"
+          placeholder=""
           value={fields.email_beruflich ?? ''}
           onChange={e => setFields(f => ({ ...f, email_beruflich: e.target.value }))}
           required
@@ -488,7 +488,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
           id="email_privat"
           type="email"
           inputMode="email"
-          placeholder="z. B. anna@mail.de"
+          placeholder=""
           value={fields.email_privat ?? ''}
           onChange={e => setFields(f => ({ ...f, email_privat: e.target.value }))}
         />
@@ -499,7 +499,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
         <Label htmlFor="einstiegsdatum">{fieldLabel('berater', 'einstiegsdatum')}</Label>
         <DatePicker
           id="einstiegsdatum"
-          placeholder="Wann ist der Einstieg?"
+          placeholder=""
           mode="date"
           value={fields.einstiegsdatum ?? null}
           onChange={v => setFields(f => ({ ...f, einstiegsdatum: v ?? undefined }))}
@@ -577,7 +577,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
           inputMode="decimal"
           step="any"
           {...numberInputProps(formEnhancements, 'stundensatz')}
-          placeholder="z. B. 95"
+          placeholder=""
           value={fields.stundensatz !== undefined ? fields.stundensatz : (computedValues['stundensatz'] ?? '')}
           onChange={e => setFields(f => ({ ...f, stundensatz: clampNumberValue(formEnhancements, 'stundensatz', e.target.value) }))}
         />
@@ -592,7 +592,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
           inputMode="decimal"
           step="any"
           {...numberInputProps(formEnhancements, 'stunden_aktueller_monat')}
-          placeholder="z. B. 120"
+          placeholder=""
           value={fields.stunden_aktueller_monat !== undefined ? fields.stunden_aktueller_monat : (computedValues['stunden_aktueller_monat'] ?? '')}
           onChange={e => setFields(f => ({ ...f, stunden_aktueller_monat: clampNumberValue(formEnhancements, 'stunden_aktueller_monat', e.target.value) }))}
         />
@@ -607,7 +607,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
           inputMode="decimal"
           step="any"
           {...numberInputProps(formEnhancements, 'stunden_aktuelles_quartal')}
-          placeholder="z. B. 360"
+          placeholder=""
           value={fields.stunden_aktuelles_quartal !== undefined ? fields.stunden_aktuelles_quartal : (computedValues['stunden_aktuelles_quartal'] ?? '')}
           onChange={e => setFields(f => ({ ...f, stunden_aktuelles_quartal: clampNumberValue(formEnhancements, 'stunden_aktuelles_quartal', e.target.value) }))}
         />
@@ -622,7 +622,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
           inputMode="decimal"
           step="any"
           {...numberInputProps(formEnhancements, 'stunden_aktuelles_jahr')}
-          placeholder="z. B. 1400"
+          placeholder=""
           value={fields.stunden_aktuelles_jahr !== undefined ? fields.stunden_aktuelles_jahr : (computedValues['stunden_aktuelles_jahr'] ?? '')}
           onChange={e => setFields(f => ({ ...f, stunden_aktuelles_jahr: clampNumberValue(formEnhancements, 'stunden_aktuelles_jahr', e.target.value) }))}
         />
@@ -637,7 +637,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
           inputMode="decimal"
           step="any"
           {...numberInputProps(formEnhancements, 'stunden_letzter_monat')}
-          placeholder="z. B. 140"
+          placeholder=""
           value={fields.stunden_letzter_monat !== undefined ? fields.stunden_letzter_monat : (computedValues['stunden_letzter_monat'] ?? '')}
           onChange={e => setFields(f => ({ ...f, stunden_letzter_monat: clampNumberValue(formEnhancements, 'stunden_letzter_monat', e.target.value) }))}
         />
@@ -652,7 +652,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
           inputMode="decimal"
           step="any"
           {...numberInputProps(formEnhancements, 'stunden_letztes_quartal')}
-          placeholder="z. B. 420"
+          placeholder=""
           value={fields.stunden_letztes_quartal !== undefined ? fields.stunden_letztes_quartal : (computedValues['stunden_letztes_quartal'] ?? '')}
           onChange={e => setFields(f => ({ ...f, stunden_letztes_quartal: clampNumberValue(formEnhancements, 'stunden_letztes_quartal', e.target.value) }))}
         />
@@ -667,7 +667,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
           inputMode="decimal"
           step="any"
           {...numberInputProps(formEnhancements, 'stunden_letztes_jahr')}
-          placeholder="z. B. 1650"
+          placeholder=""
           value={fields.stunden_letztes_jahr !== undefined ? fields.stunden_letztes_jahr : (computedValues['stunden_letztes_jahr'] ?? '')}
           onChange={e => setFields(f => ({ ...f, stunden_letztes_jahr: clampNumberValue(formEnhancements, 'stunden_letztes_jahr', e.target.value) }))}
         />
@@ -678,7 +678,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
         <Label htmlFor="sonstiges">{fieldLabel('berater', 'sonstiges')}</Label>
         <Textarea
           id="sonstiges"
-          placeholder="Weitere Hinweise zum Berater"
+          placeholder=""
           value={fields.sonstiges ?? ''}
           onChange={e => setFields(f => ({ ...f, sonstiges: e.target.value }))}
           rows={3}
@@ -690,7 +690,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
         <Label htmlFor="leistungen">{fieldLabel('berater', 'leistungen')}</Label>
         <MultiCombobox
           id="leistungen"
-          placeholder="Welche Leistungen?"
+          placeholder=""
           items={leistungskatalogListAll.map(r => ({
             id: r.record_id,
             label: String(r.fields.leistungsname ?? r.record_id),
@@ -707,7 +707,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
         <Label htmlFor="zugewiesene_projekte">{fieldLabel('berater', 'zugewiesene_projekte')}</Label>
         <MultiCombobox
           id="zugewiesene_projekte"
-          placeholder="Welche Projekte?"
+          placeholder=""
           items={projekteListAll.map(r => ({
             id: r.record_id,
             label: String(r.fields.projektkennung ?? r.record_id),
@@ -739,7 +739,7 @@ export function BeraterDialog({ open, onClose, onSubmit, defaultValues, recordId
   // eine Map { lookupKey: label } für ALLE Felder des Target-Schemas. Wird
   // beim Render-Walk gefiltert auf die in der computed-Formel tatsächlich
   // referenzierten lookupKeys (siehe applookupRefs unten).
-  const APPLOOKUP_LABELS: Record<string, Record<string, string>> = {"leistungen": {"leistungsname": "Leistungsname", "leistungstyp": "Leistungstyp", "beschreibung": "Beschreibung", "kostenvoranschlag": "Normaler Kostenvoranschlag (€)", "einheit": "Abrechnungseinheit", "ausfuehrende_berater": "Ausführende Berater"}, "zugewiesene_projekte": {"projektkennung": "Projektkennung", "projektnummer": "Projektnummer", "projektart": "Projektart", "projektstatus": "Projektstatus", "projektstart_monat": "Startmonat", "projektstart_jahr": "Startjahr", "kunde": "Kunde", "ansprechpartner_kunde": "Ansprechpartner beim Kunden", "letzter_schritt": "Letzter Schritt / aktueller Stand", "projektleitung": "Projektleitung"}};
+  const APPLOOKUP_LABELS: Record<string, Record<string, string>> = {"leistungen": {"leistungsname": "Leistungsname", "leistungstyp": "Leistungstyp", "beschreibung": "Beschreibung", "kostenvoranschlag": "Normaler Kostenvoranschlag (€)", "einheit": "Abrechnungseinheit", "ausfuehrende_berater": "Ausführende Berater"}, "zugewiesene_projekte": {"kostenstelle": "Kostenstelle", "projektkennung": "Projektkennung", "projektnummer": "Projektnummer", "projektart": "Projektart", "projektstatus": "Projektstatus", "projektstart_monat": "Startmonat", "projektstart_jahr": "Startjahr", "kunde": "Kunde", "ansprechpartner_kunde": "Ansprechpartner beim Kunden", "letzter_schritt": "Letzter Schritt / aktueller Stand", "projektleitung": "Projektleitung"}};
   const inputFields = useMemo(() => flattenFieldOrder(orderedFields), [orderedFieldsKey]);
   const backendFieldSet = useMemo(() => new Set(inputFields), [inputFields.join(',')]);
   const virtualComputed = useMemo(

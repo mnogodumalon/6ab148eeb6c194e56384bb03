@@ -326,7 +326,7 @@ export function ZeiterfassungDialog({ open, onClose, onSubmit, defaultValues, re
         }
       }
       const photoContext = contextParts.length ? contextParts.join('\n') : undefined;
-      const schema = `{\n  "berater": string | null, // Display name from Berater (see <available-records>)\n  "projekt": string | null, // Display name from Projekte (see <available-records>)\n  "leistung": string | null, // Display name from Leistungskatalog (see <available-records>)\n  "datum": string | null, // YYYY-MM-DD\n  "stunden": number | null, // Anzahl Stunden\n  "erfassungsmonat": LookupValue | null, // Abrechnungsmonat (select one key: "februar" | "maerz" | "april" | "mai" | "juni" | "juli" | "august" | "september" | "oktober" | "november" | "dezember" | "januar") mapping: februar=Februar, maerz=März, april=April, mai=Mai, juni=Juni, juli=Juli, august=August, september=September, oktober=Oktober, november=November, dezember=Dezember, januar=Januar\n  "erfassungsjahr": number | null, // Abrechnungsjahr\n  "abrechenbar": boolean | null, // Abrechenbar\n  "taetigkeit": string | null, // Tätigkeitsbeschreibung\n}`;
+      const schema = `{\n  "berater": string | null, // Display name from Berater (see <available-records>)\n  "projekt": string | null, // Display name from Projekte (see <available-records>)\n  "leistung": string | null, // Display name from Leistungskatalog (see <available-records>)\n  "datum": string | null, // YYYY-MM-DD\n  "stunden": number | null, // Anzahl Stunden\n  "erfassungsmonat": LookupValue | null, // Abrechnungsmonat (select one key: "januar" | "februar" | "maerz" | "april" | "mai" | "juni" | "juli" | "august" | "september" | "oktober" | "november" | "dezember") mapping: januar=Januar, februar=Februar, maerz=März, april=April, mai=Mai, juni=Juni, juli=Juli, august=August, september=September, oktober=Oktober, november=November, dezember=Dezember\n  "erfassungsjahr": number | null, // Abrechnungsjahr\n  "abrechenbar": boolean | null, // Abrechenbar\n  "taetigkeit": string | null, // Tätigkeitsbeschreibung\n}`;
       const raw = await extractFromInput<Record<string, unknown>>(schema, {
         dataUri: uri,
         userText: aiText.trim() || undefined,
@@ -410,7 +410,7 @@ export function ZeiterfassungDialog({ open, onClose, onSubmit, defaultValues, re
         <Label htmlFor="berater">{fieldLabel('zeiterfassung', 'berater')} <span className="text-destructive" aria-hidden="true">*</span></Label>
         <Combobox
           id="berater"
-          placeholder="Wer hat gearbeitet?"
+          placeholder=""
           items={beraterListAll.map(r => ({
             id: r.record_id,
             label: String(r.fields.vorname ?? r.record_id),
@@ -430,7 +430,7 @@ export function ZeiterfassungDialog({ open, onClose, onSubmit, defaultValues, re
         <Label htmlFor="projekt">{fieldLabel('zeiterfassung', 'projekt')} <span className="text-destructive" aria-hidden="true">*</span></Label>
         <Combobox
           id="projekt"
-          placeholder="Welches Projekt?"
+          placeholder=""
           items={projekteListAll.map(r => ({
             id: r.record_id,
             label: String(r.fields.projektkennung ?? r.record_id),
@@ -450,7 +450,7 @@ export function ZeiterfassungDialog({ open, onClose, onSubmit, defaultValues, re
         <Label htmlFor="leistung">{fieldLabel('zeiterfassung', 'leistung')}</Label>
         <Combobox
           id="leistung"
-          placeholder="Welche Leistung?"
+          placeholder=""
           items={leistungskatalogListAll.map(r => ({
             id: r.record_id,
             label: String(r.fields.leistungsname ?? r.record_id),
@@ -467,7 +467,7 @@ export function ZeiterfassungDialog({ open, onClose, onSubmit, defaultValues, re
         <Label htmlFor="datum">{fieldLabel('zeiterfassung', 'datum')} <span className="text-destructive" aria-hidden="true">*</span></Label>
         <DatePicker
           id="datum"
-          placeholder="Wann wurde gearbeitet?"
+          placeholder=""
           mode="date"
           value={fields.datum ?? null}
           onChange={v => setFields(f => ({ ...f, datum: v ?? undefined }))}
@@ -487,7 +487,7 @@ export function ZeiterfassungDialog({ open, onClose, onSubmit, defaultValues, re
           inputMode="decimal"
           step="any"
           {...numberInputProps(formEnhancements, 'stunden')}
-          placeholder="z. B. 7.5"
+          placeholder=""
           value={fields.stunden !== undefined ? fields.stunden : (computedValues['stunden'] ?? '')}
           onChange={e => setFields(f => ({ ...f, stunden: clampNumberValue(formEnhancements, 'stunden', e.target.value) }))}
         />
@@ -503,9 +503,10 @@ export function ZeiterfassungDialog({ open, onClose, onSubmit, defaultValues, re
           value={lookupKey(fields.erfassungsmonat) ?? ''}
           onValueChange={v => setFields(f => ({ ...f, erfassungsmonat: v === 'none' ? undefined : v as any }))}
         >
-          <SelectTrigger id="erfassungsmonat" className="max-sm:h-11"><SelectValue placeholder="z. B. Februar, März" /></SelectTrigger>
+          <SelectTrigger id="erfassungsmonat" className="max-sm:h-11"><SelectValue placeholder="" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="none">—</SelectItem>
+            <SelectItem value="januar">{lookupLabel('zeiterfassung', 'erfassungsmonat', 'januar') ?? 'Januar'}</SelectItem>
             <SelectItem value="februar">{lookupLabel('zeiterfassung', 'erfassungsmonat', 'februar') ?? 'Februar'}</SelectItem>
             <SelectItem value="maerz">{lookupLabel('zeiterfassung', 'erfassungsmonat', 'maerz') ?? 'März'}</SelectItem>
             <SelectItem value="april">{lookupLabel('zeiterfassung', 'erfassungsmonat', 'april') ?? 'April'}</SelectItem>
@@ -517,7 +518,6 @@ export function ZeiterfassungDialog({ open, onClose, onSubmit, defaultValues, re
             <SelectItem value="oktober">{lookupLabel('zeiterfassung', 'erfassungsmonat', 'oktober') ?? 'Oktober'}</SelectItem>
             <SelectItem value="november">{lookupLabel('zeiterfassung', 'erfassungsmonat', 'november') ?? 'November'}</SelectItem>
             <SelectItem value="dezember">{lookupLabel('zeiterfassung', 'erfassungsmonat', 'dezember') ?? 'Dezember'}</SelectItem>
-            <SelectItem value="januar">{lookupLabel('zeiterfassung', 'erfassungsmonat', 'januar') ?? 'Januar'}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -531,7 +531,7 @@ export function ZeiterfassungDialog({ open, onClose, onSubmit, defaultValues, re
           inputMode="decimal"
           step="any"
           {...numberInputProps(formEnhancements, 'erfassungsjahr')}
-          placeholder="z. B. 2026"
+          placeholder=""
           value={fields.erfassungsjahr !== undefined ? fields.erfassungsjahr : (computedValues['erfassungsjahr'] ?? '')}
           onChange={e => setFields(f => ({ ...f, erfassungsjahr: clampNumberValue(formEnhancements, 'erfassungsjahr', e.target.value) }))}
         />
@@ -555,7 +555,7 @@ export function ZeiterfassungDialog({ open, onClose, onSubmit, defaultValues, re
         <Label htmlFor="taetigkeit">{fieldLabel('zeiterfassung', 'taetigkeit')}</Label>
         <Textarea
           id="taetigkeit"
-          placeholder="Was wurde erledigt?"
+          placeholder=""
           value={fields.taetigkeit ?? ''}
           onChange={e => setFields(f => ({ ...f, taetigkeit: e.target.value }))}
           rows={3}
@@ -582,7 +582,7 @@ export function ZeiterfassungDialog({ open, onClose, onSubmit, defaultValues, re
   // eine Map { lookupKey: label } für ALLE Felder des Target-Schemas. Wird
   // beim Render-Walk gefiltert auf die in der computed-Formel tatsächlich
   // referenzierten lookupKeys (siehe applookupRefs unten).
-  const APPLOOKUP_LABELS: Record<string, Record<string, string>> = {"berater": {"vorname": "Vorname", "nachname": "Nachname", "titel": "Titel (optional)", "strasse": "Straße", "hausnummer": "Hausnummer", "plz": "Postleitzahl", "ort": "Ort", "email_beruflich": "E-Mail (beruflich)", "email_privat": "E-Mail (privat)", "einstiegsdatum": "Einstiegsdatum", "status": "Status", "stundensatz": "Stundensatz (€/h)", "stunden_aktueller_monat": "Gebuchte Stunden – aktueller Monat", "stunden_aktuelles_quartal": "Gebuchte Stunden – aktuelles Quartal", "stunden_aktuelles_jahr": "Gebuchte Stunden – aktuelles Jahr", "stunden_letzter_monat": "Gebuchte Stunden – letzter Monat", "stunden_letztes_quartal": "Gebuchte Stunden – letztes Quartal", "stunden_letztes_jahr": "Gebuchte Stunden – letztes Jahr", "sonstiges": "Sonstige Anmerkungen", "leistungen": "Zugeordnete Leistungen", "zugewiesene_projekte": "Aktuell zugewiesene Projekte"}, "projekt": {"projektkennung": "Projektkennung", "projektnummer": "Projektnummer", "projektart": "Projektart", "projektstatus": "Projektstatus", "projektstart_monat": "Startmonat", "projektstart_jahr": "Startjahr", "kunde": "Kunde", "ansprechpartner_kunde": "Ansprechpartner beim Kunden", "letzter_schritt": "Letzter Schritt / aktueller Stand", "projektleitung": "Projektleitung"}, "leistung": {"leistungsname": "Leistungsname", "leistungstyp": "Leistungstyp", "beschreibung": "Beschreibung", "kostenvoranschlag": "Normaler Kostenvoranschlag (€)", "einheit": "Abrechnungseinheit", "ausfuehrende_berater": "Ausführende Berater"}};
+  const APPLOOKUP_LABELS: Record<string, Record<string, string>> = {"berater": {"vorname": "Vorname", "nachname": "Nachname", "titel": "Titel (optional)", "strasse": "Straße", "hausnummer": "Hausnummer", "plz": "Postleitzahl", "ort": "Ort", "email_beruflich": "E-Mail (beruflich)", "email_privat": "E-Mail (privat)", "einstiegsdatum": "Einstiegsdatum", "status": "Status", "stundensatz": "Stundensatz (€/h)", "stunden_aktueller_monat": "Gebuchte Stunden – aktueller Monat", "stunden_aktuelles_quartal": "Gebuchte Stunden – aktuelles Quartal", "stunden_aktuelles_jahr": "Gebuchte Stunden – aktuelles Jahr", "stunden_letzter_monat": "Gebuchte Stunden – letzter Monat", "stunden_letztes_quartal": "Gebuchte Stunden – letztes Quartal", "stunden_letztes_jahr": "Gebuchte Stunden – letztes Jahr", "sonstiges": "Sonstige Anmerkungen", "leistungen": "Zugeordnete Leistungen", "zugewiesene_projekte": "Aktuell zugewiesene Projekte"}, "projekt": {"kostenstelle": "Kostenstelle", "projektkennung": "Projektkennung", "projektnummer": "Projektnummer", "projektart": "Projektart", "projektstatus": "Projektstatus", "projektstart_monat": "Startmonat", "projektstart_jahr": "Startjahr", "kunde": "Kunde", "ansprechpartner_kunde": "Ansprechpartner beim Kunden", "letzter_schritt": "Letzter Schritt / aktueller Stand", "projektleitung": "Projektleitung"}, "leistung": {"leistungsname": "Leistungsname", "leistungstyp": "Leistungstyp", "beschreibung": "Beschreibung", "kostenvoranschlag": "Normaler Kostenvoranschlag (€)", "einheit": "Abrechnungseinheit", "ausfuehrende_berater": "Ausführende Berater"}};
   const inputFields = useMemo(() => flattenFieldOrder(orderedFields), [orderedFieldsKey]);
   const backendFieldSet = useMemo(() => new Set(inputFields), [inputFields.join(',')]);
   const virtualComputed = useMemo(

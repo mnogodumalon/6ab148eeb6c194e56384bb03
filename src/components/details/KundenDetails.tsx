@@ -62,7 +62,7 @@ export function KundenDetails({
       <SatelliteSection
         title={appLabel('projekte')}
         items={projekteList.filter(r => extractRecordId(r.fields.kunde) === record.record_id)}
-        map={r => ({ name: r.fields.projektkennung ?? appLabel('projekte'), meta: undefined })}
+        map={r => ({ name: r.fields.kostenstelle ?? appLabel('projekte'), meta: undefined })}
         onOpen={onOpenProjekte}
         onAdd={onAddProjekte}
         getKey={r => r.record_id}

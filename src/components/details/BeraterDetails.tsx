@@ -115,7 +115,7 @@ export function BeraterDetails({
       <SatelliteSection
         title={`${appLabel('projekte')} · ${fieldLabel('projekte', 'projektleitung')}`}
         items={projekteProjektleitungList.filter(r => extractRecordId(r.fields.projektleitung) === record.record_id)}
-        map={r => ({ name: r.fields.projektkennung ?? appLabel('projekte'), meta: undefined })}
+        map={r => ({ name: r.fields.kostenstelle ?? appLabel('projekte'), meta: undefined })}
         onOpen={onOpenProjekteProjektleitung}
         onAdd={onAddProjekteProjektleitung}
         getKey={r => r.record_id}

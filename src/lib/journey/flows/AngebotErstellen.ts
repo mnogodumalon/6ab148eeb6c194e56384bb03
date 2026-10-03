@@ -1,7 +1,7 @@
 /**
  * useAngebotErstellenFlow — the plumbing of the flow « Angebot erstellen », generated from the plan.
  *
- * Writes `angebote`: asks `projekt`, `berater`, `angebotstyp`, `zeitrahmen_anfang`, `zeitrahmen_ende`, `dauer`, `kostentyp`, `kostenbetrag`, `beschreibung`; sets `angebotsstatus` itself.
+ * Writes `angebote`: asks `dauer`, `berater`, `projekt`, `kostentyp`, `angebotstyp`, `beschreibung`, `kostenbetrag`, `zeitrahmen_ende`, `zeitrahmen_anfang`; sets `angebotsstatus` itself.
  * The hook OWNS: the form(s) with exactly these fields and the plan's required
  * ingredients, one record search per picked field (columns and filter from
  * the plan), and the submit plan with its fixed and derived values. A page
@@ -16,19 +16,19 @@
  *   messages  the sentence for an empty required field, per field
  *
  *   const flow = useAngebotErstellenFlow({
- *     steps: { projekt: 1, berater: 2, angebotstyp: 3, zeitrahmen_anfang: 3, zeitrahmen_ende: 3, dauer: 3, kostentyp: 3, kostenbetrag: 3, beschreibung: 3 },
- *     items: { projekt: r => ({ id: r.id, title: fieldText(r, 'projektkennung') }) },
+ *     steps: { berater: 1, projekt: 2, dauer: 3, kostentyp: 3, angebotstyp: 3, beschreibung: 3, kostenbetrag: 3, zeitrahmen_ende: 3, zeitrahmen_anfang: 3 },
+ *     items: { berater: r => ({ id: r.id, title: fieldText(r, 'vorname') }) },
  *   });
  *   <IntentWizardShell forms={flow.forms} draftKey={flow.draftKey} …>
- *     <EntitySelectStep {...flow.picks.projekt.select} {...flow.pick('projekt')} />
  *     <EntitySelectStep {...flow.picks.berater.select} {...flow.pick('berater')} />
- *     <Bound form={flow.forms.angebote} name="angebotstyp" />
- *     <Bound form={flow.forms.angebote} name="zeitrahmen_anfang" />
- *     <Bound form={flow.forms.angebote} name="zeitrahmen_ende" />
+ *     <EntitySelectStep {...flow.picks.projekt.select} {...flow.pick('projekt')} />
  *     <Bound form={flow.forms.angebote} name="dauer" />
  *     <Bound form={flow.forms.angebote} name="kostentyp" />
- *     <Bound form={flow.forms.angebote} name="kostenbetrag" />
+ *     <Bound form={flow.forms.angebote} name="angebotstyp" />
  *     <Bound form={flow.forms.angebote} name="beschreibung" />
+ *     <Bound form={flow.forms.angebote} name="kostenbetrag" />
+ *     <Bound form={flow.forms.angebote} name="zeitrahmen_ende" />
+ *     <Bound form={flow.forms.angebote} name="zeitrahmen_anfang" />
  *     <StepNav onNext={() => flow.validateStep(n)} />
  *     {!flow.submit.done && <SummaryStep forms={flow.formList} submit={flow.submit} />}
  *     {flow.submit.result && <SuccessStep result={flow.submit.result} forms={flow.formList} submit={flow.submit} />}
@@ -58,12 +58,12 @@ export interface AngebotErstellenFlowOptions {
   messages?: Partial<Record<Key, string>>;
   /** How a search hit reads — the card's title/subtitle/status per pick. */
   items?: {
-    projekt?: (record: JourneyRecord, ctx: RefContext) => SelectItemLike;
     berater?: (record: JourneyRecord, ctx: RefContext) => SelectItemLike;
+    projekt?: (record: JourneyRecord, ctx: RefContext) => SelectItemLike;
   };
 }
 
-const DEFAULT_STEPS: Record<string, number> = {"angebotstyp": 3, "berater": 2, "beschreibung": 3, "dauer": 3, "kostenbetrag": 3, "kostentyp": 3, "projekt": 1, "zeitrahmen_anfang": 3, "zeitrahmen_ende": 3};
+const DEFAULT_STEPS: Record<string, number> = {"angebotstyp": 3, "berater": 1, "beschreibung": 3, "dauer": 3, "kostenbetrag": 3, "kostentyp": 3, "projekt": 2, "zeitrahmen_anfang": 3, "zeitrahmen_ende": 3};
 export const ANGEBOTERSTELLEN_REVIEW_STEP = 4;
 
 function fromPick<T>(pick: { recordOf(id: string): JourneyRecord | undefined }, form: StepForm, field: string, read: (r: JourneyRecord) => T): T | undefined {
@@ -95,12 +95,12 @@ function hasValues(form: StepForm): boolean {
 export function useAngebotErstellenFlow(options: AngebotErstellenFlowOptions = {}) {
   const steps = { ...DEFAULT_STEPS, ...(options.steps ?? {}) } as Record<string, number>;
   const angebote = useStepForm('angebote', {
-    fields: ["projekt", "berater", "angebotstyp", "zeitrahmen_anfang", "zeitrahmen_ende", "dauer", "kostentyp", "kostenbetrag", "beschreibung"],
-    steps: only(steps, ["projekt", "berater", "angebotstyp", "zeitrahmen_anfang", "zeitrahmen_ende", "dauer", "kostentyp", "kostenbetrag", "beschreibung"]) as Record<string, number>,
+    fields: ["dauer", "berater", "projekt", "kostentyp", "angebotstyp", "beschreibung", "kostenbetrag", "zeitrahmen_ende", "zeitrahmen_anfang"],
+    steps: only(steps, ["dauer", "berater", "projekt", "kostentyp", "angebotstyp", "beschreibung", "kostenbetrag", "zeitrahmen_ende", "zeitrahmen_anfang"]) as Record<string, number>,
     // the plan builds a value from these — required here, whatever the app's base view says
     required: { zeitrahmen_anfang: true },
-    initial: only(options.initial as FormValues | undefined, ["projekt", "berater", "angebotstyp", "zeitrahmen_anfang", "zeitrahmen_ende", "dauer", "kostentyp", "kostenbetrag", "beschreibung"]),
-    messages: only(options.messages as Record<string, string> | undefined, ["projekt", "berater", "angebotstyp", "zeitrahmen_anfang", "zeitrahmen_ende", "dauer", "kostentyp", "kostenbetrag", "beschreibung"]),
+    initial: only(options.initial as FormValues | undefined, ["dauer", "berater", "projekt", "kostentyp", "angebotstyp", "beschreibung", "kostenbetrag", "zeitrahmen_ende", "zeitrahmen_anfang"]),
+    messages: only(options.messages as Record<string, string> | undefined, ["dauer", "berater", "projekt", "kostentyp", "angebotstyp", "beschreibung", "kostenbetrag", "zeitrahmen_ende", "zeitrahmen_anfang"]),
   });
   const forms: AngebotErstellenForms = { angebote };
   const formList: StepForm[] = [angebote];
@@ -110,17 +110,17 @@ export function useAngebotErstellenFlow(options: AngebotErstellenFlowOptions = {
   // render time, so a change works on the running application.
   usePolicyVersion();
   const searches = {
-    projekt: useRecordSearch(servicePort, 'projekte', withPickPolicy('projekt', {
-      searchFields: ["projektkennung"] as never,
-      filter: "r.v_projektstatus != 'abgeschlossen'",
-      where: (r: JourneyRecord) => (fieldLookup(r, "projektstatus")?.key ?? null) !== "abgeschlossen",
-      toItem: options.items?.projekt as never,
-    })),
     berater: useRecordSearch(servicePort, 'berater', withPickPolicy('berater', {
       searchFields: ["vorname", "nachname"] as never,
       filter: "r.v_status == 'aktiv'",
       where: (r: JourneyRecord) => (fieldLookup(r, "status")?.key ?? null) === "aktiv",
       toItem: options.items?.berater as never,
+    })),
+    projekt: useRecordSearch(servicePort, 'projekte', withPickPolicy('projekt', {
+      searchFields: ["projektkennung"] as never,
+      filter: "r.v_projektstatus != 'abgeschlossen'",
+      where: (r: JourneyRecord) => (fieldLookup(r, "projektstatus")?.key ?? null) !== "abgeschlossen",
+      toItem: options.items?.projekt as never,
     })),
   };
   // Whether a pick offers „Neu anlegen“ is the plan's call: off for the record
@@ -138,8 +138,8 @@ export function useAngebotErstellenFlow(options: AngebotErstellenFlowOptions = {
     href: `#/verwaltung/anwendung?line=intent:angebot-erstellen:write:${entity}.${field}`,
   });
   const picks = {
-    projekt: { ...searches.projekt, select: { ...searches.projekt.select, create: false as boolean, hint: hintFor('projekt', 'projekte', {"conditions": [{"field": "projektstatus", "op": "ne", "value": "abgeschlossen"}], "mode": "all"} as PickWhere | null) } },
     berater: { ...searches.berater, select: { ...searches.berater.select, create: true as boolean, hint: hintFor('berater', 'berater', {"conditions": [{"field": "status", "op": "eq", "value": "aktiv"}], "mode": "all"} as PickWhere | null) } },
+    projekt: { ...searches.projekt, select: { ...searches.projekt.select, create: false as boolean, hint: hintFor('projekt', 'projekte', {"conditions": [{"field": "projektstatus", "op": "ne", "value": "abgeschlossen"}], "mode": "all"} as PickWhere | null) } },
   };
 
   const plan: PlanStep[] = [

@@ -21,7 +21,7 @@ export interface StringFields {
   "kunden": "kundenname" | "email" | "strasse" | "hausnummer" | "plz" | "ort" | "rechnungsstrasse" | "rechnungshausnummer" | "rechnungsplz" | "rechnungsort" | "ansprechpartner_titel" | "ansprechpartner_vorname" | "ansprechpartner_nachname" | "ansprechpartner_email" | "letzter_kontakt_ansprechpartner" | "notizen";
   "berater": "vorname" | "nachname" | "titel" | "strasse" | "hausnummer" | "plz" | "ort" | "email_beruflich" | "email_privat" | "sonstiges";
   "leistungskatalog": "leistungsname" | "beschreibung";
-  "projekte": "projektkennung" | "ansprechpartner_kunde" | "letzter_schritt";
+  "projekte": "kostenstelle" | "projektkennung" | "ansprechpartner_kunde" | "letzter_schritt";
   "angebote": "dauer" | "beschreibung";
   "zeiterfassung": "taetigkeit";
   "rechnungen": "rechnungsnummer" | "notizen";
@@ -172,10 +172,10 @@ export const FIELD_RULES: Record<EntityKey, Record<string, FieldRule>> = {
       "label": "Kundentyp",
       "writable": true,
       "options": [
+        "einzelperson",
         "firma",
         "behoerde",
-        "sonstiges",
-        "einzelperson"
+        "sonstiges"
       ]
     },
     "email": {
@@ -621,6 +621,15 @@ export const FIELD_RULES: Record<EntityKey, Record<string, FieldRule>> = {
     }
   },
   "projekte": {
+    "kostenstelle": {
+      "key": "kostenstelle",
+      "fulltype": "string/text",
+      "kind": "text",
+      "required": false,
+      "label": "Kostenstelle",
+      "writable": true,
+      "maxLength": 4000
+    },
     "projektkennung": {
       "key": "projektkennung",
       "fulltype": "string/text",
@@ -646,12 +655,12 @@ export const FIELD_RULES: Record<EntityKey, Record<string, FieldRule>> = {
       "label": "Projektart",
       "writable": true,
       "options": [
-        "it_beratung",
         "entwicklung",
         "schulung",
         "konzeption",
         "support",
-        "sonstiges"
+        "sonstiges",
+        "it_beratung"
       ]
     },
     "projektstatus": {
@@ -922,6 +931,7 @@ export const FIELD_RULES: Record<EntityKey, Record<string, FieldRule>> = {
       "label": "Abrechnungsmonat",
       "writable": true,
       "options": [
+        "januar",
         "februar",
         "maerz",
         "april",
@@ -932,8 +942,7 @@ export const FIELD_RULES: Record<EntityKey, Record<string, FieldRule>> = {
         "september",
         "oktober",
         "november",
-        "dezember",
-        "januar"
+        "dezember"
       ]
     },
     "erfassungsjahr": {

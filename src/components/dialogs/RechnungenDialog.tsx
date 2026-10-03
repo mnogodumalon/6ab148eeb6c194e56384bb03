@@ -456,7 +456,7 @@ export function RechnungenDialog({ open, onClose, onSubmit, defaultValues, recor
         <Label htmlFor="rechnungsnummer">{fieldLabel('rechnungen', 'rechnungsnummer')} <span className="text-destructive" aria-hidden="true">*</span></Label>
         <Input
           id="rechnungsnummer"
-          placeholder="z. B. RE-2026-001"
+          placeholder=""
           value={fields.rechnungsnummer ?? ''}
           onChange={e => setFields(f => ({ ...f, rechnungsnummer: e.target.value }))}
           required
@@ -471,7 +471,7 @@ export function RechnungenDialog({ open, onClose, onSubmit, defaultValues, recor
         <Label htmlFor="rechnungsdatum">{fieldLabel('rechnungen', 'rechnungsdatum')} <span className="text-destructive" aria-hidden="true">*</span></Label>
         <DatePicker
           id="rechnungsdatum"
-          placeholder="Wann wurde sie erstellt?"
+          placeholder=""
           mode="date"
           value={fields.rechnungsdatum ?? null}
           onChange={v => setFields(f => ({ ...f, rechnungsdatum: v ?? undefined }))}
@@ -487,7 +487,7 @@ export function RechnungenDialog({ open, onClose, onSubmit, defaultValues, recor
         <Label htmlFor="faelligkeitsdatum">{fieldLabel('rechnungen', 'faelligkeitsdatum')}</Label>
         <DatePicker
           id="faelligkeitsdatum"
-          placeholder="Bis wann ist sie fällig?"
+          placeholder=""
           mode="date"
           value={fields.faelligkeitsdatum ?? null}
           onChange={v => setFields(f => ({ ...f, faelligkeitsdatum: v ?? undefined }))}
@@ -573,7 +573,7 @@ export function RechnungenDialog({ open, onClose, onSubmit, defaultValues, recor
           value={lookupKey(fields.rechnungsmonat) ?? ''}
           onValueChange={v => setFields(f => ({ ...f, rechnungsmonat: v === 'none' ? undefined : v as any }))}
         >
-          <SelectTrigger id="rechnungsmonat" className="max-sm:h-11"><SelectValue placeholder="z. B. Januar, Februar" /></SelectTrigger>
+          <SelectTrigger id="rechnungsmonat" className="max-sm:h-11"><SelectValue placeholder="" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="none">—</SelectItem>
             <SelectItem value="januar">{lookupLabel('rechnungen', 'rechnungsmonat', 'januar') ?? 'Januar'}</SelectItem>
@@ -601,7 +601,7 @@ export function RechnungenDialog({ open, onClose, onSubmit, defaultValues, recor
           inputMode="decimal"
           step="any"
           {...numberInputProps(formEnhancements, 'rechnungsjahr')}
-          placeholder="z. B. 2026"
+          placeholder=""
           value={fields.rechnungsjahr !== undefined ? fields.rechnungsjahr : (computedValues['rechnungsjahr'] ?? '')}
           onChange={e => setFields(f => ({ ...f, rechnungsjahr: clampNumberValue(formEnhancements, 'rechnungsjahr', e.target.value) }))}
         />
@@ -612,7 +612,7 @@ export function RechnungenDialog({ open, onClose, onSubmit, defaultValues, recor
         <Label htmlFor="kunde">{fieldLabel('rechnungen', 'kunde')} <span className="text-destructive" aria-hidden="true">*</span></Label>
         <Combobox
           id="kunde"
-          placeholder="Welcher Kunde?"
+          placeholder=""
           items={kundenListAll.map(r => ({
             id: r.record_id,
             label: String(r.fields.kundenname ?? r.record_id),
@@ -636,7 +636,7 @@ export function RechnungenDialog({ open, onClose, onSubmit, defaultValues, recor
           inputMode="decimal"
           step="any"
           {...numberInputProps(formEnhancements, 'nettobetrag')}
-          placeholder="z. B. 1500"
+          placeholder=""
           value={fields.nettobetrag !== undefined ? fields.nettobetrag : (computedValues['nettobetrag'] ?? '')}
           onChange={e => setFields(f => ({ ...f, nettobetrag: clampNumberValue(formEnhancements, 'nettobetrag', e.target.value) }))}
         />
@@ -651,7 +651,7 @@ export function RechnungenDialog({ open, onClose, onSubmit, defaultValues, recor
           inputMode="decimal"
           step="any"
           {...numberInputProps(formEnhancements, 'mehrwertsteuer')}
-          placeholder="z. B. 19"
+          placeholder=""
           value={fields.mehrwertsteuer !== undefined ? fields.mehrwertsteuer : (computedValues['mehrwertsteuer'] ?? '')}
           onChange={e => setFields(f => ({ ...f, mehrwertsteuer: clampNumberValue(formEnhancements, 'mehrwertsteuer', e.target.value) }))}
         />
@@ -666,7 +666,7 @@ export function RechnungenDialog({ open, onClose, onSubmit, defaultValues, recor
           inputMode="decimal"
           step="any"
           {...numberInputProps(formEnhancements, 'gesamtbetrag')}
-          placeholder="z. B. 1785"
+          placeholder=""
           value={fields.gesamtbetrag !== undefined ? fields.gesamtbetrag : (computedValues['gesamtbetrag'] ?? '')}
           onChange={e => setFields(f => ({ ...f, gesamtbetrag: clampNumberValue(formEnhancements, 'gesamtbetrag', e.target.value) }))}
         />
@@ -677,7 +677,7 @@ export function RechnungenDialog({ open, onClose, onSubmit, defaultValues, recor
         <Label htmlFor="notizen">{fieldLabel('rechnungen', 'notizen')}</Label>
         <Textarea
           id="notizen"
-          placeholder="Interne Hinweise zur Rechnung"
+          placeholder=""
           value={fields.notizen ?? ''}
           onChange={e => setFields(f => ({ ...f, notizen: e.target.value }))}
           rows={3}
@@ -759,7 +759,7 @@ export function RechnungenDialog({ open, onClose, onSubmit, defaultValues, recor
         <Label htmlFor="projekt">{fieldLabel('rechnungen', 'projekt')} <span className="text-destructive" aria-hidden="true">*</span></Label>
         <Combobox
           id="projekt"
-          placeholder="Welches Projekt?"
+          placeholder=""
           items={projekteListAll.map(r => ({
             id: r.record_id,
             label: String(r.fields.projektkennung ?? r.record_id),
@@ -779,7 +779,7 @@ export function RechnungenDialog({ open, onClose, onSubmit, defaultValues, recor
         <Label htmlFor="berater">{fieldLabel('rechnungen', 'berater')}</Label>
         <MultiCombobox
           id="berater"
-          placeholder="Welche Berater?"
+          placeholder=""
           items={beraterListAll.map(r => ({
             id: r.record_id,
             label: String(r.fields.vorname ?? r.record_id),
@@ -796,7 +796,7 @@ export function RechnungenDialog({ open, onClose, onSubmit, defaultValues, recor
         <Label htmlFor="zeiterfassungseintraege">{fieldLabel('rechnungen', 'zeiterfassungseintraege')}</Label>
         <MultiCombobox
           id="zeiterfassungseintraege"
-          placeholder="Welche Zeiteinträge?"
+          placeholder=""
           items={zeiterfassungListAll.map(r => ({
             id: r.record_id,
             label: String(r.fields.taetigkeit ?? r.record_id),
@@ -828,7 +828,7 @@ export function RechnungenDialog({ open, onClose, onSubmit, defaultValues, recor
   // eine Map { lookupKey: label } für ALLE Felder des Target-Schemas. Wird
   // beim Render-Walk gefiltert auf die in der computed-Formel tatsächlich
   // referenzierten lookupKeys (siehe applookupRefs unten).
-  const APPLOOKUP_LABELS: Record<string, Record<string, string>> = {"kunde": {"kundenname": "Name / Firmenname", "kundentyp": "Kundentyp", "email": "E-Mail", "anlagedatum": "Anlagedatum", "strasse": "Straße", "hausnummer": "Hausnummer", "plz": "Postleitzahl", "ort": "Ort", "rechnungsadresse_gleich": "Rechnungsadresse ist identisch mit der Adresse", "rechnungsstrasse": "Rechnungsstraße", "rechnungshausnummer": "Rechnungs-Hausnummer", "rechnungsplz": "Rechnungs-Postleitzahl", "rechnungsort": "Rechnungsort", "ansprechpartner_titel": "Titel des Ansprechpartners", "ansprechpartner_vorname": "Vorname des Ansprechpartners", "ansprechpartner_nachname": "Nachname des Ansprechpartners", "ansprechpartner_email": "E-Mail des Ansprechpartners", "bevorzugte_kontaktart": "Bevorzugte Kontaktart", "letzter_kontakt_datum": "Datum des letzten Kontakts", "letzter_kontakt_ansprechpartner": "Ansprechpartner beim letzten Kontakt", "notizen": "Notizen"}, "projekt": {"projektkennung": "Projektkennung", "projektnummer": "Projektnummer", "projektart": "Projektart", "projektstatus": "Projektstatus", "projektstart_monat": "Startmonat", "projektstart_jahr": "Startjahr", "kunde": "Kunde", "ansprechpartner_kunde": "Ansprechpartner beim Kunden", "letzter_schritt": "Letzter Schritt / aktueller Stand", "projektleitung": "Projektleitung"}, "berater": {"vorname": "Vorname", "nachname": "Nachname", "titel": "Titel (optional)", "strasse": "Straße", "hausnummer": "Hausnummer", "plz": "Postleitzahl", "ort": "Ort", "email_beruflich": "E-Mail (beruflich)", "email_privat": "E-Mail (privat)", "einstiegsdatum": "Einstiegsdatum", "status": "Status", "stundensatz": "Stundensatz (€/h)", "stunden_aktueller_monat": "Gebuchte Stunden – aktueller Monat", "stunden_aktuelles_quartal": "Gebuchte Stunden – aktuelles Quartal", "stunden_aktuelles_jahr": "Gebuchte Stunden – aktuelles Jahr", "stunden_letzter_monat": "Gebuchte Stunden – letzter Monat", "stunden_letztes_quartal": "Gebuchte Stunden – letztes Quartal", "stunden_letztes_jahr": "Gebuchte Stunden – letztes Jahr", "sonstiges": "Sonstige Anmerkungen", "leistungen": "Zugeordnete Leistungen", "zugewiesene_projekte": "Aktuell zugewiesene Projekte"}, "zeiterfassungseintraege": {"berater": "Berater", "projekt": "Projekt", "leistung": "Erbrachte Leistung", "datum": "Datum", "stunden": "Anzahl Stunden", "erfassungsmonat": "Abrechnungsmonat", "erfassungsjahr": "Abrechnungsjahr", "abrechenbar": "Abrechenbar", "taetigkeit": "Tätigkeitsbeschreibung"}};
+  const APPLOOKUP_LABELS: Record<string, Record<string, string>> = {"kunde": {"kundenname": "Name / Firmenname", "kundentyp": "Kundentyp", "email": "E-Mail", "anlagedatum": "Anlagedatum", "strasse": "Straße", "hausnummer": "Hausnummer", "plz": "Postleitzahl", "ort": "Ort", "rechnungsadresse_gleich": "Rechnungsadresse ist identisch mit der Adresse", "rechnungsstrasse": "Rechnungsstraße", "rechnungshausnummer": "Rechnungs-Hausnummer", "rechnungsplz": "Rechnungs-Postleitzahl", "rechnungsort": "Rechnungsort", "ansprechpartner_titel": "Titel des Ansprechpartners", "ansprechpartner_vorname": "Vorname des Ansprechpartners", "ansprechpartner_nachname": "Nachname des Ansprechpartners", "ansprechpartner_email": "E-Mail des Ansprechpartners", "bevorzugte_kontaktart": "Bevorzugte Kontaktart", "letzter_kontakt_datum": "Datum des letzten Kontakts", "letzter_kontakt_ansprechpartner": "Ansprechpartner beim letzten Kontakt", "notizen": "Notizen"}, "projekt": {"kostenstelle": "Kostenstelle", "projektkennung": "Projektkennung", "projektnummer": "Projektnummer", "projektart": "Projektart", "projektstatus": "Projektstatus", "projektstart_monat": "Startmonat", "projektstart_jahr": "Startjahr", "kunde": "Kunde", "ansprechpartner_kunde": "Ansprechpartner beim Kunden", "letzter_schritt": "Letzter Schritt / aktueller Stand", "projektleitung": "Projektleitung"}, "berater": {"vorname": "Vorname", "nachname": "Nachname", "titel": "Titel (optional)", "strasse": "Straße", "hausnummer": "Hausnummer", "plz": "Postleitzahl", "ort": "Ort", "email_beruflich": "E-Mail (beruflich)", "email_privat": "E-Mail (privat)", "einstiegsdatum": "Einstiegsdatum", "status": "Status", "stundensatz": "Stundensatz (€/h)", "stunden_aktueller_monat": "Gebuchte Stunden – aktueller Monat", "stunden_aktuelles_quartal": "Gebuchte Stunden – aktuelles Quartal", "stunden_aktuelles_jahr": "Gebuchte Stunden – aktuelles Jahr", "stunden_letzter_monat": "Gebuchte Stunden – letzter Monat", "stunden_letztes_quartal": "Gebuchte Stunden – letztes Quartal", "stunden_letztes_jahr": "Gebuchte Stunden – letztes Jahr", "sonstiges": "Sonstige Anmerkungen", "leistungen": "Zugeordnete Leistungen", "zugewiesene_projekte": "Aktuell zugewiesene Projekte"}, "zeiterfassungseintraege": {"berater": "Berater", "projekt": "Projekt", "leistung": "Erbrachte Leistung", "datum": "Datum", "stunden": "Anzahl Stunden", "erfassungsmonat": "Abrechnungsmonat", "erfassungsjahr": "Abrechnungsjahr", "abrechenbar": "Abrechenbar", "taetigkeit": "Tätigkeitsbeschreibung"}};
   const inputFields = useMemo(() => flattenFieldOrder(orderedFields), [orderedFieldsKey]);
   const backendFieldSet = useMemo(() => new Set(inputFields), [inputFields.join(',')]);
   const virtualComputed = useMemo(

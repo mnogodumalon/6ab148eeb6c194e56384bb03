@@ -247,7 +247,7 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
         }
       }
       const photoContext = contextParts.length ? contextParts.join('\n') : undefined;
-      const schema = `{\n  "kundenname": string | null, // Name / Firmenname\n  "kundentyp": LookupValue | null, // Kundentyp (select one key: "firma" | "behoerde" | "sonstiges" | "einzelperson") mapping: firma=Firma, behoerde=Behörde, sonstiges=Sonstiges, einzelperson=Einzelperson\n  "email": string | null, // E-Mail\n  "anlagedatum": string | null, // YYYY-MM-DD\n  "strasse": string | null, // Straße\n  "hausnummer": string | null, // Hausnummer\n  "plz": string | null, // Postleitzahl\n  "ort": string | null, // Ort\n  "rechnungsadresse_gleich": boolean | null, // Rechnungsadresse ist identisch mit der Adresse\n  "rechnungsstrasse": string | null, // Rechnungsstraße\n  "rechnungshausnummer": string | null, // Rechnungs-Hausnummer\n  "rechnungsplz": string | null, // Rechnungs-Postleitzahl\n  "rechnungsort": string | null, // Rechnungsort\n  "ansprechpartner_titel": string | null, // Titel des Ansprechpartners\n  "ansprechpartner_vorname": string | null, // Vorname des Ansprechpartners\n  "ansprechpartner_nachname": string | null, // Nachname des Ansprechpartners\n  "ansprechpartner_email": string | null, // E-Mail des Ansprechpartners\n  "bevorzugte_kontaktart": LookupValue | null, // Bevorzugte Kontaktart (select one key: "email" | "telefon" | "post" | "persoenlich") mapping: email=E-Mail, telefon=Telefon, post=Post, persoenlich=Persönlich\n  "letzter_kontakt_datum": string | null, // YYYY-MM-DD\n  "letzter_kontakt_ansprechpartner": string | null, // Ansprechpartner beim letzten Kontakt\n  "notizen": string | null, // Notizen\n}`;
+      const schema = `{\n  "kundenname": string | null, // Name / Firmenname\n  "kundentyp": LookupValue | null, // Kundentyp (select one key: "einzelperson" | "firma" | "behoerde" | "sonstiges") mapping: einzelperson=Einzelperson, firma=Firma, behoerde=Behörde, sonstiges=Sonstiges\n  "email": string | null, // E-Mail\n  "anlagedatum": string | null, // YYYY-MM-DD\n  "strasse": string | null, // Straße\n  "hausnummer": string | null, // Hausnummer\n  "plz": string | null, // Postleitzahl\n  "ort": string | null, // Ort\n  "rechnungsadresse_gleich": boolean | null, // Rechnungsadresse ist identisch mit der Adresse\n  "rechnungsstrasse": string | null, // Rechnungsstraße\n  "rechnungshausnummer": string | null, // Rechnungs-Hausnummer\n  "rechnungsplz": string | null, // Rechnungs-Postleitzahl\n  "rechnungsort": string | null, // Rechnungsort\n  "ansprechpartner_titel": string | null, // Titel des Ansprechpartners\n  "ansprechpartner_vorname": string | null, // Vorname des Ansprechpartners\n  "ansprechpartner_nachname": string | null, // Nachname des Ansprechpartners\n  "ansprechpartner_email": string | null, // E-Mail des Ansprechpartners\n  "bevorzugte_kontaktart": LookupValue | null, // Bevorzugte Kontaktart (select one key: "email" | "telefon" | "post" | "persoenlich") mapping: email=E-Mail, telefon=Telefon, post=Post, persoenlich=Persönlich\n  "letzter_kontakt_datum": string | null, // YYYY-MM-DD\n  "letzter_kontakt_ansprechpartner": string | null, // Ansprechpartner beim letzten Kontakt\n  "notizen": string | null, // Notizen\n}`;
       const raw = await extractFromInput<Record<string, unknown>>(schema, {
         dataUri: uri,
         userText: aiText.trim() || undefined,
@@ -314,7 +314,7 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
         <Label htmlFor="kundenname">{fieldLabel('kunden', 'kundenname')} <span className="text-destructive" aria-hidden="true">*</span></Label>
         <Input
           id="kundenname"
-          placeholder="z. B. Muster GmbH"
+          placeholder=""
           value={fields.kundenname ?? ''}
           onChange={e => setFields(f => ({ ...f, kundenname: e.target.value }))}
           required
@@ -328,6 +328,19 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
       <div key="kundentyp" className="space-y-1.5">
         <Label htmlFor="kundentyp">{fieldLabel('kunden', 'kundentyp')} <span className="text-destructive" aria-hidden="true">*</span></Label>
         <div role="radiogroup" className="flex flex-wrap gap-1.5">
+          <button
+            type="button"
+            role="radio"
+            aria-checked={lookupKey(fields.kundentyp) === 'einzelperson'}
+            onClick={() => setFields(f => ({ ...f, kundentyp: (lookupKey(f.kundentyp) === 'einzelperson' ? undefined : 'einzelperson') as any }))}
+            className={`inline-flex items-center justify-center min-h-9 max-sm:min-h-11 max-sm:px-4 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${
+              lookupKey(fields.kundentyp) === 'einzelperson'
+                ? 'bg-foreground text-background border-foreground'
+                : 'bg-background text-foreground border-input hover:bg-accent'
+            }`}
+          >
+            {lookupLabel('kunden', 'kundentyp', 'einzelperson') ?? 'Einzelperson'}
+          </button>
           <button
             type="button"
             role="radio"
@@ -367,19 +380,6 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
           >
             {lookupLabel('kunden', 'kundentyp', 'sonstiges') ?? 'Sonstiges'}
           </button>
-          <button
-            type="button"
-            role="radio"
-            aria-checked={lookupKey(fields.kundentyp) === 'einzelperson'}
-            onClick={() => setFields(f => ({ ...f, kundentyp: (lookupKey(f.kundentyp) === 'einzelperson' ? undefined : 'einzelperson') as any }))}
-            className={`inline-flex items-center justify-center min-h-9 max-sm:min-h-11 max-sm:px-4 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${
-              lookupKey(fields.kundentyp) === 'einzelperson'
-                ? 'bg-foreground text-background border-foreground'
-                : 'bg-background text-foreground border-input hover:bg-accent'
-            }`}
-          >
-            {lookupLabel('kunden', 'kundentyp', 'einzelperson') ?? 'Einzelperson'}
-          </button>
         </div>
         {showErrors && !fields.kundentyp && (
           <p className="text-xs text-destructive mt-1" role="alert">{requiredMessage('kunden', 'kundentyp')}</p>
@@ -393,7 +393,7 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
           id="email"
           type="email"
           inputMode="email"
-          placeholder="z. B. info@muster.de"
+          placeholder=""
           value={fields.email ?? ''}
           onChange={e => setFields(f => ({ ...f, email: e.target.value }))}
           required
@@ -408,7 +408,7 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
         <Label htmlFor="anlagedatum">{fieldLabel('kunden', 'anlagedatum')} <span className="text-destructive" aria-hidden="true">*</span></Label>
         <DatePicker
           id="anlagedatum"
-          placeholder="Wann wurde der Kunde angelegt?"
+          placeholder=""
           mode="date"
           value={fields.anlagedatum ?? null}
           onChange={v => setFields(f => ({ ...f, anlagedatum: v ?? undefined }))}
@@ -424,7 +424,7 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
         <Label htmlFor="strasse">{fieldLabel('kunden', 'strasse')} <span className="text-destructive" aria-hidden="true">*</span></Label>
         <Input
           id="strasse"
-          placeholder="z. B. Hauptstraße"
+          placeholder=""
           value={fields.strasse ?? ''}
           onChange={e => setFields(f => ({ ...f, strasse: e.target.value }))}
           required
@@ -439,7 +439,7 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
         <Label htmlFor="hausnummer">{fieldLabel('kunden', 'hausnummer')} <span className="text-destructive" aria-hidden="true">*</span></Label>
         <Input
           id="hausnummer"
-          placeholder="z. B. 12a"
+          placeholder=""
           value={fields.hausnummer ?? ''}
           onChange={e => setFields(f => ({ ...f, hausnummer: e.target.value }))}
           required
@@ -454,7 +454,7 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
         <Label htmlFor="plz">{fieldLabel('kunden', 'plz')} <span className="text-destructive" aria-hidden="true">*</span></Label>
         <Input
           id="plz"
-          placeholder="z. B. 10115"
+          placeholder=""
           value={fields.plz ?? ''}
           onChange={e => setFields(f => ({ ...f, plz: e.target.value }))}
           required
@@ -469,7 +469,7 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
         <Label htmlFor="ort">{fieldLabel('kunden', 'ort')} <span className="text-destructive" aria-hidden="true">*</span></Label>
         <Input
           id="ort"
-          placeholder="z. B. Berlin"
+          placeholder=""
           value={fields.ort ?? ''}
           onChange={e => setFields(f => ({ ...f, ort: e.target.value }))}
           required
@@ -497,7 +497,7 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
         <Label htmlFor="rechnungsstrasse">{fieldLabel('kunden', 'rechnungsstrasse')}</Label>
         <Input
           id="rechnungsstrasse"
-          placeholder="z. B. Hauptstraße"
+          placeholder=""
           value={fields.rechnungsstrasse ?? ''}
           onChange={e => setFields(f => ({ ...f, rechnungsstrasse: e.target.value }))}
         />
@@ -508,7 +508,7 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
         <Label htmlFor="rechnungshausnummer">{fieldLabel('kunden', 'rechnungshausnummer')}</Label>
         <Input
           id="rechnungshausnummer"
-          placeholder="z. B. 12a"
+          placeholder=""
           value={fields.rechnungshausnummer ?? ''}
           onChange={e => setFields(f => ({ ...f, rechnungshausnummer: e.target.value }))}
         />
@@ -519,7 +519,7 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
         <Label htmlFor="rechnungsplz">{fieldLabel('kunden', 'rechnungsplz')}</Label>
         <Input
           id="rechnungsplz"
-          placeholder="z. B. 10115"
+          placeholder=""
           value={fields.rechnungsplz ?? ''}
           onChange={e => setFields(f => ({ ...f, rechnungsplz: e.target.value }))}
         />
@@ -530,7 +530,7 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
         <Label htmlFor="rechnungsort">{fieldLabel('kunden', 'rechnungsort')}</Label>
         <Input
           id="rechnungsort"
-          placeholder="z. B. Berlin"
+          placeholder=""
           value={fields.rechnungsort ?? ''}
           onChange={e => setFields(f => ({ ...f, rechnungsort: e.target.value }))}
         />
@@ -541,7 +541,7 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
         <Label htmlFor="ansprechpartner_titel">{fieldLabel('kunden', 'ansprechpartner_titel')}</Label>
         <Input
           id="ansprechpartner_titel"
-          placeholder="z. B. Dr."
+          placeholder=""
           value={fields.ansprechpartner_titel ?? ''}
           onChange={e => setFields(f => ({ ...f, ansprechpartner_titel: e.target.value }))}
         />
@@ -552,7 +552,7 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
         <Label htmlFor="ansprechpartner_vorname">{fieldLabel('kunden', 'ansprechpartner_vorname')}</Label>
         <Input
           id="ansprechpartner_vorname"
-          placeholder="z. B. Anna"
+          placeholder=""
           value={fields.ansprechpartner_vorname ?? ''}
           onChange={e => setFields(f => ({ ...f, ansprechpartner_vorname: e.target.value }))}
         />
@@ -563,7 +563,7 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
         <Label htmlFor="ansprechpartner_nachname">{fieldLabel('kunden', 'ansprechpartner_nachname')}</Label>
         <Input
           id="ansprechpartner_nachname"
-          placeholder="z. B. Schmidt"
+          placeholder=""
           value={fields.ansprechpartner_nachname ?? ''}
           onChange={e => setFields(f => ({ ...f, ansprechpartner_nachname: e.target.value }))}
         />
@@ -576,7 +576,7 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
           id="ansprechpartner_email"
           type="email"
           inputMode="email"
-          placeholder="z. B. a.schmidt@muster.de"
+          placeholder=""
           value={fields.ansprechpartner_email ?? ''}
           onChange={e => setFields(f => ({ ...f, ansprechpartner_email: e.target.value }))}
         />
@@ -646,7 +646,7 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
         <Label htmlFor="letzter_kontakt_datum">{fieldLabel('kunden', 'letzter_kontakt_datum')}</Label>
         <DatePicker
           id="letzter_kontakt_datum"
-          placeholder="Wann war der letzte Kontakt?"
+          placeholder=""
           mode="date"
           value={fields.letzter_kontakt_datum ?? null}
           onChange={v => setFields(f => ({ ...f, letzter_kontakt_datum: v ?? undefined }))}
@@ -658,7 +658,7 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
         <Label htmlFor="letzter_kontakt_ansprechpartner">{fieldLabel('kunden', 'letzter_kontakt_ansprechpartner')}</Label>
         <Input
           id="letzter_kontakt_ansprechpartner"
-          placeholder="z. B. Anna Schmidt"
+          placeholder=""
           value={fields.letzter_kontakt_ansprechpartner ?? ''}
           onChange={e => setFields(f => ({ ...f, letzter_kontakt_ansprechpartner: e.target.value }))}
         />
@@ -669,7 +669,7 @@ export function KundenDialog({ open, onClose, onSubmit, defaultValues, recordId,
         <Label htmlFor="notizen">{fieldLabel('kunden', 'notizen')}</Label>
         <Textarea
           id="notizen"
-          placeholder="Interne Hinweise zum Kunden"
+          placeholder=""
           value={fields.notizen ?? ''}
           onChange={e => setFields(f => ({ ...f, notizen: e.target.value }))}
           rows={3}

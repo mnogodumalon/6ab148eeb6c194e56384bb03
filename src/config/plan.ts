@@ -38,7 +38,7 @@ export const PLAN_SENTENCES: Record<string, string[]> = {
   ],
   "zeit-erfassen": [
     "Legt an: zeiterfassung",
-    "Automatisch: erfassungsmonat (Monat des eingegebenen Datums als Monatsoption), erfassungsjahr (Jahr des eingegebenen Datums)"
+    "Automatisch: erfassungsjahr (Jahr des eingegebenen Datums), erfassungsmonat (Monat des eingegebenen Datums als Monatsoption)"
   ],
   "rechnung-erstellen": [
     "Legt an: rechnungen",

@@ -1,7 +1,7 @@
 /**
  * useRechnungErstellenFlow — the plumbing of the flow « Rechnung aus Zeiteinträgen erstellen », generated from the plan.
  *
- * Writes `rechnungen`: asks `projekt`, `berater`, `zeiterfassungseintraege`, `rechnungsmonat`, `rechnungsjahr`, `faelligkeitsdatum`, `mehrwertsteuer`, `notizen`; sets `kunde`, `rechnungsdatum`, `rechnungsstatus` itself.
+ * Writes `rechnungen`: asks `berater`, `notizen`, `projekt`, `rechnungsjahr`, `mehrwertsteuer`, `rechnungsmonat`, `faelligkeitsdatum`, `zeiterfassungseintraege`; sets `kunde`, `rechnungsdatum`, `rechnungsstatus` itself.
  * The hook OWNS: the form(s) with exactly these fields and the plan's required
  * ingredients, one record search per picked field (columns and filter from
  * the plan), and the submit plan with its fixed and derived values. A page
@@ -16,18 +16,18 @@
  *   messages  the sentence for an empty required field, per field
  *
  *   const flow = useRechnungErstellenFlow({
- *     steps: { projekt: 1, berater: 2, zeiterfassungseintraege: 3, rechnungsmonat: 4, rechnungsjahr: 4, faelligkeitsdatum: 4, mehrwertsteuer: 4, notizen: 4 },
- *     items: { projekt: r => ({ id: r.id, title: fieldText(r, 'projektkennung') }) },
+ *     steps: { berater: 1, projekt: 2, zeiterfassungseintraege: 3, notizen: 4, rechnungsjahr: 4, mehrwertsteuer: 4, rechnungsmonat: 4, faelligkeitsdatum: 4 },
+ *     items: { berater: r => ({ id: r.id, title: fieldText(r, 'vorname') }) },
  *   });
  *   <IntentWizardShell forms={flow.forms} draftKey={flow.draftKey} …>
- *     <EntitySelectStep {...flow.picks.projekt.select} {...flow.pick('projekt')} />
  *     <EntitySelectStep {...flow.picks.berater.select} {...flow.pickMany('berater')} />
+ *     <EntitySelectStep {...flow.picks.projekt.select} {...flow.pick('projekt')} />
  *     <EntitySelectStep {...flow.picks.zeiterfassungseintraege.select} {...flow.pickMany('zeiterfassungseintraege')} />
- *     <Bound form={flow.forms.rechnungen} name="rechnungsmonat" />
- *     <Bound form={flow.forms.rechnungen} name="rechnungsjahr" />
- *     <Bound form={flow.forms.rechnungen} name="faelligkeitsdatum" />
- *     <Bound form={flow.forms.rechnungen} name="mehrwertsteuer" />
  *     <Bound form={flow.forms.rechnungen} name="notizen" />
+ *     <Bound form={flow.forms.rechnungen} name="rechnungsjahr" />
+ *     <Bound form={flow.forms.rechnungen} name="mehrwertsteuer" />
+ *     <Bound form={flow.forms.rechnungen} name="rechnungsmonat" />
+ *     <Bound form={flow.forms.rechnungen} name="faelligkeitsdatum" />
  *     <StepNav onNext={() => flow.validateStep(n)} />
  *     {!flow.submit.done && <SummaryStep forms={flow.formList} submit={flow.submit} />}
  *     {flow.submit.result && <SuccessStep result={flow.submit.result} forms={flow.formList} submit={flow.submit} />}
@@ -57,13 +57,13 @@ export interface RechnungErstellenFlowOptions {
   messages?: Partial<Record<Key, string>>;
   /** How a search hit reads — the card's title/subtitle/status per pick. */
   items?: {
-    projekt?: (record: JourneyRecord, ctx: RefContext) => SelectItemLike;
     berater?: (record: JourneyRecord, ctx: RefContext) => SelectItemLike;
+    projekt?: (record: JourneyRecord, ctx: RefContext) => SelectItemLike;
     zeiterfassungseintraege?: (record: JourneyRecord, ctx: RefContext) => SelectItemLike;
   };
 }
 
-const DEFAULT_STEPS: Record<string, number> = {"berater": 2, "faelligkeitsdatum": 4, "mehrwertsteuer": 4, "notizen": 4, "projekt": 1, "rechnungsjahr": 4, "rechnungsmonat": 4, "zeiterfassungseintraege": 3};
+const DEFAULT_STEPS: Record<string, number> = {"berater": 1, "faelligkeitsdatum": 4, "mehrwertsteuer": 4, "notizen": 4, "projekt": 2, "rechnungsjahr": 4, "rechnungsmonat": 4, "zeiterfassungseintraege": 3};
 export const RECHNUNGERSTELLEN_REVIEW_STEP = 5;
 
 function fromPick<T>(pick: { recordOf(id: string): JourneyRecord | undefined }, form: StepForm, field: string, read: (r: JourneyRecord) => T): T | undefined {
@@ -95,12 +95,12 @@ function hasValues(form: StepForm): boolean {
 export function useRechnungErstellenFlow(options: RechnungErstellenFlowOptions = {}) {
   const steps = { ...DEFAULT_STEPS, ...(options.steps ?? {}) } as Record<string, number>;
   const rechnungen = useStepForm('rechnungen', {
-    fields: ["projekt", "berater", "zeiterfassungseintraege", "rechnungsmonat", "rechnungsjahr", "faelligkeitsdatum", "mehrwertsteuer", "notizen"],
-    steps: only(steps, ["projekt", "berater", "zeiterfassungseintraege", "rechnungsmonat", "rechnungsjahr", "faelligkeitsdatum", "mehrwertsteuer", "notizen"]) as Record<string, number>,
+    fields: ["berater", "notizen", "projekt", "rechnungsjahr", "mehrwertsteuer", "rechnungsmonat", "faelligkeitsdatum", "zeiterfassungseintraege"],
+    steps: only(steps, ["berater", "notizen", "projekt", "rechnungsjahr", "mehrwertsteuer", "rechnungsmonat", "faelligkeitsdatum", "zeiterfassungseintraege"]) as Record<string, number>,
     // the plan builds a value from these — required here, whatever the app's base view says
     required: { berater: true, mehrwertsteuer: true, zeiterfassungseintraege: true },
-    initial: only(options.initial as FormValues | undefined, ["projekt", "berater", "zeiterfassungseintraege", "rechnungsmonat", "rechnungsjahr", "faelligkeitsdatum", "mehrwertsteuer", "notizen"]),
-    messages: only(options.messages as Record<string, string> | undefined, ["projekt", "berater", "zeiterfassungseintraege", "rechnungsmonat", "rechnungsjahr", "faelligkeitsdatum", "mehrwertsteuer", "notizen"]),
+    initial: only(options.initial as FormValues | undefined, ["berater", "notizen", "projekt", "rechnungsjahr", "mehrwertsteuer", "rechnungsmonat", "faelligkeitsdatum", "zeiterfassungseintraege"]),
+    messages: only(options.messages as Record<string, string> | undefined, ["berater", "notizen", "projekt", "rechnungsjahr", "mehrwertsteuer", "rechnungsmonat", "faelligkeitsdatum", "zeiterfassungseintraege"]),
   });
   const forms: RechnungErstellenForms = { rechnungen };
   const formList: StepForm[] = [rechnungen];
@@ -110,13 +110,13 @@ export function useRechnungErstellenFlow(options: RechnungErstellenFlowOptions =
   // render time, so a change works on the running application.
   usePolicyVersion();
   const searches = {
-    projekt: useRecordSearch(servicePort, 'projekte', withPickPolicy('projekt', {
-      searchFields: ["projektkennung"] as never,
-      toItem: options.items?.projekt as never,
-    })),
     berater: useRecordSearch(servicePort, 'berater', withPickPolicy('berater', {
       searchFields: ["vorname", "nachname"] as never,
       toItem: options.items?.berater as never,
+    })),
+    projekt: useRecordSearch(servicePort, 'projekte', withPickPolicy('projekt', {
+      searchFields: ["projektkennung"] as never,
+      toItem: options.items?.projekt as never,
     })),
     zeiterfassungseintraege: useRecordSearch(servicePort, 'zeiterfassung', withPickPolicy('zeiterfassungseintraege', {
       searchFields: ["taetigkeit"] as never,
@@ -140,8 +140,8 @@ export function useRechnungErstellenFlow(options: RechnungErstellenFlowOptions =
     href: `#/verwaltung/anwendung?line=intent:rechnung-erstellen:write:${entity}.${field}`,
   });
   const picks = {
-    projekt: { ...searches.projekt, select: { ...searches.projekt.select, create: false as boolean, hint: hintFor('projekt', 'projekte', null as PickWhere | null) } },
     berater: { ...searches.berater, select: { ...searches.berater.select, create: false as boolean, hint: hintFor('berater', 'berater', null as PickWhere | null) } },
+    projekt: { ...searches.projekt, select: { ...searches.projekt.select, create: false as boolean, hint: hintFor('projekt', 'projekte', null as PickWhere | null) } },
     zeiterfassungseintraege: { ...searches.zeiterfassungseintraege, select: { ...searches.zeiterfassungseintraege.select, create: false as boolean, hint: hintFor('zeiterfassungseintraege', 'zeiterfassung', {"conditions": [{"field": "abrechenbar", "op": "eq", "value": "true"}], "mode": "all"} as PickWhere | null) } },
   };
 

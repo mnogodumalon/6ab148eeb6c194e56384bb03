@@ -14,7 +14,7 @@ index.css is pre-generated with the shared design system. Do NOT edit it.
 src/config/ai-features.ts is editable — set AI_PHOTO_SCAN['Entity'] = true to enable photo scan in dialogs.
 NEVER use Bash cat/echo/heredoc for file operations — always use Read/Write/Edit tools.
 
-Generated 169 scaffold files:
+Generated 160 scaffold files:
   - src/App.tsx
   - src/i18n/index.ts
   - src/i18n/common.ts
@@ -24,7 +24,6 @@ Generated 169 scaffold files:
   - src/types/la-widgets.d.ts
   - src/components/PageShell.tsx
   - src/components/ActionsSidebar.tsx
-  - src/pages/DashboardOverview.tsx
   - src/pages/DashboardReady.tsx
   - src/components/DashboardStates.tsx
   - src/components/ConfirmDialog.tsx
@@ -54,13 +53,6 @@ Generated 169 scaffold files:
   - src/components/DatePicker.tsx
   - .placeholder-tasks.json
   - src/config/form-enhancements/types.ts
-  - src/config/form-enhancements/Kunden.ts
-  - src/config/form-enhancements/Berater.ts
-  - src/config/form-enhancements/Leistungskatalog.ts
-  - src/config/form-enhancements/Projekte.ts
-  - src/config/form-enhancements/Angebote.ts
-  - src/config/form-enhancements/Zeiterfassung.ts
-  - src/config/form-enhancements/Rechnungen.ts
   - scripts/parse-formulas.mjs
   - scripts/apply-placeholders.mjs
   - src/config/intents.ts
@@ -124,7 +116,6 @@ Generated 169 scaffold files:
   - src/lib/ai.ts
   - src/components/VersionCheck.tsx
   - src/components/AttachmentsSection.tsx
-  - src/config/ai-features.ts
   - src/lib/formatters.ts
   - src/lib/polish.ts
   - src/hooks/useDashboardData.ts
@@ -352,7 +343,7 @@ contracts; Read one only if the contract below is insufficient.
  *   kunden: kundenname, kundentyp, email, anlagedatum, strasse, hausnummer, plz, ort, …  ·  ← projekte (list + contextual +) · ← rechnungen (list + contextual +)
  *   berater: vorname, nachname, titel, strasse, hausnummer, plz, ort, email_beruflich, …  ·  → leistungskatalog · → projekte · ← leistungskatalog (list + contextual + + choose existing) · ← projekte (list + contextual +) · ← angebote (list + contextual +) · ← zeiterfassung (list + contextual +) · ← rechnungen (list + contextual + + choose existing)
  *   leistungskatalog: leistungsname, leistungstyp, beschreibung, kostenvoranschlag, einheit, ausfuehrende_berater  ·  → berater · ← berater (list + contextual + + choose existing) · ← zeiterfassung (list + contextual +)
- *   projekte: projektkennung, projektnummer, projektart, projektstatus, projektstart_monat, projektstart_jahr, kunde, ansprechpartner_kunde, …  ·  → kunden · → berater · ← berater (list + contextual + + choose existing) · ← angebote (list + contextual +) · ← zeiterfassung (list + contextual +) · ← rechnungen (list + contextual +)
+ *   projekte: kostenstelle, projektkennung, projektnummer, projektart, projektstatus, projektstart_monat, projektstart_jahr, kunde, …  ·  → kunden · → berater · ← berater (list + contextual + + choose existing) · ← angebote (list + contextual +) · ← zeiterfassung (list + contextual +) · ← rechnungen (list + contextual +)
  *   angebote: angebotsnummer, angebotsjahr, angebotstyp, angebotsstatus, zeitrahmen_anfang, zeitrahmen_ende, dauer, kostentyp, …  ·  → projekte · → berater
  *   zeiterfassung: berater, projekt, leistung, datum, stunden, erfassungsmonat, erfassungsjahr, abrechenbar, …  ·  → berater · → projekte · → leistungskatalog · ← rechnungen (list + contextual + + choose existing)
  *   rechnungen: rechnungsnummer, rechnungsdatum, faelligkeitsdatum, rechnungsstatus, rechnungsmonat, rechnungsjahr, kunde, nettobetrag, …  ·  → kunden · → projekte · → berater · → zeiterfassung

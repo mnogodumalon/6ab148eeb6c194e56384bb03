@@ -44,7 +44,7 @@
  *   kunden: kundenname, kundentyp, email, anlagedatum, strasse, hausnummer, plz, ort, …  ·  ← projekte (list + contextual +) · ← rechnungen (list + contextual +)
  *   berater: vorname, nachname, titel, strasse, hausnummer, plz, ort, email_beruflich, …  ·  → leistungskatalog · → projekte · ← leistungskatalog (list + contextual + + choose existing) · ← projekte (list + contextual +) · ← angebote (list + contextual +) · ← zeiterfassung (list + contextual +) · ← rechnungen (list + contextual + + choose existing)
  *   leistungskatalog: leistungsname, leistungstyp, beschreibung, kostenvoranschlag, einheit, ausfuehrende_berater  ·  → berater · ← berater (list + contextual + + choose existing) · ← zeiterfassung (list + contextual +)
- *   projekte: projektkennung, projektnummer, projektart, projektstatus, projektstart_monat, projektstart_jahr, kunde, ansprechpartner_kunde, …  ·  → kunden · → berater · ← berater (list + contextual + + choose existing) · ← angebote (list + contextual +) · ← zeiterfassung (list + contextual +) · ← rechnungen (list + contextual +)
+ *   projekte: kostenstelle, projektkennung, projektnummer, projektart, projektstatus, projektstart_monat, projektstart_jahr, kunde, …  ·  → kunden · → berater · ← berater (list + contextual + + choose existing) · ← angebote (list + contextual +) · ← zeiterfassung (list + contextual +) · ← rechnungen (list + contextual +)
  *   angebote: angebotsnummer, angebotsjahr, angebotstyp, angebotsstatus, zeitrahmen_anfang, zeitrahmen_ende, dauer, kostentyp, …  ·  → projekte · → berater
  *   zeiterfassung: berater, projekt, leistung, datum, stunden, erfassungsmonat, erfassungsjahr, abrechenbar, …  ·  → berater · → projekte · → leistungskatalog · ← rechnungen (list + contextual + + choose existing)
  *   rechnungen: rechnungsnummer, rechnungsdatum, faelligkeitsdatum, rechnungsstatus, rechnungsmonat, rechnungsjahr, kunde, nettobetrag, …  ·  → kunden · → projekte · → berater · → zeiterfassung
@@ -662,7 +662,7 @@ export function useEntityCrud(data: EntityCrudData, options?: EntityCrudOptions)
           if (top.type === 'projekte') {
             return (
               <>
-                <RecordHeader title={top.record.fields.projektkennung ?? appLabel('projekte')} subtitle={undefined} />
+                <RecordHeader title={top.record.fields.kostenstelle ?? appLabel('projekte')} subtitle={undefined} />
                 <ProjekteDetails
                   record={top.record}
                   kundenList={data.kunden}
