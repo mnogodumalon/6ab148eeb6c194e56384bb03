@@ -1,16 +1,6 @@
 {
   "version": 1,
-  "changes": [
-    {
-      "kind": "field_added",
-      "entity": "projekte",
-      "field": "kostenstelle",
-      "fulltype": "string/text",
-      "label": "Kostenstelle"
-    }
-  ],
-  "counts": {
-    "field_added": 1
-  },
-  "harmless_only": false
+  "changes": [],
+  "counts": {},
+  "harmless_only": true
 }

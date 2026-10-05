@@ -722,7 +722,6 @@ import { IntentPolicyLoader } from '@/components/IntentPolicyLoader';
 import IntentsAdmin from '@/pages/IntentsAdmin';
 import AppMap from '@/pages/AppMap';
 // <custom:imports>
-import { lazy, Suspense } from 'react';
 import { DashboardSkeleton } from '@/components/DashboardStates';
 const IntentAngebotErstellenPage = lazy(() => import('@/pages/intents/AngebotErstellenPage'));
 const IntentProjektAnlegenPage = lazy(() => import('@/pages/intents/ProjektAnlegenPage'));

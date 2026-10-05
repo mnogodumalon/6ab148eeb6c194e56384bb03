@@ -1866,7 +1866,7 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
           "kundenname": "Name / Company Name",
           "kundentyp": "Customer Type",
           "email": "Email",
-          "anlagedatum": "Creation Date",
+          "anlagedatum": "Created On",
           "strasse": "Street",
           "hausnummer": "House Number",
           "plz": "Postal Code",
@@ -1889,7 +1889,7 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
           "kundentyp": {
             "einzelperson": "Individual",
             "firma": "Company",
-            "behoerde": "Government Agency",
+            "behoerde": "Public Authority",
             "sonstiges": "Other"
           },
           "bevorzugte_kontaktart": {
@@ -1911,8 +1911,8 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
           "hausnummer": "House Number",
           "plz": "Postal Code",
           "ort": "City",
-          "email_beruflich": "Email (business)",
-          "email_privat": "Email (private)",
+          "email_beruflich": "Email (work)",
+          "email_privat": "Email (personal)",
           "einstiegsdatum": "Start Date",
           "status": "Status",
           "stundensatz": "Hourly Rate (€/h)",
@@ -1952,7 +1952,7 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
             "entwicklung": "Development",
             "schulung": "Training",
             "support": "Support",
-            "konzeption": "Conceptual Design",
+            "konzeption": "Conception",
             "sonstiges": "Other"
           },
           "einheit": {
@@ -1975,15 +1975,15 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
           "projektstart_monat": "Start Month",
           "projektstart_jahr": "Start Year",
           "kunde": "Customer",
-          "ansprechpartner_kunde": "Contact Person at Customer",
+          "ansprechpartner_kunde": "Customer Contact Person",
           "letzter_schritt": "Last Step / Current Status",
-          "projektleitung": "Project Manager"
+          "projektleitung": "Project Management"
         },
         "lookups": {
           "projektart": {
             "entwicklung": "Development",
             "schulung": "Training",
-            "konzeption": "Conceptual Design",
+            "konzeption": "Conception",
             "support": "Support",
             "sonstiges": "Other",
             "it_beratung": "IT Consulting"
@@ -2044,7 +2044,7 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
           "kostentyp": {
             "einmalig": "One-time",
             "monatlich": "Monthly",
-            "jaehrlich": "Annual",
+            "jaehrlich": "Yearly",
             "quartalsweise": "Quarterly",
             "sonstiges": "Other"
           }
