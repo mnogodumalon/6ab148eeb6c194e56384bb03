@@ -158,7 +158,7 @@ export function useRechnungErstellenFlow(options: RechnungErstellenFlowOptions =
       settings: () => [setting('rechnungen', 'rechnungsstatus', policyFixedValue('rechnungen', 'rechnungsstatus') ?? "entwurf")],
 
       // the planner's assumptions that first act here — shown once with „Passt“ / „ändern“
-      notices: () => [{"assumed": "einfache laufende Nummer (1, 2, 3 \u2026)", "id": "rechnungsnummer-format", "question": "Wie soll die Rechnungsnummer aussehen?"}, {"assumed": "14 Tage, von Hand eingetragen", "id": "rechnung-zahlungsziel", "question": "Wie viele Tage Zahlungsziel gelten?"}],
+      notices: () => [{"assumed": "einfache laufende Nummer (1, 2, 3 \u2026)", "id": "rechnungsnummer-format", "question": "Wie soll die Rechnungsnummer aussehen?"}, {"assumed": "30 Tage", "id": "rechnung-zahlungsziel", "question": "Wie viele Tage Zahlungsziel gelten?"}],
     },
   ];
 

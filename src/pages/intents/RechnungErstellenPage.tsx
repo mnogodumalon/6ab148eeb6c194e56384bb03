@@ -1,13 +1,13 @@
 /**
  * Rechnung erstellen — 5-Schritt-Wizard.
  * Steps: 1) Projekt wählen → 2) Abrechnungsmonat und -jahr → 3) Berater und Zeiteinträge auswählen
- *        → 4) Fälligkeit, Mehrwertsteuer und Notizen → 5) Prüfen & als Entwurf anlegen.
+ *        → 4) Fälligkeit (Standard: Rechnungsdatum + 30 Tage), Mehrwertsteuer und Notizen → 5) Prüfen & als Entwurf anlegen.
  * Reads: projekte, berater, zeiterfassung. Writes: rechnungen (Entwurf; Kunde, Datum, Status setzt der Ablauf,
  * Nummer und Beträge das System).
  * Composes: IntentWizardShell, EntitySelectStep, Bound, Field, StepNav, SummaryStep, SuccessStep.
  */
 import { useState } from 'react';
-import { format, parseISO } from 'date-fns';
+import { addDays, format, parseISO } from 'date-fns';
 import { IntentWizardShell, WizardStep } from '@/components/blocks/IntentWizardShell';
 import { EntitySelectStep } from '@/components/blocks/EntitySelectStep';
 import { Bound } from '@/components/blocks/Bound';
@@ -18,6 +18,8 @@ import { SuccessStep } from '@/components/blocks/SuccessStep';
 import { fieldText, fieldDate, fieldNumber, todayIso } from '@/lib/journey';
 import { useRechnungErstellenFlow } from '@/lib/journey/flows/RechnungErstellen';
 import { tx } from '@/i18n';
+
+const PAYMENT_TERM_DAYS = 30;
 
 function shortDate(iso: string | null): string {
   if (!iso) return '';
@@ -50,7 +52,11 @@ export default function RechnungErstellenPage() {
         subtitle: [ctx.ref('berater'), fieldText(z, 'taetigkeit')].filter(Boolean).join(' · ') || undefined,
       }),
     },
-    initial: { rechnungsjahr: new Date().getFullYear(), mehrwertsteuer: 19 },
+    initial: {
+      rechnungsjahr: new Date().getFullYear(),
+      mehrwertsteuer: 19,
+      faelligkeitsdatum: format(addDays(new Date(), PAYMENT_TERM_DAYS), 'yyyy-MM-dd'),
+    },
   });
   const f = flow.forms.rechnungen;
 
@@ -124,11 +130,15 @@ export default function RechnungErstellenPage() {
 
       <WizardStep
         label={tx('Rechnungsdaten')}
-        description={tx('Wann ist die Rechnung fällig und wie hoch ist die Mehrwertsteuer?')}
+        description={tx('Die Rechnung ist 30 Tage nach Rechnungsdatum fällig — wie hoch ist die Mehrwertsteuer?')}
         needs={['zeiterfassungseintraege']}
       >
         <div className="space-y-4">
-          <Bound form={f} name="faelligkeitsdatum" />
+          <Bound
+            form={f}
+            name="faelligkeitsdatum"
+            hint={tx('Vorgabe: 30 Tage Zahlungsziel ab Rechnungsdatum')}
+          />
           <Bound form={f} name="mehrwertsteuer" hint={tx('In Prozent, z. B. 19')} />
           <Bound form={f} name="notizen" rows={3} />
           <StepNav
@@ -148,7 +158,7 @@ export default function RechnungErstellenPage() {
               { key: 'rechnungsstatus', label: tx('Status'), value: tx('Entwurf') },
               { key: 'rechnungsdatum', label: tx('Rechnungsdatum'), value: shortDate(todayIso()) },
             ]}
-            whatHappensNext={tx('Rechnungsnummer, Netto- und Gesamtbetrag vergibt das System. Die Rechnung bleibt ein Entwurf.')}
+            whatHappensNext={tx('Rechnungsnummer, Netto- und Gesamtbetrag vergibt das System. Die Rechnung bleibt ein Entwurf und ist standardmäßig 30 Tage nach Rechnungsdatum fällig.')}
           />
         )}
       </WizardStep>
