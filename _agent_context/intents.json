@@ -23,7 +23,7 @@
       "label": "Projekt anlegen",
       "description": "Ein neues Projekt für einen Kunden mit Art, Start und Projektleitung anlegen.",
       "file": "src/pages/intents/ProjektAnlegenPage.tsx",
-      "summary": "/**\n * Projekt anlegen — 4-Schritt-Wizard.\n * Steps: 1) Kunden wählen → 2) Projektart und Start → 3) Projektleitung wählen → 4) Ansprechpartner eintragen → Prüfen & anlegen.\n * Reads: kunden, berater. Writes: projekte (via useProjektAnlegenFlow; Status „Akquise“ fix, Kennung berechnet).\n * Composes: IntentWizardShell, EntitySelectStep, Bound, StepNav, SummaryStep, SuccessStep.\n */",
+      "summary": "/**\n * Projekt anlegen — 5-Schritt-Wizard.\n * Steps: 1) Kunden wählen → 2) Projektart und Start → 3) Kostenstelle → 4) Projektleitung wählen → 5) Ansprechpartner eintragen → Prüfen & anlegen.\n * Reads: kunden, berater. Writes: projekte (via useProjektAnlegenFlow; Status „Akquise“ fix, Kennung berechnet).\n * Composes: IntentWizardShell, EntitySelectStep, Bound, StepNav, SummaryStep, SuccessStep.\n */",
       "components": [
         "Bound",
         "EntitySelectStep",
