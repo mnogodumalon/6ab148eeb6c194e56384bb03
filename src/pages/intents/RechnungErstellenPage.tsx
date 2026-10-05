@@ -7,7 +7,7 @@
  * Composes: IntentWizardShell, EntitySelectStep, Bound, Field, StepNav, SummaryStep, SuccessStep.
  */
 import { useState } from 'react';
-import { addDays, format, parseISO } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { IntentWizardShell, WizardStep } from '@/components/blocks/IntentWizardShell';
 import { EntitySelectStep } from '@/components/blocks/EntitySelectStep';
 import { Bound } from '@/components/blocks/Bound';
@@ -50,12 +50,7 @@ export default function RechnungErstellenPage() {
         subtitle: [ctx.ref('berater'), fieldText(z, 'taetigkeit')].filter(Boolean).join(' · ') || undefined,
       }),
     },
-    // Zahlungsziel 14 Tage: Rechnungsdatum ist heute, Fälligkeit = heute + 14 Tage (von Hand überschreibbar)
-    initial: {
-      rechnungsjahr: new Date().getFullYear(),
-      mehrwertsteuer: 19,
-      faelligkeitsdatum: format(addDays(new Date(), 14), 'yyyy-MM-dd'),
-    },
+    initial: { rechnungsjahr: new Date().getFullYear(), mehrwertsteuer: 19 },
   });
   const f = flow.forms.rechnungen;
 
@@ -133,7 +128,7 @@ export default function RechnungErstellenPage() {
         needs={['zeiterfassungseintraege']}
       >
         <div className="space-y-4">
-          <Bound form={f} name="faelligkeitsdatum" hint={tx('Zahlungsziel: 14 Tage ab Rechnungsdatum, von Hand änderbar')} />
+          <Bound form={f} name="faelligkeitsdatum" />
           <Bound form={f} name="mehrwertsteuer" hint={tx('In Prozent, z. B. 19')} />
           <Bound form={f} name="notizen" rows={3} />
           <StepNav
