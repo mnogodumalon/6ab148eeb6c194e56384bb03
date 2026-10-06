@@ -102,6 +102,7 @@ export function SummaryStep({
     let alive = true;
     getAppMapCached().then(st => {
       if (!alive) return;
+      if (!st.canChange) { setNoticeState({}); return; }   // an assumption is the owner's to settle, not the staff's
       const out: Record<string, { seen: boolean; answered: boolean }> = {};
       for (const n of notices) {
         const line = st.map?.lines.find(l => l.id === `question:${n.id}`);

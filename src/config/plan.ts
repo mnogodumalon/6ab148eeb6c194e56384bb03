@@ -50,3 +50,23 @@ export const PLAN_SENTENCES: Record<string, string[]> = {
 };
 
 export const PLAN_SUMMARY = "inclou ist ein ERP für die Beratungsfirma inclou GmbH & Co. KG. Es verwaltet Kunden, Berater, den Leistungskatalog und Projekte. Angebote werden jahresweise nummeriert, Arbeitsstunden erfasst und daraus Rechnungen erstellt.";
+
+/** slug → the lists a flow writes (the plan's Schreibliste). The nav leaves a
+ *  flow out for a user who may not write one of them (lib/permissions.ts). */
+export const FLOW_ENTITIES: Record<string, string[]> = {
+  "angebot-erstellen": [
+    "angebote"
+  ],
+  "projekt-anlegen": [
+    "projekte"
+  ],
+  "zeit-erfassen": [
+    "zeiterfassung"
+  ],
+  "rechnung-erstellen": [
+    "rechnungen"
+  ],
+  "rechnung-versenden": [
+    "rechnungen"
+  ]
+};

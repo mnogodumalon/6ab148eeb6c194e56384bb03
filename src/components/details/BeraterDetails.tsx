@@ -6,6 +6,7 @@ import {
 } from '@/components/widgets/RecordView';
 import { t, appLabel, fieldLabel } from '@/i18n';
 import { SatelliteSection } from '@/components/SatelliteSection';
+import { usePermissions } from '@/lib/permissions';
 
 export interface BeraterDetailsProps {
   /** Der Record — enriched oder roh; alle Felder werden hier gerendert. */
@@ -23,7 +24,7 @@ export interface BeraterDetailsProps {
   /** Zeilen-Klick → overlay.push auf das Leistungskatalog-Detail (nie der Edit-Dialog). */
   onOpenLeistungskatalogAusfuehrendeBerater: (record: Leistungskatalog) => void;
   /** Kontextuelles „+": öffnet den Leistungskatalog-Dialog mit diesem Record vorgesetzt. */
-  onAddLeistungskatalogAusfuehrendeBerater: () => void;
+  onAddLeistungskatalogAusfuehrendeBerater?: () => void;
   /** „Vorhandene wählen": Listenfeld-Rückbezug — hängt diesen Record an einen bestehenden Leistungskatalog-Datensatz. */
   onPickLeistungskatalogAusfuehrendeBerater?: () => void;
   /** 1:N „Projekte" (projektleitung): VOLLE Liste — der Block filtert auf diesen Record. */
@@ -31,25 +32,25 @@ export interface BeraterDetailsProps {
   /** Zeilen-Klick → overlay.push auf das Projekte-Detail (nie der Edit-Dialog). */
   onOpenProjekteProjektleitung: (record: Projekte) => void;
   /** Kontextuelles „+": öffnet den Projekte-Dialog mit diesem Record vorgesetzt. */
-  onAddProjekteProjektleitung: () => void;
+  onAddProjekteProjektleitung?: () => void;
   /** 1:N „Angebote" (berater): VOLLE Liste — der Block filtert auf diesen Record. */
   angeboteList: Angebote[];
   /** Zeilen-Klick → overlay.push auf das Angebote-Detail (nie der Edit-Dialog). */
   onOpenAngebote: (record: Angebote) => void;
   /** Kontextuelles „+": öffnet den Angebote-Dialog mit diesem Record vorgesetzt. */
-  onAddAngebote: () => void;
+  onAddAngebote?: () => void;
   /** 1:N „Zeiterfassung" (berater): VOLLE Liste — der Block filtert auf diesen Record. */
   zeiterfassungList: Zeiterfassung[];
   /** Zeilen-Klick → overlay.push auf das Zeiterfassung-Detail (nie der Edit-Dialog). */
   onOpenZeiterfassung: (record: Zeiterfassung) => void;
   /** Kontextuelles „+": öffnet den Zeiterfassung-Dialog mit diesem Record vorgesetzt. */
-  onAddZeiterfassung: () => void;
+  onAddZeiterfassung?: () => void;
   /** 1:N „Rechnungen" (berater): VOLLE Liste — der Block filtert auf diesen Record. */
   rechnungenList: Rechnungen[];
   /** Zeilen-Klick → overlay.push auf das Rechnungen-Detail (nie der Edit-Dialog). */
   onOpenRechnungen: (record: Rechnungen) => void;
   /** Kontextuelles „+": öffnet den Rechnungen-Dialog mit diesem Record vorgesetzt. */
-  onAddRechnungen: () => void;
+  onAddRechnungen?: () => void;
   /** „Vorhandene wählen": Listenfeld-Rückbezug — hängt diesen Record an einen bestehenden Rechnungen-Datensatz. */
   onPickRechnungen?: () => void;
 }
@@ -76,6 +77,8 @@ export function BeraterDetails({
   onAddRechnungen,
   onPickRechnungen,
 }: BeraterDetailsProps) {
+  // attachments are a write to this record — read-only without the platform right
+  const perms = usePermissions();
   return (
     <>
       <RecordSection title={t('details')} cols={2}>
@@ -149,7 +152,7 @@ export function BeraterDetails({
         getKey={r => r.record_id}
       />
 
-      <RecordAttachments appId={APP_IDS.BERATER} recordId={record.record_id} />
+      <RecordAttachments appId={APP_IDS.BERATER} recordId={record.record_id} readOnly={!perms.canWrite('berater')} />
     </>
   );
 }

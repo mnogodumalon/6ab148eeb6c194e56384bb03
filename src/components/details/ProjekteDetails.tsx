@@ -6,6 +6,7 @@ import {
 } from '@/components/widgets/RecordView';
 import { t, appLabel, fieldLabel } from '@/i18n';
 import { SatelliteSection } from '@/components/SatelliteSection';
+import { usePermissions } from '@/lib/permissions';
 
 export interface ProjekteDetailsProps {
   /** Der Record — enriched oder roh; alle Felder werden hier gerendert. */
@@ -23,7 +24,7 @@ export interface ProjekteDetailsProps {
   /** Zeilen-Klick → overlay.push auf das Berater-Detail (nie der Edit-Dialog). */
   onOpenBeraterZugewieseneProjekte: (record: Berater) => void;
   /** Kontextuelles „+": öffnet den Berater-Dialog mit diesem Record vorgesetzt. */
-  onAddBeraterZugewieseneProjekte: () => void;
+  onAddBeraterZugewieseneProjekte?: () => void;
   /** „Vorhandene wählen": Listenfeld-Rückbezug — hängt diesen Record an einen bestehenden Berater-Datensatz. */
   onPickBeraterZugewieseneProjekte?: () => void;
   /** 1:N „Angebote" (projekt): VOLLE Liste — der Block filtert auf diesen Record. */
@@ -31,19 +32,19 @@ export interface ProjekteDetailsProps {
   /** Zeilen-Klick → overlay.push auf das Angebote-Detail (nie der Edit-Dialog). */
   onOpenAngebote: (record: Angebote) => void;
   /** Kontextuelles „+": öffnet den Angebote-Dialog mit diesem Record vorgesetzt. */
-  onAddAngebote: () => void;
+  onAddAngebote?: () => void;
   /** 1:N „Zeiterfassung" (projekt): VOLLE Liste — der Block filtert auf diesen Record. */
   zeiterfassungList: Zeiterfassung[];
   /** Zeilen-Klick → overlay.push auf das Zeiterfassung-Detail (nie der Edit-Dialog). */
   onOpenZeiterfassung: (record: Zeiterfassung) => void;
   /** Kontextuelles „+": öffnet den Zeiterfassung-Dialog mit diesem Record vorgesetzt. */
-  onAddZeiterfassung: () => void;
+  onAddZeiterfassung?: () => void;
   /** 1:N „Rechnungen" (projekt): VOLLE Liste — der Block filtert auf diesen Record. */
   rechnungenList: Rechnungen[];
   /** Zeilen-Klick → overlay.push auf das Rechnungen-Detail (nie der Edit-Dialog). */
   onOpenRechnungen: (record: Rechnungen) => void;
   /** Kontextuelles „+": öffnet den Rechnungen-Dialog mit diesem Record vorgesetzt. */
-  onAddRechnungen: () => void;
+  onAddRechnungen?: () => void;
 }
 
 export function ProjekteDetails({
@@ -66,6 +67,8 @@ export function ProjekteDetails({
   onOpenRechnungen,
   onAddRechnungen,
 }: ProjekteDetailsProps) {
+  // attachments are a write to this record — read-only without the platform right
+  const perms = usePermissions();
   const kundeTarget = kundenList.find(r => r.record_id === extractRecordId(record.fields.kunde));
   const projektleitungTarget = beraterList.find(r => r.record_id === extractRecordId(record.fields.projektleitung));
   return (
@@ -135,7 +138,7 @@ export function ProjekteDetails({
         getKey={r => r.record_id}
       />
 
-      <RecordAttachments appId={APP_IDS.PROJEKTE} recordId={record.record_id} />
+      <RecordAttachments appId={APP_IDS.PROJEKTE} recordId={record.record_id} readOnly={!perms.canWrite('projekte')} />
     </>
   );
 }

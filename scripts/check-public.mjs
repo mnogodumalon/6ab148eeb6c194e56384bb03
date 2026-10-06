@@ -85,6 +85,19 @@ const pageFiles = pageOnly
     : [];
 for (const file of pageFiles) {
   const src = readFileSync(file, 'utf8');
+
+  // fieldText is the DISPLAY text („12.10.2026, 11:00“); new Date()/parseISO
+  // read it month-first — salon 05.10.2026 showed Monday 12 Oct as
+  // „Donnerstag, 10.12.2026“. Anything computed or formatted from a date
+  // reads fieldDate (ISO).
+  {
+    const textVars = [...src.matchAll(/(?:const|let)\s+(\w+)\s*=\s*fieldText\(/g)].map(m => m[1]);
+    const direct = /(?:new Date|parseISO)\(\s*fieldText\(/.test(src);
+    const viaVar = textVars.some(v => new RegExp(`(?:new Date|parseISO)\\(\\s*${v}\\b`).test(src));
+    if (direct || viaVar) {
+      errors.push(`${file}: a fieldText(...) value goes into new Date()/parseISO — fieldText is the DISPLAY text ('12.10.2026, 11:00'), which Date reads month-first (12 Oct became 10 Dec, live). Use fieldDate(r, key) — the ISO value — for anything computed or formatted from a date`);
+    }
+  }
   // A record reference written for the authenticated REST API is rejected by
   // the anonymous surface with 400 "Unsupported field value" — applookup
   // values must be grant-scoped. Live-proven twice: a course registration

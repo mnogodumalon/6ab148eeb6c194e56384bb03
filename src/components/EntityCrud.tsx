@@ -78,6 +78,8 @@ import { PickExistingDialog } from '@/components/PickExistingDialog';
 import { AI_PHOTO_SCAN, AI_PHOTO_LOCATION } from '@/config/ai-features';
 import { t, appLabel } from '@/i18n';
 import { undoToast } from '@/lib/polish';
+import { usePermissions } from '@/lib/permissions';
+import { toast } from 'sonner';
 import { formatDate } from '@/lib/formatters';
 
 // The overlay union — one branch per entity, `record` typed the way the data
@@ -109,6 +111,10 @@ export interface EntityCrudApi<TRecord, TDefaults> {
   openEdit: (record: TRecord) => void;
   /** Open the record overlay (raw record is fine — enrichment resolved inside). */
   openDetail: (record: TRecord) => void;
+  /** May the signed-in user create/change records of this list? (the
+   *  platform's rights — show a „+ Neu“ only when true; openCreate/openEdit
+   *  refuse with a notice otherwise). */
+  canWrite: boolean;
 }
 
 export interface EntityCrud {
@@ -131,6 +137,9 @@ export interface EntityCrud {
 
 export function useEntityCrud(data: EntityCrudData, options?: EntityCrudOptions): EntityCrud {
   const overlay = useRecordOverlayStack<OverlayItem>();
+  // the platform's rights of the signed-in user (lib/permissions.ts) — unknown = allowed
+  const perms = usePermissions();
+  const refuse = () => { toast.error(t('perm_denied_title'), { description: t('perm_denied_desc') }); };
   const [kundenDialog, setKundenDialog] = useState<{ defaults?: KundenDialogDefaults; editing?: Kunden } | null>(null);
   const [beraterDialog, setBeraterDialog] = useState<{ defaults?: BeraterDialogDefaults; editing?: Berater } | null>(null);
   const [leistungskatalogDialog, setLeistungskatalogDialog] = useState<{ defaults?: LeistungskatalogDialogDefaults; editing?: Leistungskatalog } | null>(null);
@@ -604,10 +613,10 @@ export function useEntityCrud(data: EntityCrudData, options?: EntityCrudOptions)
                   record={top.record}
                   projekteList={data.projekte}
                   onOpenProjekte={(r) => detailProjekte(r, true)}
-                  onAddProjekte={() => setProjekteDialog({ defaults: { kunde: createRecordUrl(APP_IDS.KUNDEN, top.record.record_id) } })}
+                  onAddProjekte={perms.canWrite('projekte') ? () => setProjekteDialog({ defaults: { kunde: createRecordUrl(APP_IDS.KUNDEN, top.record.record_id) } }) : undefined}
                   rechnungenList={data.rechnungen}
                   onOpenRechnungen={(r) => detailRechnungen(r, true)}
-                  onAddRechnungen={() => setRechnungenDialog({ defaults: { kunde: createRecordUrl(APP_IDS.KUNDEN, top.record.record_id) } })}
+                  onAddRechnungen={perms.canWrite('rechnungen') ? () => setRechnungenDialog({ defaults: { kunde: createRecordUrl(APP_IDS.KUNDEN, top.record.record_id) } }) : undefined}
                 />
               </>
             );
@@ -622,21 +631,21 @@ export function useEntityCrud(data: EntityCrudData, options?: EntityCrudOptions)
                   projekteList={data.projekte}
                   leistungskatalogAusfuehrendeBeraterList={data.leistungskatalog}
                   onOpenLeistungskatalogAusfuehrendeBerater={(r) => detailLeistungskatalog(r, true)}
-                  onAddLeistungskatalogAusfuehrendeBerater={() => setLeistungskatalogDialog({ defaults: { ausfuehrende_berater: [createRecordUrl(APP_IDS.BERATER, top.record.record_id)] } })}
-                  onPickLeistungskatalogAusfuehrendeBerater={() => setPickBeraterLeistungskatalogAusfuehrendeBerater(top.record.record_id)}
+                  onAddLeistungskatalogAusfuehrendeBerater={perms.canWrite('leistungskatalog') ? () => setLeistungskatalogDialog({ defaults: { ausfuehrende_berater: [createRecordUrl(APP_IDS.BERATER, top.record.record_id)] } }) : undefined}
+                  onPickLeistungskatalogAusfuehrendeBerater={perms.canWrite('leistungskatalog') ? () => setPickBeraterLeistungskatalogAusfuehrendeBerater(top.record.record_id) : undefined}
                   projekteProjektleitungList={data.projekte}
                   onOpenProjekteProjektleitung={(r) => detailProjekte(r, true)}
-                  onAddProjekteProjektleitung={() => setProjekteDialog({ defaults: { projektleitung: createRecordUrl(APP_IDS.BERATER, top.record.record_id) } })}
+                  onAddProjekteProjektleitung={perms.canWrite('projekte') ? () => setProjekteDialog({ defaults: { projektleitung: createRecordUrl(APP_IDS.BERATER, top.record.record_id) } }) : undefined}
                   angeboteList={data.angebote}
                   onOpenAngebote={(r) => detailAngebote(r, true)}
-                  onAddAngebote={() => setAngeboteDialog({ defaults: { berater: createRecordUrl(APP_IDS.BERATER, top.record.record_id) } })}
+                  onAddAngebote={perms.canWrite('angebote') ? () => setAngeboteDialog({ defaults: { berater: createRecordUrl(APP_IDS.BERATER, top.record.record_id) } }) : undefined}
                   zeiterfassungList={data.zeiterfassung}
                   onOpenZeiterfassung={(r) => detailZeiterfassung(r, true)}
-                  onAddZeiterfassung={() => setZeiterfassungDialog({ defaults: { berater: createRecordUrl(APP_IDS.BERATER, top.record.record_id) } })}
+                  onAddZeiterfassung={perms.canWrite('zeiterfassung') ? () => setZeiterfassungDialog({ defaults: { berater: createRecordUrl(APP_IDS.BERATER, top.record.record_id) } }) : undefined}
                   rechnungenList={data.rechnungen}
                   onOpenRechnungen={(r) => detailRechnungen(r, true)}
-                  onAddRechnungen={() => setRechnungenDialog({ defaults: { berater: [createRecordUrl(APP_IDS.BERATER, top.record.record_id)] } })}
-                  onPickRechnungen={() => setPickBeraterRechnungen(top.record.record_id)}
+                  onAddRechnungen={perms.canWrite('rechnungen') ? () => setRechnungenDialog({ defaults: { berater: [createRecordUrl(APP_IDS.BERATER, top.record.record_id)] } }) : undefined}
+                  onPickRechnungen={perms.canWrite('rechnungen') ? () => setPickBeraterRechnungen(top.record.record_id) : undefined}
                 />
               </>
             );
@@ -650,11 +659,11 @@ export function useEntityCrud(data: EntityCrudData, options?: EntityCrudOptions)
                   beraterList={data.berater}
                   beraterLeistungenList={data.berater}
                   onOpenBeraterLeistungen={(r) => detailBerater(r, true)}
-                  onAddBeraterLeistungen={() => setBeraterDialog({ defaults: { leistungen: [createRecordUrl(APP_IDS.LEISTUNGSKATALOG, top.record.record_id)] } })}
-                  onPickBeraterLeistungen={() => setPickLeistungskatalogBeraterLeistungen(top.record.record_id)}
+                  onAddBeraterLeistungen={perms.canWrite('berater') ? () => setBeraterDialog({ defaults: { leistungen: [createRecordUrl(APP_IDS.LEISTUNGSKATALOG, top.record.record_id)] } }) : undefined}
+                  onPickBeraterLeistungen={perms.canWrite('berater') ? () => setPickLeistungskatalogBeraterLeistungen(top.record.record_id) : undefined}
                   zeiterfassungList={data.zeiterfassung}
                   onOpenZeiterfassung={(r) => detailZeiterfassung(r, true)}
-                  onAddZeiterfassung={() => setZeiterfassungDialog({ defaults: { leistung: createRecordUrl(APP_IDS.LEISTUNGSKATALOG, top.record.record_id) } })}
+                  onAddZeiterfassung={perms.canWrite('zeiterfassung') ? () => setZeiterfassungDialog({ defaults: { leistung: createRecordUrl(APP_IDS.LEISTUNGSKATALOG, top.record.record_id) } }) : undefined}
                 />
               </>
             );
@@ -671,17 +680,17 @@ export function useEntityCrud(data: EntityCrudData, options?: EntityCrudOptions)
                   onOpenBerater={(r) => detailBerater(r, true)}
                   beraterZugewieseneProjekteList={data.berater}
                   onOpenBeraterZugewieseneProjekte={(r) => detailBerater(r, true)}
-                  onAddBeraterZugewieseneProjekte={() => setBeraterDialog({ defaults: { zugewiesene_projekte: [createRecordUrl(APP_IDS.PROJEKTE, top.record.record_id)] } })}
-                  onPickBeraterZugewieseneProjekte={() => setPickProjekteBeraterZugewieseneProjekte(top.record.record_id)}
+                  onAddBeraterZugewieseneProjekte={perms.canWrite('berater') ? () => setBeraterDialog({ defaults: { zugewiesene_projekte: [createRecordUrl(APP_IDS.PROJEKTE, top.record.record_id)] } }) : undefined}
+                  onPickBeraterZugewieseneProjekte={perms.canWrite('berater') ? () => setPickProjekteBeraterZugewieseneProjekte(top.record.record_id) : undefined}
                   angeboteList={data.angebote}
                   onOpenAngebote={(r) => detailAngebote(r, true)}
-                  onAddAngebote={() => setAngeboteDialog({ defaults: { projekt: createRecordUrl(APP_IDS.PROJEKTE, top.record.record_id) } })}
+                  onAddAngebote={perms.canWrite('angebote') ? () => setAngeboteDialog({ defaults: { projekt: createRecordUrl(APP_IDS.PROJEKTE, top.record.record_id) } }) : undefined}
                   zeiterfassungList={data.zeiterfassung}
                   onOpenZeiterfassung={(r) => detailZeiterfassung(r, true)}
-                  onAddZeiterfassung={() => setZeiterfassungDialog({ defaults: { projekt: createRecordUrl(APP_IDS.PROJEKTE, top.record.record_id) } })}
+                  onAddZeiterfassung={perms.canWrite('zeiterfassung') ? () => setZeiterfassungDialog({ defaults: { projekt: createRecordUrl(APP_IDS.PROJEKTE, top.record.record_id) } }) : undefined}
                   rechnungenList={data.rechnungen}
                   onOpenRechnungen={(r) => detailRechnungen(r, true)}
-                  onAddRechnungen={() => setRechnungenDialog({ defaults: { projekt: createRecordUrl(APP_IDS.PROJEKTE, top.record.record_id) } })}
+                  onAddRechnungen={perms.canWrite('rechnungen') ? () => setRechnungenDialog({ defaults: { projekt: createRecordUrl(APP_IDS.PROJEKTE, top.record.record_id) } }) : undefined}
                 />
               </>
             );
@@ -714,8 +723,8 @@ export function useEntityCrud(data: EntityCrudData, options?: EntityCrudOptions)
                   onOpenLeistungskatalog={(r) => detailLeistungskatalog(r, true)}
                   rechnungenList={data.rechnungen}
                   onOpenRechnungen={(r) => detailRechnungen(r, true)}
-                  onAddRechnungen={() => setRechnungenDialog({ defaults: { zeiterfassungseintraege: [createRecordUrl(APP_IDS.ZEITERFASSUNG, top.record.record_id)] } })}
-                  onPickRechnungen={() => setPickZeiterfassungRechnungen(top.record.record_id)}
+                  onAddRechnungen={perms.canWrite('rechnungen') ? () => setRechnungenDialog({ defaults: { zeiterfassungseintraege: [createRecordUrl(APP_IDS.ZEITERFASSUNG, top.record.record_id)] } }) : undefined}
+                  onPickRechnungen={perms.canWrite('rechnungen') ? () => setPickZeiterfassungRechnungen(top.record.record_id) : undefined}
                 />
               </>
             );
@@ -738,6 +747,16 @@ export function useEntityCrud(data: EntityCrudData, options?: EntityCrudOptions)
           }
           return null;
         }}
+        canEdit={(top) => {
+          if (top.type === 'kunden') return perms.canWrite('kunden');
+          if (top.type === 'berater') return perms.canWrite('berater');
+          if (top.type === 'leistungskatalog') return perms.canWrite('leistungskatalog');
+          if (top.type === 'projekte') return perms.canWrite('projekte');
+          if (top.type === 'angebote') return perms.canWrite('angebote');
+          if (top.type === 'zeiterfassung') return perms.canWrite('zeiterfassung');
+          if (top.type === 'rechnungen') return perms.canWrite('rechnungen');
+          return true;
+        }}
         onEdit={(top) => {
           overlay.close();
           if (top.type === 'kunden') setKundenDialog({ editing: top.record, defaults: top.record.fields });
@@ -756,39 +775,46 @@ export function useEntityCrud(data: EntityCrudData, options?: EntityCrudOptions)
     overlay,
     surfaces,
     kunden: {
-      openCreate: (defaults?: KundenDialogDefaults) => setKundenDialog({ defaults }),
-      openEdit: (record: Kunden) => setKundenDialog({ editing: record, defaults: record.fields }),
+      openCreate: (defaults?: KundenDialogDefaults) => (perms.canWrite('kunden') ? setKundenDialog({ defaults }) : refuse()),
+      openEdit: (record: Kunden) => (perms.canWrite('kunden') ? setKundenDialog({ editing: record, defaults: record.fields }) : refuse()),
       openDetail: (record: Kunden) => detailKunden(record, false),
+      canWrite: perms.canWrite('kunden'),
     },
     berater: {
-      openCreate: (defaults?: BeraterDialogDefaults) => setBeraterDialog({ defaults }),
-      openEdit: (record: Berater) => setBeraterDialog({ editing: record, defaults: record.fields }),
+      openCreate: (defaults?: BeraterDialogDefaults) => (perms.canWrite('berater') ? setBeraterDialog({ defaults }) : refuse()),
+      openEdit: (record: Berater) => (perms.canWrite('berater') ? setBeraterDialog({ editing: record, defaults: record.fields }) : refuse()),
       openDetail: (record: Berater) => detailBerater(record, false),
+      canWrite: perms.canWrite('berater'),
     },
     leistungskatalog: {
-      openCreate: (defaults?: LeistungskatalogDialogDefaults) => setLeistungskatalogDialog({ defaults }),
-      openEdit: (record: Leistungskatalog) => setLeistungskatalogDialog({ editing: record, defaults: record.fields }),
+      openCreate: (defaults?: LeistungskatalogDialogDefaults) => (perms.canWrite('leistungskatalog') ? setLeistungskatalogDialog({ defaults }) : refuse()),
+      openEdit: (record: Leistungskatalog) => (perms.canWrite('leistungskatalog') ? setLeistungskatalogDialog({ editing: record, defaults: record.fields }) : refuse()),
       openDetail: (record: Leistungskatalog) => detailLeistungskatalog(record, false),
+      canWrite: perms.canWrite('leistungskatalog'),
     },
     projekte: {
-      openCreate: (defaults?: ProjekteDialogDefaults) => setProjekteDialog({ defaults }),
-      openEdit: (record: Projekte) => setProjekteDialog({ editing: record, defaults: record.fields }),
+      openCreate: (defaults?: ProjekteDialogDefaults) => (perms.canWrite('projekte') ? setProjekteDialog({ defaults }) : refuse()),
+      openEdit: (record: Projekte) => (perms.canWrite('projekte') ? setProjekteDialog({ editing: record, defaults: record.fields }) : refuse()),
       openDetail: (record: Projekte) => detailProjekte(record, false),
+      canWrite: perms.canWrite('projekte'),
     },
     angebote: {
-      openCreate: (defaults?: AngeboteDialogDefaults) => setAngeboteDialog({ defaults }),
-      openEdit: (record: Angebote) => setAngeboteDialog({ editing: record, defaults: record.fields }),
+      openCreate: (defaults?: AngeboteDialogDefaults) => (perms.canWrite('angebote') ? setAngeboteDialog({ defaults }) : refuse()),
+      openEdit: (record: Angebote) => (perms.canWrite('angebote') ? setAngeboteDialog({ editing: record, defaults: record.fields }) : refuse()),
       openDetail: (record: Angebote) => detailAngebote(record, false),
+      canWrite: perms.canWrite('angebote'),
     },
     zeiterfassung: {
-      openCreate: (defaults?: ZeiterfassungDialogDefaults) => setZeiterfassungDialog({ defaults }),
-      openEdit: (record: Zeiterfassung) => setZeiterfassungDialog({ editing: record, defaults: record.fields }),
+      openCreate: (defaults?: ZeiterfassungDialogDefaults) => (perms.canWrite('zeiterfassung') ? setZeiterfassungDialog({ defaults }) : refuse()),
+      openEdit: (record: Zeiterfassung) => (perms.canWrite('zeiterfassung') ? setZeiterfassungDialog({ editing: record, defaults: record.fields }) : refuse()),
       openDetail: (record: Zeiterfassung) => detailZeiterfassung(record, false),
+      canWrite: perms.canWrite('zeiterfassung'),
     },
     rechnungen: {
-      openCreate: (defaults?: RechnungenDialogDefaults) => setRechnungenDialog({ defaults }),
-      openEdit: (record: Rechnungen) => setRechnungenDialog({ editing: record, defaults: record.fields }),
+      openCreate: (defaults?: RechnungenDialogDefaults) => (perms.canWrite('rechnungen') ? setRechnungenDialog({ defaults }) : refuse()),
+      openEdit: (record: Rechnungen) => (perms.canWrite('rechnungen') ? setRechnungenDialog({ editing: record, defaults: record.fields }) : refuse()),
       openDetail: (record: Rechnungen) => detailRechnungen(record, false),
+      canWrite: perms.canWrite('rechnungen'),
     },
     enriched: { kunden: data.kunden, berater: enrichedBerater, leistungskatalog: enrichedLeistungskatalog, projekte: enrichedProjekte, angebote: enrichedAngebote, zeiterfassung: enrichedZeiterfassung, rechnungen: enrichedRechnungen },
   };

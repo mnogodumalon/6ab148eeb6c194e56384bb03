@@ -164,7 +164,18 @@ function holds(record: { fields: Record<string, unknown> }, c: PickCondition): b
 export function whereSentence(where: PickWhere | null | undefined, label: (field: string) => string, option: (field: string, value: unknown) => string): string {
   const conds = where?.conditions ?? [];
   if (conds.length === 0) return '';
-  const one = (v: unknown, field: string) => (typeof v === 'boolean' ? t(v ? 'yes' : 'no') : option(field, v));
+  // A relative date ({rel: 'today'|'now', days}) is a word, never an object — live
+  // 05.10.2026 the hint read „Datum mindestens [object Object]“.
+  const one = (v: unknown, field: string) => {
+    if (typeof v === 'boolean') return t(v ? 'yes' : 'no');
+    if (v && typeof v === 'object' && 'rel' in (v as object)) {
+      const days = Number((v as { days?: number }).days || 0);
+      if (!days) return t('am_today');
+      const iso = relativeIso(v);
+      return iso ? new Date(iso).toLocaleDateString() : t('am_today');
+    }
+    return option(field, v);
+  };
   const parts = conds.map(c => {
     const l = label(c.field);
     const op = t(`am_op_${c.op}`);

@@ -14,7 +14,7 @@ index.css is pre-generated with the shared design system. Do NOT edit it.
 src/config/ai-features.ts is editable — set AI_PHOTO_SCAN['Entity'] = true to enable photo scan in dialogs.
 NEVER use Bash cat/echo/heredoc for file operations — always use Read/Write/Edit tools.
 
-Generated 160 scaffold files:
+Generated 161 scaffold files:
   - src/App.tsx
   - src/i18n/index.ts
   - src/i18n/common.ts
@@ -111,6 +111,7 @@ Generated 160 scaffold files:
   - scripts/render-smoke.mjs
   - src/index.css
   - src/lib/origin.ts
+  - src/lib/permissions.ts
   - src/lib/sentry.ts
   - src/lib/stale-bundle.ts
   - src/lib/ai.ts
@@ -488,8 +489,8 @@ contracts; Read one only if the contract below is insufficient.
  * Mängel/Berichte/Fotos/…), the hub's overlay shows ONE of these per satellite
  * entity. The component bakes in the three mechanics that are easy to get wrong
  * by hand, so they're guaranteed by construction:
- *   1. it ALWAYS renders a "+" (the `onAdd` prop is required) — no read-only
- *      satellite sections;
+ *   1. it renders a "+" whenever the user may create (`onAdd` given — the
+ *      scaffold leaves it out for a list the user may not write);
  *   2. clicking a row calls `onOpen` (→ open the record's DETAIL overlay via
  *      overlay.push), NEVER the edit form — editing happens from inside that
  *      detail;

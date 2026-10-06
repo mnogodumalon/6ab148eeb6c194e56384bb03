@@ -306,7 +306,7 @@ export function ProjekteDialog({ open, onClose, onSubmit, defaultValues, recordI
         }
       }
       const photoContext = contextParts.length ? contextParts.join('\n') : undefined;
-      const schema = `{\n  "kostenstelle": string | null, // Kostenstelle\n  "projektkennung": string | null, // Projektkennung\n  "projektnummer": number | null, // Projektnummer\n  "projektart": LookupValue | null, // Projektart (select one key: "entwicklung" | "schulung" | "konzeption" | "support" | "sonstiges" | "it_beratung") mapping: entwicklung=Entwicklung, schulung=Schulung, konzeption=Konzeption, support=Support, sonstiges=Sonstiges, it_beratung=IT-Beratung\n  "projektstatus": LookupValue | null, // Projektstatus (select one key: "in_bearbeitung" | "akquise" | "abgeschlossen") mapping: in_bearbeitung=In Bearbeitung, akquise=Akquise, abgeschlossen=Abgeschlossen\n  "projektstart_monat": LookupValue | null, // Startmonat (select one key: "januar" | "februar" | "maerz" | "april" | "mai" | "juni" | "juli" | "august" | "september" | "oktober" | "november" | "dezember") mapping: januar=Januar, februar=Februar, maerz=März, april=April, mai=Mai, juni=Juni, juli=Juli, august=August, september=September, oktober=Oktober, november=November, dezember=Dezember\n  "projektstart_jahr": number | null, // Startjahr\n  "kunde": string | null, // Display name from Kunden (see <available-records>)\n  "ansprechpartner_kunde": string | null, // Ansprechpartner beim Kunden\n  "letzter_schritt": string | null, // Letzter Schritt / aktueller Stand\n  "projektleitung": string | null, // Display name from Berater (see <available-records>)\n}`;
+      const schema = `{\n  "kostenstelle": string | null, // Kostenstelle\n  "projektkennung": string | null, // Projektkennung\n  "projektnummer": number | null, // Projektnummer\n  "projektart": LookupValue | null, // Projektart (select one key: "it_beratung" | "entwicklung" | "schulung" | "konzeption" | "support" | "sonstiges") mapping: it_beratung=IT-Beratung, entwicklung=Entwicklung, schulung=Schulung, konzeption=Konzeption, support=Support, sonstiges=Sonstiges\n  "projektstatus": LookupValue | null, // Projektstatus (select one key: "in_bearbeitung" | "akquise" | "abgeschlossen") mapping: in_bearbeitung=In Bearbeitung, akquise=Akquise, abgeschlossen=Abgeschlossen\n  "projektstart_monat": LookupValue | null, // Startmonat (select one key: "januar" | "februar" | "maerz" | "april" | "mai" | "juni" | "juli" | "august" | "september" | "oktober" | "november" | "dezember") mapping: januar=Januar, februar=Februar, maerz=März, april=April, mai=Mai, juni=Juni, juli=Juli, august=August, september=September, oktober=Oktober, november=November, dezember=Dezember\n  "projektstart_jahr": number | null, // Startjahr\n  "kunde": string | null, // Display name from Kunden (see <available-records>)\n  "ansprechpartner_kunde": string | null, // Ansprechpartner beim Kunden\n  "letzter_schritt": string | null, // Letzter Schritt / aktueller Stand\n  "projektleitung": string | null, // Display name from Berater (see <available-records>)\n}`;
       const raw = await extractFromInput<Record<string, unknown>>(schema, {
         dataUri: uri,
         userText: aiText.trim() || undefined,
@@ -434,12 +434,12 @@ export function ProjekteDialog({ open, onClose, onSubmit, defaultValues, recordI
           <SelectTrigger id="projektart" className="max-sm:h-11"><SelectValue placeholder="" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="none">—</SelectItem>
+            <SelectItem value="it_beratung">{lookupLabel('projekte', 'projektart', 'it_beratung') ?? 'IT-Beratung'}</SelectItem>
             <SelectItem value="entwicklung">{lookupLabel('projekte', 'projektart', 'entwicklung') ?? 'Entwicklung'}</SelectItem>
             <SelectItem value="schulung">{lookupLabel('projekte', 'projektart', 'schulung') ?? 'Schulung'}</SelectItem>
             <SelectItem value="konzeption">{lookupLabel('projekte', 'projektart', 'konzeption') ?? 'Konzeption'}</SelectItem>
             <SelectItem value="support">{lookupLabel('projekte', 'projektart', 'support') ?? 'Support'}</SelectItem>
             <SelectItem value="sonstiges">{lookupLabel('projekte', 'projektart', 'sonstiges') ?? 'Sonstiges'}</SelectItem>
-            <SelectItem value="it_beratung">{lookupLabel('projekte', 'projektart', 'it_beratung') ?? 'IT-Beratung'}</SelectItem>
           </SelectContent>
         </Select>
         {showErrors && !fields.projektart && (

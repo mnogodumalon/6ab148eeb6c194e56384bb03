@@ -79,6 +79,19 @@ if (pages.length > 0) {
     const file = pageFile(name);
     const src = readFileSync(file, 'utf8');
 
+    // fieldText is the DISPLAY text („12.10.2026, 11:00“); new Date()/parseISO
+    // read it month-first — salon 05.10.2026 showed Monday 12 Oct as
+    // „Donnerstag, 10.12.2026“. Anything computed or formatted from a date
+    // reads fieldDate (ISO).
+    {
+      const textVars = [...src.matchAll(/(?:const|let)\s+(\w+)\s*=\s*fieldText\(/g)].map(m => m[1]);
+      const direct = /(?:new Date|parseISO)\(\s*fieldText\(/.test(src);
+      const viaVar = textVars.some(v => new RegExp(`(?:new Date|parseISO)\\(\\s*${v}\\b`).test(src));
+      if (direct || viaVar) {
+        errors.push(`${file}: a fieldText(...) value goes into new Date()/parseISO — fieldText is the DISPLAY text ('12.10.2026, 11:00'), which Date reads month-first (12 Oct became 10 Dec, live). Use fieldDate(r, key) — the ISO value — for anything computed or formatted from a date`);
+      }
+    }
+
     // 1. Imported and routed? (not from staging — the band wires later)
     if (!pageOnly && !appSrc.includes(`@/pages/intents/${name}`)) {
       errors.push(`${APP}: no import for '${name}' — add it inside <custom:imports> and route it in <custom:routes>`);
@@ -113,7 +126,7 @@ if (pages.length > 0) {
       if (/\buseRecordSearch\s*\(/.test(src)) raw.push('useRecordSearch');
       if (/from\s*['"]@\/services\/journeyPort['"]/.test(src)) raw.push('servicePort');
       if (raw.length) {
-        errors.push(`${file}: uses the flow hook use${hookImport[1]}Flow AND the raw plumbing (${raw.join(', ')}) — the hook owns the form(s), the record searches and the submit plan; compose with flow.forms.<key>, flow.picks.<field>.select + flow.pick()/flow.pickMany(), flow.validateStep(n), flow.submit. Remove the raw calls.`);
+        errors.push(`${file}: uses the flow hook use${hookImport[1]}Flow AND the raw plumbing (${raw.join(', ')}) — the hook owns the form(s), the record searches and the submit plan; compose with flow.forms.<key>, flow.picks.<field>.select + flow.pick()/flow.pickMany(), flow.validateStep(n), flow.submit; availability or a count through the hook's door: useOccupancy(flow.port, entity, { resource }), useRecordCount(flow.port, …). Remove the raw calls.`);
       }
     }
     if (!/useJourneySubmit\s*\(/.test(src) && !usesFlowHook) {
@@ -567,7 +580,7 @@ if (pages.length > 0) {
         // array because the hook offered no pick; the warning let it through.
         errors.push(`${file}:${line}: useDashboardData next to the flow hook — the hook owns every pick: {...flow.picks.<field>.select} {...flow.pick('<field>')}, and for the record an update changes {...flow.picks.<entity>.select} {...flow.pick('<entity>')} (prefilled, updated on submit). Remove useDashboardData and the hand-built items`);
       } else {
-        warnings.push(`${file}:${line}: useDashboardData in a flow — picks are useRecordSearch (never items from an array), availability is useOccupancy(servicePort, entity, { resource }), the picked record is x.recordOf(id); keep the hook only for an aggregate the layer has no answer for`);
+        warnings.push(`${file}:${line}: useDashboardData in a flow — picks are useRecordSearch (never items from an array), availability is useOccupancy(servicePort, entity, { resource }) — with a flow hook useOccupancy(flow.port, …) —, the picked record is x.recordOf(id); keep the hook only for an aggregate the layer has no answer for`);
       }
     }
 

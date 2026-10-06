@@ -6,6 +6,7 @@ import {
 } from '@/components/widgets/RecordView';
 import { t, appLabel, fieldLabel } from '@/i18n';
 import { SatelliteSection } from '@/components/SatelliteSection';
+import { usePermissions } from '@/lib/permissions';
 
 export interface KundenDetailsProps {
   /** Der Record — enriched oder roh; alle Felder werden hier gerendert. */
@@ -15,13 +16,13 @@ export interface KundenDetailsProps {
   /** Zeilen-Klick → overlay.push auf das Projekte-Detail (nie der Edit-Dialog). */
   onOpenProjekte: (record: Projekte) => void;
   /** Kontextuelles „+": öffnet den Projekte-Dialog mit diesem Record vorgesetzt. */
-  onAddProjekte: () => void;
+  onAddProjekte?: () => void;
   /** 1:N „Rechnungen" (kunde): VOLLE Liste — der Block filtert auf diesen Record. */
   rechnungenList: Rechnungen[];
   /** Zeilen-Klick → overlay.push auf das Rechnungen-Detail (nie der Edit-Dialog). */
   onOpenRechnungen: (record: Rechnungen) => void;
   /** Kontextuelles „+": öffnet den Rechnungen-Dialog mit diesem Record vorgesetzt. */
-  onAddRechnungen: () => void;
+  onAddRechnungen?: () => void;
 }
 
 export function KundenDetails({
@@ -33,6 +34,8 @@ export function KundenDetails({
   onOpenRechnungen,
   onAddRechnungen,
 }: KundenDetailsProps) {
+  // attachments are a write to this record — read-only without the platform right
+  const perms = usePermissions();
   return (
     <>
       <RecordSection title={t('details')} cols={2}>
@@ -77,7 +80,7 @@ export function KundenDetails({
         getKey={r => r.record_id}
       />
 
-      <RecordAttachments appId={APP_IDS.KUNDEN} recordId={record.record_id} />
+      <RecordAttachments appId={APP_IDS.KUNDEN} recordId={record.record_id} readOnly={!perms.canWrite('kunden')} />
     </>
   );
 }

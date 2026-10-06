@@ -25,7 +25,7 @@ const BUG_TYPES = new Set<string>([
 ]);
 
 type ErrorSource = 'api' | 'promise' | 'js' | 'network';
-type ErrorCategory = 'user' | 'bug' | 'transient' | 'auth';
+type ErrorCategory = 'user' | 'bug' | 'transient' | 'auth' | 'forbidden';
 
 export interface ErrorPayload {
   source: ErrorSource;
@@ -40,9 +40,11 @@ export interface ErrorPayload {
 }
 
 function classify(err: ErrorPayload): ErrorCategory {
-  // 401/403: the Layout login screen is the surface for this — a repair run
-  // cannot fix a missing session or missing permissions.
-  if (err.status === 401 || err.status === 403) return 'auth';
+  // 401: the Layout login screen is the surface for this — a repair run
+  // cannot fix a missing session. 403: signed in, but without the right for
+  // this list — a plain notice, never a repair offer (05.10.2026).
+  if (err.status === 401) return 'auth';
+  if (err.status === 403) return 'forbidden';
   if (err.source === 'network') return 'transient';
   if (typeof err.status === 'number' && err.status >= 500) return 'transient';
   if (err.type && USER_TYPES.has(err.type)) return 'user';
@@ -151,6 +153,10 @@ export function ErrorBusProvider({ children }: { children: ReactNode }) {
 
     const category = classify(err);
     if (category === 'user' || category === 'auth') return;
+    if (category === 'forbidden') {
+      toast.error(t('perm_denied_title'), { description: t('perm_denied_desc'), duration: TOAST_DURATION_MS });
+      return;
+    }
 
     if (category === 'transient') {
       const isServerError = typeof err.status === 'number' && err.status >= 500;

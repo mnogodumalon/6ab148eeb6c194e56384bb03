@@ -12,13 +12,13 @@
  * a plain date field pair is shown instead.
  *
  * Facts from the metadata — candidates, NOT decisions:
- *   - kunden: lookups kundentyp[einzelperson|firma|behoerde|sonstiges], bevorzugte_kontaktart[email|telefon|post|persoenlich]
+ *   - kunden: lookups kundentyp[firma|behoerde|sonstiges|einzelperson], bevorzugte_kontaktart[email|telefon|post|persoenlich]
  *   - berater: applookups leistungen→leistungskatalog, zugewiesene_projekte→projekte · lookups status[aktiv|urlaub|elternzeit|sonstiges]
  *   - leistungskatalog: applookups ausfuehrende_berater→berater · lookups leistungstyp[beratung|entwicklung|schulung|support|konzeption|sonstiges], einheit[pro_stunde|pro_tag|pauschal|pro_monat]
- *   - projekte: applookups kunde→kunden, projektleitung→berater · lookups projektart[entwicklung|schulung|konzeption|support|sonstiges|it_beratung], projektstatus[in_bearbeitung|akquise|abgeschlossen], projektstart_monat[januar|februar|maerz|april|mai|juni|juli|august|september|oktober|november|dezember]
- *   - angebote: applookups projekt→projekte, berater→berater · lookups angebotstyp[dienstleistungsangebot|wartungsvertrag|projektangebot|rahmenvertrag|sonstiges], angebotsstatus[entwurf|versendet|angenommen|abgelehnt], kostentyp[einmalig|monatlich|jaehrlich|quartalsweise|sonstiges]
+ *   - projekte: applookups kunde→kunden, projektleitung→berater · lookups projektart[it_beratung|entwicklung|schulung|konzeption|support|sonstiges], projektstatus[in_bearbeitung|akquise|abgeschlossen], projektstart_monat[januar|februar|maerz|april|mai|juni|juli|august|september|oktober|november|dezember]
+ *   - angebote: applookups projekt→projekte, berater→berater · lookups angebotstyp[wartungsvertrag|projektangebot|rahmenvertrag|sonstiges|dienstleistungsangebot], angebotsstatus[entwurf|versendet|angenommen|abgelehnt], kostentyp[einmalig|monatlich|jaehrlich|quartalsweise|sonstiges]
  *   - zeiterfassung: applookups berater→berater, projekt→projekte, leistung→leistungskatalog · lookups erfassungsmonat[januar|februar|maerz|april|mai|juni|juli|august|september|oktober|november|dezember]
- *   - rechnungen: applookups kunde→kunden, projekt→projekte, berater→berater, zeiterfassungseintraege→zeiterfassung · lookups rechnungsstatus[entwurf|versendet|bezahlt|ueberfaellig|storniert], rechnungsmonat[januar|februar|maerz|april|mai|juni|juli|august|september|oktober|november|dezember]
+ *   - rechnungen: applookups kunde→kunden, projekt→projekte, berater→berater, zeiterfassungseintraege→zeiterfassung · lookups rechnungsstatus[entwurf|versendet|bezahlt|ueberfaellig|storniert], rechnungsmonat[august|september|oktober|november|dezember|januar|februar|maerz|april|mai|juni|juli]
  */
 import type { EntityKey } from '@/lib/journey/rules';
 
@@ -37,4 +37,20 @@ export interface OccupancyRule {
 export const OCCUPANCY: Partial<Record<EntityKey, OccupancyRule>> = {
   // <custom:occupancy>
   // </custom:occupancy>
+};
+
+/**
+ * A record of the KEY entity is TAKEN while a record of `entity` points at it
+ * through `field` — a slot with a booking, a seat with a ticket. Generated
+ * from the plan's blocking `unique` check on that reference (05.10.2026:
+ * the salon's public page offered booked slots again). Pickers on both
+ * doors leave taken records out (useRecordSearch); a public page reads only
+ * `field` of `entity` — never who booked. Generator-owned: no markers.
+ */
+export interface TakenRule {
+  entity: EntityKey;
+  field: string;
+}
+
+export const TAKEN_BY: Partial<Record<EntityKey, TakenRule>> = {
 };

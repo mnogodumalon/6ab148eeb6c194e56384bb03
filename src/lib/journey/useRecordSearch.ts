@@ -24,6 +24,7 @@ import type { JourneyPort, JourneyRecord } from './port';
 import { FIELD_RULES, displayNameOf, type EntityKey, type StringFieldKey } from './rules';
 import { SERVER_SEARCH_FROM, SEARCH_PAGE_SIZE } from './selectMode';
 import { recordIdOf, rememberRecordLabel } from './recordLabels';
+import { takenIdsFrom, takenRuleOf } from './occupancy';
 import { t } from '@/i18n';
 import { Sentry } from '@/lib/sentry';
 
@@ -76,6 +77,10 @@ export interface RecordSearchOptions<T extends SelectItemLike, E extends EntityK
   /** Below this count everything is loaded once and searched client-side (default SERVER_SEARCH_FROM). */
   loadAllUpTo?: number;
   pageSize?: number;
+  /** Keep records another entity has taken (config TAKEN_BY) — default false:
+   *  a picker never offers a booked slot. Set it where the owner works on
+   *  the taken ones themselves. */
+  includeTaken?: boolean;
 }
 
 export interface RecordSearch<T extends SelectItemLike> {
@@ -134,7 +139,7 @@ export function useRecordSearch<E extends EntityKey, T extends SelectItemLike>(
   entity: E,
   options: RecordSearchOptions<T, E>,
 ): RecordSearch<T> {
-  const { searchFields, toItem, orderby, filter, where, loadAllUpTo = SERVER_SEARCH_FROM, pageSize = SEARCH_PAGE_SIZE } = options;
+  const { searchFields, toItem, orderby, filter, where, loadAllUpTo = SERVER_SEARCH_FROM, pageSize = SEARCH_PAGE_SIZE, includeTaken = false } = options;
   const [items, setItems] = useState<T[]>([]);
   const [totalCount, setTotalCount] = useState<number | null>(null);
   const [serverSearch, setServerSearch] = useState(false);
@@ -178,7 +183,23 @@ export function useRecordSearch<E extends EntityKey, T extends SelectItemLike>(
   toItemRef.current = toItem ?? defaultItem;
   const whereRef = useRef(where);
   whereRef.current = where;
-  const keep = (rows: JourneyRecord[]) => (whereRef.current ? rows.filter(whereRef.current) : rows);
+  // Records another entity has taken (TAKEN_BY: a booked slot) — loaded with
+  // every list, left out of the picker. The taking entity is read with ONE
+  // field; a door that cannot read it (no grant endpoint) changes nothing.
+  const taken = useRef<Set<string>>(new Set());
+  const loadTaken = useCallback(async () => {
+    const rule = includeTaken ? undefined : takenRuleOf(entity);
+    if (!rule) return;
+    try {
+      taken.current = takenIdsFrom(rule, await port.list(rule.entity, { fields: [rule.field] }));
+    } catch (e) {
+      console.warn(`useRecordSearch: could not read '${rule.entity}.${rule.field}' — taken '${entity}' records stay listed:`, e);
+    }
+  }, [port, entity, includeTaken]);
+  const keep = (rows: JourneyRecord[]) => {
+    const free = taken.current.size ? rows.filter(r => !taken.current.has(r.id)) : rows;
+    return whereRef.current ? free.filter(whereRef.current) : free;
+  };
   const fieldsKey = searchFields.join('|');
   const orderKey = (orderby ?? []).join('|');
 
@@ -263,6 +284,7 @@ export function useRecordSearch<E extends EntityKey, T extends SelectItemLike>(
         ? decideStrategy(count, loadAllUpTo, pageSize)
         : { serverSearch: false as const };
       setServerSearch(strategy.serverSearch);
+      await loadTaken();
       const rows = keep(await port.list(entity, strategy.serverSearch ? { limit: strategy.limit, orderby, filter: activeFilter } : { orderby, filter: activeFilter }));
       rowsRef.current = rows;
       // Names BEFORE the list: `records`, `refLabel` and `labelOf` are
@@ -297,7 +319,7 @@ export function useRecordSearch<E extends EntityKey, T extends SelectItemLike>(
       setLoading(false);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps -- keys stand in for the arrays
-  }, [port, entity, loadAllUpTo, pageSize, orderKey, filter, remember, loadRefs]);
+  }, [port, entity, loadAllUpTo, pageSize, orderKey, filter, remember, loadRefs, loadTaken]);
 
   useEffect(() => { void load(); }, [load]);
 

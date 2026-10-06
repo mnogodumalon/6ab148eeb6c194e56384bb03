@@ -7,6 +7,8 @@ import { t, locale } from '@/i18n';
 import { usePageJobs } from '@/hooks/usePageJobs';
 import { NavRows, type NavRow } from '@/components/NavRows';
 import { getAppMapCached } from '@/lib/appMap';
+import { usePermissions } from '@/lib/permissions';
+import { FLOW_ENTITIES } from '@/config/plan';
 
 /**
  * IntentsNav — the sidebar list of the dashboard's flows ("Abläufe").
@@ -62,8 +64,14 @@ export function IntentsNav() {
     return () => { on = false; };
   }, []);
 
+  // a flow writes its lists: without the right to write one of them it is not offered
+  const perms = usePermissions();
   const rows = useMemo<NavRow[]>(() => {
-    const items: NavRow[] = INTENTS.map(intent => {
+    const allowed = INTENTS.filter(intent => {
+      const ents = FLOW_ENTITIES[intent.path.replace(/\/+$/, '').split('/').pop() ?? ''];
+      return !ents || ents.every(e => perms.canWrite(e));
+    });
+    const items: NavRow[] = allowed.map(intent => {
       const Icon = intent.icon;
       return {
         key: intent.path,
@@ -95,7 +103,7 @@ export function IntentsNav() {
       });
     }
     return items;
-  }, [location.pathname, pending, building, hasMap]);
+  }, [location.pathname, pending, building, hasMap, perms]);
 
   const onSelect = (row: NavRow, e: MouseEvent<HTMLAnchorElement>) => {
     // Plain left click → SPA navigation; modifier clicks keep the href.

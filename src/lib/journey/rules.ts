@@ -172,10 +172,10 @@ export const FIELD_RULES: Record<EntityKey, Record<string, FieldRule>> = {
       "label": "Kundentyp",
       "writable": true,
       "options": [
-        "einzelperson",
         "firma",
         "behoerde",
-        "sonstiges"
+        "sonstiges",
+        "einzelperson"
       ]
     },
     "email": {
@@ -655,12 +655,12 @@ export const FIELD_RULES: Record<EntityKey, Record<string, FieldRule>> = {
       "label": "Projektart",
       "writable": true,
       "options": [
+        "it_beratung",
         "entwicklung",
         "schulung",
         "konzeption",
         "support",
-        "sonstiges",
-        "it_beratung"
+        "sonstiges"
       ]
     },
     "projektstatus": {
@@ -769,11 +769,11 @@ export const FIELD_RULES: Record<EntityKey, Record<string, FieldRule>> = {
       "label": "Angebotstyp",
       "writable": true,
       "options": [
-        "dienstleistungsangebot",
         "wartungsvertrag",
         "projektangebot",
         "rahmenvertrag",
-        "sonstiges"
+        "sonstiges",
+        "dienstleistungsangebot"
       ]
     },
     "angebotsstatus": {
@@ -1019,18 +1019,18 @@ export const FIELD_RULES: Record<EntityKey, Record<string, FieldRule>> = {
       "label": "Abrechnungsmonat",
       "writable": true,
       "options": [
+        "august",
+        "september",
+        "oktober",
+        "november",
+        "dezember",
         "januar",
         "februar",
         "maerz",
         "april",
         "mai",
         "juni",
-        "juli",
-        "august",
-        "september",
-        "oktober",
-        "november",
-        "dezember"
+        "juli"
       ]
     },
     "rechnungsjahr": {

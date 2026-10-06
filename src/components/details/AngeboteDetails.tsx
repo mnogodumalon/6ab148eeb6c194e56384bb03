@@ -5,6 +5,7 @@ import {
   RecordSection, RecordField, RecordRelation, RecordAttachments,
 } from '@/components/widgets/RecordView';
 import { t, appLabel, fieldLabel } from '@/i18n';
+import { usePermissions } from '@/lib/permissions';
 import { MediaThumbnail } from '@/components/widgets/MediaViewer';
 
 export interface AngeboteDetailsProps {
@@ -27,6 +28,8 @@ export function AngeboteDetails({
   beraterList,
   onOpenBerater,
 }: AngeboteDetailsProps) {
+  // attachments are a write to this record — read-only without the platform right
+  const perms = usePermissions();
   const projektTarget = projekteList.find(r => r.record_id === extractRecordId(record.fields.projekt));
   const beraterTarget = beraterList.find(r => r.record_id === extractRecordId(record.fields.berater));
   return (
@@ -65,7 +68,7 @@ export function AngeboteDetails({
         />
       </RecordSection>
 
-      <RecordAttachments appId={APP_IDS.ANGEBOTE} recordId={record.record_id} />
+      <RecordAttachments appId={APP_IDS.ANGEBOTE} recordId={record.record_id} readOnly={!perms.canWrite('angebote')} />
     </>
   );
 }

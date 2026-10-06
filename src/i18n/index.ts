@@ -159,6 +159,8 @@ export const UI_CATALOG: Record<CoreLocale, Record<string, string>> = {
     "download": "Herunterladen",
     "auth_error_title": "Du bist nicht angemeldet.",
     "auth_login_button": "Anmelden",
+    "perm_denied_title": "Dafür fehlt dir die Berechtigung.",
+    "perm_denied_desc": "Eine Administratorin oder ein Administrator der Anwendung kann sie dir geben.",
     "repair_text": "Dashboard reparieren",
     "repair_error_title": "Etwas ist schiefgelaufen",
     "repair_reload": "Neu laden",
@@ -498,6 +500,8 @@ export const UI_CATALOG: Record<CoreLocale, Record<string, string>> = {
     "am_nav": "Deine Anwendung",
     "am_none": "Für diese Anwendung gibt es hier noch nichts zu sehen.",
     "am_stale": "Die Anwendung wurde am {date} neu gebaut, ohne diesen Plan zu kennen. Was hier steht, kann davon abweichen.",
+    "am_readonly": "Hier siehst du, wie die Anwendung arbeitet. Ändern können das nur Administratoren.",
+    "am_stale_rollback": "Die Anwendung wurde am {date} auf eine ältere Version zurückgesetzt. Was hier steht, kann die neuere beschreiben.",
     "am_loading": "Lade …",
     "am_saving": "Wird übernommen …",
     "am_upload": "Datei hochladen (PDF, DOCX)",
@@ -913,6 +917,8 @@ export const UI_CATALOG: Record<CoreLocale, Record<string, string>> = {
     "download": "Download",
     "auth_error_title": "You are not logged in.",
     "auth_login_button": "Log in",
+    "perm_denied_title": "You do not have permission for this.",
+    "perm_denied_desc": "An administrator of the application can grant it.",
     "repair_text": "Repair Dashboard",
     "repair_error_title": "Something went wrong",
     "repair_reload": "Reload",
@@ -1252,6 +1258,8 @@ export const UI_CATALOG: Record<CoreLocale, Record<string, string>> = {
     "am_nav": "Your application",
     "am_none": "There is nothing to show for this application yet.",
     "am_stale": "The application was rebuilt on {date} without this plan. What you read here may differ from it.",
+    "am_readonly": "This shows how the application works. Only administrators can change it.",
+    "am_stale_rollback": "The application was set back to an older version on {date}. What you read here may describe the newer one.",
     "am_loading": "Loading …",
     "am_saving": "Applying …",
     "am_upload": "Upload a file (PDF, DOCX)",
@@ -1616,10 +1624,10 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
         },
         "lookups": {
           "kundentyp": {
-            "einzelperson": "Einzelperson",
             "firma": "Firma",
             "behoerde": "Behörde",
-            "sonstiges": "Sonstiges"
+            "sonstiges": "Sonstiges",
+            "einzelperson": "Einzelperson"
           },
           "bevorzugte_kontaktart": {
             "email": "E-Mail",
@@ -1710,12 +1718,12 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
         },
         "lookups": {
           "projektart": {
+            "it_beratung": "IT-Beratung",
             "entwicklung": "Entwicklung",
             "schulung": "Schulung",
             "konzeption": "Konzeption",
             "support": "Support",
-            "sonstiges": "Sonstiges",
-            "it_beratung": "IT-Beratung"
+            "sonstiges": "Sonstiges"
           },
           "projektstatus": {
             "in_bearbeitung": "In Bearbeitung",
@@ -1758,11 +1766,11 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
         },
         "lookups": {
           "angebotstyp": {
-            "dienstleistungsangebot": "Dienstleistungsangebot",
             "wartungsvertrag": "Wartungsvertrag",
             "projektangebot": "Projektangebot",
             "rahmenvertrag": "Rahmenvertrag",
-            "sonstiges": "Sonstiges"
+            "sonstiges": "Sonstiges",
+            "dienstleistungsangebot": "Dienstleistungsangebot"
           },
           "angebotsstatus": {
             "entwurf": "Entwurf",
@@ -1839,18 +1847,18 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
             "storniert": "Storniert"
           },
           "rechnungsmonat": {
+            "august": "August",
+            "september": "September",
+            "oktober": "Oktober",
+            "november": "November",
+            "dezember": "Dezember",
             "januar": "Januar",
             "februar": "Februar",
             "maerz": "März",
             "april": "April",
             "mai": "Mai",
             "juni": "Juni",
-            "juli": "Juli",
-            "august": "August",
-            "september": "September",
-            "oktober": "Oktober",
-            "november": "November",
-            "dezember": "Dezember"
+            "juli": "Juli"
           }
         }
       }
@@ -1887,10 +1895,10 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
         },
         "lookups": {
           "kundentyp": {
-            "einzelperson": "Individual",
             "firma": "Company",
-            "behoerde": "Government Agency",
-            "sonstiges": "Other"
+            "behoerde": "Public Authority",
+            "sonstiges": "Other",
+            "einzelperson": "Individual"
           },
           "bevorzugte_kontaktart": {
             "email": "Email",
@@ -1911,8 +1919,8 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
           "hausnummer": "House Number",
           "plz": "Postal Code",
           "ort": "City",
-          "email_beruflich": "Email (business)",
-          "email_privat": "Email (private)",
+          "email_beruflich": "Email (work)",
+          "email_privat": "Email (personal)",
           "einstiegsdatum": "Start Date",
           "status": "Status",
           "stundensatz": "Hourly Rate (€/h)",
@@ -1975,18 +1983,18 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
           "projektstart_monat": "Start Month",
           "projektstart_jahr": "Start Year",
           "kunde": "Customer",
-          "ansprechpartner_kunde": "Contact Person at Customer",
+          "ansprechpartner_kunde": "Customer Contact Person",
           "letzter_schritt": "Last Step / Current Status",
           "projektleitung": "Project Manager"
         },
         "lookups": {
           "projektart": {
+            "it_beratung": "IT Consulting",
             "entwicklung": "Development",
             "schulung": "Training",
             "konzeption": "Conceptual Design",
             "support": "Support",
-            "sonstiges": "Other",
-            "it_beratung": "IT Consulting"
+            "sonstiges": "Other"
           },
           "projektstatus": {
             "in_bearbeitung": "In Progress",
@@ -2029,11 +2037,11 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
         },
         "lookups": {
           "angebotstyp": {
-            "dienstleistungsangebot": "Service Quote",
             "wartungsvertrag": "Maintenance Contract",
             "projektangebot": "Project Quote",
             "rahmenvertrag": "Framework Agreement",
-            "sonstiges": "Other"
+            "sonstiges": "Other",
+            "dienstleistungsangebot": "Service Quote"
           },
           "angebotsstatus": {
             "entwurf": "Draft",
@@ -2044,7 +2052,7 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
           "kostentyp": {
             "einmalig": "One-time",
             "monatlich": "Monthly",
-            "jaehrlich": "Annual",
+            "jaehrlich": "Annually",
             "quartalsweise": "Quarterly",
             "sonstiges": "Other"
           }
@@ -2110,18 +2118,18 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
             "storniert": "Canceled"
           },
           "rechnungsmonat": {
+            "august": "August",
+            "september": "September",
+            "oktober": "October",
+            "november": "November",
+            "dezember": "December",
             "januar": "January",
             "februar": "February",
             "maerz": "March",
             "april": "April",
             "mai": "May",
             "juni": "June",
-            "juli": "July",
-            "august": "August",
-            "september": "September",
-            "oktober": "October",
-            "november": "November",
-            "dezember": "December"
+            "juli": "July"
           }
         }
       }

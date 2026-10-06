@@ -19,7 +19,7 @@ function lineLink(id: string): string {
 export function PlanNotice() {
   const [st, setSt] = useState<AppMapState | null>(null);
   useEffect(() => { getAppMap().then(setSt).catch(() => setSt(null)); }, []);
-  if (!st?.map) return null;
+  if (!st?.map || !st.canChange) return null;   // the owner's to-do; a viewer without admin rights cannot act on it
   const jobs = openJobs(st.jobs);
   const failed = jobs.find(j => j.status === 'failed');
   const running = jobs.find(j => j.status === 'running');

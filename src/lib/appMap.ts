@@ -123,7 +123,9 @@ export interface PlanChange {
   /** present when „Zurück auf vorher“ can re-apply it here — instant channels and „Passt“ only */
   undo?: { line_id: string; value?: unknown; unconfirm?: boolean } | null;
   /** present after agent work: „Zurückbauen · einige Minuten“ sends the old value as a new order */
-  rebuild?: { line_id: string; value?: unknown } | null;
+  rebuild?: { line_id: string; value?: unknown; job?: string } | null;
+  /** an agent change the server can restore exactly (a plain „Rückgängig“, no rebuild) */
+  exact?: boolean;
   undone?: boolean;
 }
 
@@ -177,9 +179,11 @@ export interface AppMapState {
   jobs: Record<string, LineJob>;
   /** a full build without this plan happened after it — the page says so */
   stale: { at: string; reason: string } | null;
+  /** false for a viewer without admin rights: the page is read-only (an older server sends nothing = true) */
+  canChange: boolean;
 }
 
-const EMPTY: AppMapState = { map: null, status: null, createdAt: null, planVersion: 0, changes: [], proposal: null, jobs: {}, stale: null };
+const EMPTY: AppMapState = { map: null, status: null, createdAt: null, planVersion: 0, changes: [], proposal: null, jobs: {}, stale: null, canChange: false };
 
 /** The newest job on a line, running first. */
 export function jobFor(jobs: Record<string, LineJob>, lineId: string): LineJob | undefined {
@@ -227,6 +231,7 @@ function stateOf(data: Record<string, unknown>): AppMapState {
     proposal: (data.proposal as Proposal | null | undefined) ?? null,
     jobs: (data.jobs as Record<string, LineJob> | undefined) ?? {},
     stale: (data.stale as { at: string; reason: string } | null | undefined) ?? null,
+    canChange: data.can_change !== false,
   };
 }
 

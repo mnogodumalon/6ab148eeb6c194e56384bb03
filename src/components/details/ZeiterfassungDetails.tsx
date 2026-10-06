@@ -6,6 +6,7 @@ import {
 } from '@/components/widgets/RecordView';
 import { t, appLabel, fieldLabel } from '@/i18n';
 import { SatelliteSection } from '@/components/SatelliteSection';
+import { usePermissions } from '@/lib/permissions';
 
 export interface ZeiterfassungDetailsProps {
   /** Der Record — enriched oder roh; alle Felder werden hier gerendert. */
@@ -27,7 +28,7 @@ export interface ZeiterfassungDetailsProps {
   /** Zeilen-Klick → overlay.push auf das Rechnungen-Detail (nie der Edit-Dialog). */
   onOpenRechnungen: (record: Rechnungen) => void;
   /** Kontextuelles „+": öffnet den Rechnungen-Dialog mit diesem Record vorgesetzt. */
-  onAddRechnungen: () => void;
+  onAddRechnungen?: () => void;
   /** „Vorhandene wählen": Listenfeld-Rückbezug — hängt diesen Record an einen bestehenden Rechnungen-Datensatz. */
   onPickRechnungen?: () => void;
 }
@@ -45,6 +46,8 @@ export function ZeiterfassungDetails({
   onAddRechnungen,
   onPickRechnungen,
 }: ZeiterfassungDetailsProps) {
+  // attachments are a write to this record — read-only without the platform right
+  const perms = usePermissions();
   const beraterTarget = beraterList.find(r => r.record_id === extractRecordId(record.fields.berater));
   const projektTarget = projekteList.find(r => r.record_id === extractRecordId(record.fields.projekt));
   const leistungTarget = leistungskatalogList.find(r => r.record_id === extractRecordId(record.fields.leistung));
@@ -91,7 +94,7 @@ export function ZeiterfassungDetails({
         getKey={r => r.record_id}
       />
 
-      <RecordAttachments appId={APP_IDS.ZEITERFASSUNG} recordId={record.record_id} />
+      <RecordAttachments appId={APP_IDS.ZEITERFASSUNG} recordId={record.record_id} readOnly={!perms.canWrite('zeiterfassung')} />
     </>
   );
 }

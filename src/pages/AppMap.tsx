@@ -73,7 +73,7 @@ function rich(text: string): ReactNode[] {
 }
 function valueLabel(line: MapLine): string {
   const e = line.editable;
-  if (!e) return '';
+  if (!e) return line.assumed ?? '';   // a note: the assumption nothing acts on
   if (e.value_label) return e.value_label;
   if (e.kind === 'option' && e.options) return e.options.find(o => o.value === String(e.value))?.label ?? '';
   if (e.kind === 'text' && typeof e.value === 'string') return e.value;
@@ -131,6 +131,8 @@ interface PageCtx {
   reload: () => void;
   toast: (text: string) => void;
   navigate: (to: string) => void;
+  /** admin rights: without them every control is hidden, the sentences stay */
+  canChange: boolean;
 }
 const Ctx = createContext<PageCtx | null>(null);
 function usePage(): PageCtx {
@@ -251,7 +253,7 @@ export default function AppMap() {
     try {
       const r = await undoChange(c.version);
       setSt(prev => prev ? { ...prev, map: r.map ?? prev.map, planVersion: r.plan_version, changes: r.changes } : prev);
-      if (c.rebuild && !c.undo) reload();
+      if (c.rebuild && !c.undo && !c.exact) reload();
     } catch (e) { toast(e instanceof Error ? e.message : String(e), undefined, true); }
   };
   const leave = (j: LineJob) => { dismissJob(j.id); setDismissed(d => ({ ...d, [j.id]: true })); };
@@ -276,6 +278,7 @@ export default function AppMap() {
     jobs: st?.jobs ?? {}, states, dev, focus, editing, setEditing, save, upload, confirm,
     wishKey, openWish: setWishOpen, proposal, proposalKey,
     onChanged: next => setSt(prev => prev ? { ...prev, ...next } : prev), reload, toast: text => toast(text), navigate,
+    canChange: st?.canChange ?? false,
   };
 
   // the map's own subtitle („Kunden, Projekte … und Rechnungen.“), else the lists of the create groups
@@ -292,8 +295,11 @@ export default function AppMap() {
       {!loading && !error && !map && <p className="text-sm text-muted-foreground">{t('am_none')}</p>}
       {map && st?.stale && (
         <p role="status" className="mb-4 rounded-2xl border border-amber-300 bg-amber-50 px-4 py-2.5 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-100">
-          {t('am_stale', { date: new Date(st.stale.at).toLocaleDateString(localeTag()) })}
+          {t(/rollback/i.test(st.stale.reason ?? '') ? 'am_stale_rollback' : 'am_stale', { date: new Date(st.stale.at).toLocaleDateString(localeTag()) })}
         </p>
+      )}
+      {map && st && !st.canChange && (
+        <p role="status" className="mb-4 rounded-2xl border border-border bg-secondary px-4 py-2.5 text-sm text-secondary-foreground">{t('am_readonly')}</p>
       )}
       {map && st && (
         <Ctx.Provider value={ctx}>
@@ -369,8 +375,8 @@ function MainView({ st, groups, lines, q, setQ, openGroups, setOpenGroups, dismi
                 {j.status === 'running' && <span className="block text-xs text-muted-foreground">{t('am_meanwhile')}</span>}
                 {j.status === 'failed' && c.dev && j.error && <span className="block font-mono text-xs text-muted-foreground">{j.error}</span>}
               </span>
-              {j.status === 'running'
-                ? <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-0.5 text-xs font-semibold text-secondary-foreground"><span className="h-2 w-2 animate-pulse rounded-full bg-current" aria-hidden="true" />{t('am_remaining', { n: remainingMinutes(j) })}</span>
+              {j.status === 'running' || !c.canChange
+                ? (j.status === 'running' ? <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-0.5 text-xs font-semibold text-secondary-foreground"><span className="h-2 w-2 animate-pulse rounded-full bg-current" aria-hidden="true" />{t('am_remaining', { n: remainingMinutes(j) })}</span> : null)
                 : <span className="flex flex-wrap gap-1">
                     {j.value !== undefined && <Button type="button" size="sm" variant="outline" onClick={() => onRetry(j)} className="min-h-11 gap-1 sm:min-h-8"><IconClock size={14} aria-hidden="true" />{t('am_retry', { n: AGENT_MINUTES })}</Button>}
                     <Button type="button" size="sm" variant="ghost" onClick={() => onLeave(j)} className="min-h-11 sm:min-h-8">{t('am_leave')}</Button>
@@ -395,10 +401,10 @@ function MainView({ st, groups, lines, q, setQ, openGroups, setOpenGroups, dismi
         {needle && shown.length === 0 && (
           <p className="text-sm text-muted-foreground">
             {t('am_nothing')}{' '}
-            <button type="button" onClick={() => c.openWish('free')} className="font-semibold text-primary hover:underline">{t('am_as_wish')}</button>
+            {c.canChange && <button type="button" onClick={() => c.openWish('free')} className="font-semibold text-primary hover:underline">{t('am_as_wish')}</button>}
           </p>
         )}
-        {c.wishKey === 'free' && <ChangeBox about={null} />}
+        {c.canChange && c.wishKey === 'free' && <ChangeBox about={null} />}
       </div>
 
       {shown.map(([g, ls]) => {
@@ -435,7 +441,8 @@ function MainView({ st, groups, lines, q, setQ, openGroups, setOpenGroups, dismi
           <p>
             {t('am_last')}: {last.text} · {fmtWhen(last.at)}
             {last.undone ? ` · ${t('am_undone')}`
-              : last.undo ? <> · <button type="button" onClick={() => onUndo(last)} className="font-semibold text-primary hover:underline">{t('am_undo')}</button></>
+              : !c.canChange ? null
+              : (last.undo || (last.rebuild && last.exact)) ? <> · <button type="button" onClick={() => onUndo(last)} className="font-semibold text-primary hover:underline">{t('am_undo')}</button></>
               : last.rebuild ? <> · <button type="button" onClick={() => onUndo(last)} className="inline-flex items-center gap-1 font-semibold text-primary hover:underline"><IconClock size={14} aria-hidden="true" />{t('am_rebuild', { n: AGENT_MINUTES })}</button></>
               : null}
           </p>
@@ -495,7 +502,7 @@ function LineRow({ line, card, more, flowLink }: { line: MapLine; card?: boolean
   const busy = state.phase === 'saving' || blocked;
   const editing = c.editing === line.id && !!e?.ready;
   const slow = speedOf(line) === 'minutes';
-  const canEdit = !!e?.ready && !editing;
+  const canEdit = c.canChange && !!e?.ready && !editing;
   const assumed = line.tag === 'assumed' && !line.answered;
   const aboutTool: ChangeAbout | null = more ? { kind: 'tool', id: line.about.id, label: line.about.label ?? line.about.id } : null;
   const wishHere = !!aboutTool && c.wishKey === keyOf(aboutTool);
@@ -520,7 +527,7 @@ function LineRow({ line, card, more, flowLink }: { line: MapLine; card?: boolean
   const confirmAction = line.actions?.find(a => a.id === 'confirm');
   const fileAction = line.actions?.find(a => a.id === 'file');
   // „Einrichten“ under „Fehlt noch“: the gap's sentence goes through the change door as the owner's wish
-  const requestAction = line.actions?.find(a => a.id === 'request');
+  const requestAction = c.canChange ? line.actions?.find(a => a.id === 'request') : undefined;
   const [requesting, setRequesting] = useState(false);
   const request = async () => {
     setRequesting(true);
@@ -549,7 +556,7 @@ function LineRow({ line, card, more, flowLink }: { line: MapLine; card?: boolean
         </div>
         <div className="flex flex-wrap items-center gap-1">
           {!card && requestAction && <Button type="button" size="sm" variant="ghost" disabled={requesting} onClick={request} className="min-h-11 gap-0.5 text-primary sm:min-h-8">{requestAction.label}<IconChevronRight size={14} aria-hidden="true" /></Button>}
-          {!card && assumed && !editing && <Button type="button" size="sm" variant="ghost" disabled={busy} onClick={() => c.confirm(line)} className="min-h-11 sm:min-h-8">{t('am_fits')}</Button>}
+          {!card && c.canChange && assumed && !editing && <Button type="button" size="sm" variant="ghost" disabled={busy} onClick={() => c.confirm(line)} className="min-h-11 sm:min-h-8">{t('am_fits')}</Button>}
           {!card && canEdit && <Button type="button" size="sm" variant="ghost" disabled={busy} onClick={() => c.setEditing(line.id)} className="min-h-11 text-primary sm:min-h-8">{t('am_change')}</Button>}
           {editing && !armed && <Button type="button" size="sm" variant="ghost" onClick={cancel} className="min-h-11 sm:min-h-8">{t('am_confirm_cancel')}</Button>}
           {more && (
@@ -561,7 +568,7 @@ function LineRow({ line, card, more, flowLink }: { line: MapLine; card?: boolean
         </div>
       </div>
 
-      {card && !editing && (
+      {card && !editing && c.canChange && (
         <div className="mt-3 flex flex-wrap items-center gap-2">
           {fileAction && !file && (
             <label className={`inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground sm:min-h-9 ${busy ? 'pointer-events-none opacity-50' : ''}`}>
@@ -599,10 +606,10 @@ function LineRow({ line, card, more, flowLink }: { line: MapLine; card?: boolean
       {more && expanded && (
         <div className="mt-3 space-y-2 border-l-2 border-border pl-3">
           {line.note && <p className="text-sm text-muted-foreground"><b className="font-semibold text-foreground">{t('am_good_to_know')}</b> {line.note}</p>}
-          {aboutTool && !wishHere && <button type="button" onClick={() => c.openWish(keyOf(aboutTool))} className="inline-flex min-h-11 items-center text-sm text-primary hover:underline sm:min-h-0">{t('am_other_about', { label: aboutTool.label ?? aboutTool.id })}</button>}
+          {aboutTool && !wishHere && c.canChange && <button type="button" onClick={() => c.openWish(keyOf(aboutTool))} className="inline-flex min-h-11 items-center text-sm text-primary hover:underline sm:min-h-0">{t('am_other_about', { label: aboutTool.label ?? aboutTool.id })}</button>}
         </div>
       )}
-      {aboutTool && wishHere && <div className="mt-3"><ChangeBox about={aboutTool} /></div>}
+      {aboutTool && wishHere && c.canChange && <div className="mt-3"><ChangeBox about={aboutTool} /></div>}
 
       {c.dev && (
         <p className="mt-1 font-mono text-[11px] text-muted-foreground">{line.id} · {line.section} · {line.group}{line.speed ? ` · ${line.speed}` : ''}{line.status ? ` · ok=${String(line.status.ok)}` : ''}</p>
@@ -720,6 +727,7 @@ function ChangeBox({ about }: { about: ChangeAbout | null }) {
 /* ── history ──────────────────────────────────────────────────────────── */
 
 function HistoryView({ changes, onUndo, onBack, dev }: { changes: PlanChange[]; onUndo: (c: PlanChange) => void; onBack: () => void; dev: boolean }) {
+  const { canChange } = usePage();
   return (
     <div className="space-y-4">
       <button type="button" onClick={onBack} className="inline-flex min-h-11 items-center text-sm text-muted-foreground hover:underline sm:min-h-0">‹ {t('am_title')}</button>
@@ -731,7 +739,8 @@ function HistoryView({ changes, onUndo, onBack, dev }: { changes: PlanChange[]; 
             <span className={`text-sm ${c.undone ? 'text-muted-foreground line-through' : ''}`}>{c.text}{dev && c.how && <span className="block font-mono text-[11px] text-muted-foreground">v{c.version} · {c.kind} · {c.how}</span>}</span>
             <span className="justify-self-start sm:justify-self-end">
               {c.undone ? <span className="text-xs text-muted-foreground">{t('am_undone')}</span>
-                : c.undo ? <Button type="button" size="sm" variant="ghost" onClick={() => onUndo(c)} className="min-h-11 text-primary sm:min-h-8">{t('am_undo')}</Button>
+                : !canChange ? null
+                : (c.undo || (c.rebuild && c.exact)) ? <Button type="button" size="sm" variant="ghost" onClick={() => onUndo(c)} className="min-h-11 text-primary sm:min-h-8">{t('am_undo')}</Button>
                 : c.rebuild ? <Button type="button" size="sm" variant="outline" onClick={() => onUndo(c)} className="min-h-11 gap-1 sm:min-h-8"><IconClock size={14} aria-hidden="true" />{t('am_rebuild', { n: AGENT_MINUTES })}</Button>
                 : null}
             </span>

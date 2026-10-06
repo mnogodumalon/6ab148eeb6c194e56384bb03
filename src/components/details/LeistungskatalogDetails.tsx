@@ -6,6 +6,7 @@ import {
 } from '@/components/widgets/RecordView';
 import { t, appLabel, fieldLabel } from '@/i18n';
 import { SatelliteSection } from '@/components/SatelliteSection';
+import { usePermissions } from '@/lib/permissions';
 
 export interface LeistungskatalogDetailsProps {
   /** Der Record — enriched oder roh; alle Felder werden hier gerendert. */
@@ -19,7 +20,7 @@ export interface LeistungskatalogDetailsProps {
   /** Zeilen-Klick → overlay.push auf das Berater-Detail (nie der Edit-Dialog). */
   onOpenBeraterLeistungen: (record: Berater) => void;
   /** Kontextuelles „+": öffnet den Berater-Dialog mit diesem Record vorgesetzt. */
-  onAddBeraterLeistungen: () => void;
+  onAddBeraterLeistungen?: () => void;
   /** „Vorhandene wählen": Listenfeld-Rückbezug — hängt diesen Record an einen bestehenden Berater-Datensatz. */
   onPickBeraterLeistungen?: () => void;
   /** 1:N „Zeiterfassung" (leistung): VOLLE Liste — der Block filtert auf diesen Record. */
@@ -27,7 +28,7 @@ export interface LeistungskatalogDetailsProps {
   /** Zeilen-Klick → overlay.push auf das Zeiterfassung-Detail (nie der Edit-Dialog). */
   onOpenZeiterfassung: (record: Zeiterfassung) => void;
   /** Kontextuelles „+": öffnet den Zeiterfassung-Dialog mit diesem Record vorgesetzt. */
-  onAddZeiterfassung: () => void;
+  onAddZeiterfassung?: () => void;
 }
 
 export function LeistungskatalogDetails({
@@ -41,6 +42,8 @@ export function LeistungskatalogDetails({
   onOpenZeiterfassung,
   onAddZeiterfassung,
 }: LeistungskatalogDetailsProps) {
+  // attachments are a write to this record — read-only without the platform right
+  const perms = usePermissions();
   return (
     <>
       <RecordSection title={t('details')} cols={2}>
@@ -71,7 +74,7 @@ export function LeistungskatalogDetails({
         getKey={r => r.record_id}
       />
 
-      <RecordAttachments appId={APP_IDS.LEISTUNGSKATALOG} recordId={record.record_id} />
+      <RecordAttachments appId={APP_IDS.LEISTUNGSKATALOG} recordId={record.record_id} readOnly={!perms.canWrite('leistungskatalog')} />
     </>
   );
 }

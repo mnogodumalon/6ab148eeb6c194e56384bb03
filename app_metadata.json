@@ -37,10 +37,10 @@
           "in_fulltext_search": true,
           "in_expert_search": true,
           "lookup_data": {
-            "einzelperson": "Einzelperson",
             "firma": "Firma",
             "behoerde": "Behörde",
-            "sonstiges": "Sonstiges"
+            "sonstiges": "Sonstiges",
+            "einzelperson": "Einzelperson"
           }
         },
         "email": {
@@ -852,12 +852,12 @@
           "in_fulltext_search": true,
           "in_expert_search": true,
           "lookup_data": {
+            "it_beratung": "IT-Beratung",
             "entwicklung": "Entwicklung",
             "schulung": "Schulung",
             "konzeption": "Konzeption",
             "support": "Support",
-            "sonstiges": "Sonstiges",
-            "it_beratung": "IT-Beratung"
+            "sonstiges": "Sonstiges"
           }
         },
         "projektstatus": {
@@ -1041,11 +1041,11 @@
           "in_fulltext_search": true,
           "in_expert_search": true,
           "lookup_data": {
-            "dienstleistungsangebot": "Dienstleistungsangebot",
             "wartungsvertrag": "Wartungsvertrag",
             "projektangebot": "Projektangebot",
             "rahmenvertrag": "Rahmenvertrag",
-            "sonstiges": "Sonstiges"
+            "sonstiges": "Sonstiges",
+            "dienstleistungsangebot": "Dienstleistungsangebot"
           }
         },
         "angebotsstatus": {
@@ -1464,18 +1464,18 @@
           "in_fulltext_search": true,
           "in_expert_search": true,
           "lookup_data": {
+            "august": "August",
+            "september": "September",
+            "oktober": "Oktober",
+            "november": "November",
+            "dezember": "Dezember",
             "januar": "Januar",
             "februar": "Februar",
             "maerz": "März",
             "april": "April",
             "mai": "Mai",
             "juni": "Juni",
-            "juli": "Juli",
-            "august": "August",
-            "september": "September",
-            "oktober": "Oktober",
-            "november": "November",
-            "dezember": "Dezember"
+            "juli": "Juli"
           }
         },
         "rechnungsjahr": {

@@ -116,10 +116,6 @@
             "required": true,
             "options": [
               {
-                "key": "einzelperson",
-                "label": "Einzelperson"
-              },
-              {
                 "key": "firma",
                 "label": "Firma"
               },
@@ -130,6 +126,10 @@
               {
                 "key": "sonstiges",
                 "label": "Sonstiges"
+              },
+              {
+                "key": "einzelperson",
+                "label": "Einzelperson"
               }
             ]
           },
@@ -726,12 +726,12 @@
           "label": "Projektart",
           "type": "lookup/select",
           "options": [
+            "IT-Beratung",
             "Entwicklung",
             "Schulung",
             "Konzeption",
             "Support",
-            "Sonstiges",
-            "IT-Beratung"
+            "Sonstiges"
           ]
         },
         {
@@ -805,6 +805,10 @@
             "required": true,
             "options": [
               {
+                "key": "it_beratung",
+                "label": "IT-Beratung"
+              },
+              {
                 "key": "entwicklung",
                 "label": "Entwicklung"
               },
@@ -823,10 +827,6 @@
               {
                 "key": "sonstiges",
                 "label": "Sonstiges"
-              },
-              {
-                "key": "it_beratung",
-                "label": "IT-Beratung"
               }
             ]
           },
@@ -1033,10 +1033,6 @@
             "required": true,
             "options": [
               {
-                "key": "dienstleistungsangebot",
-                "label": "Dienstleistungsangebot"
-              },
-              {
                 "key": "wartungsvertrag",
                 "label": "Wartungsvertrag"
               },
@@ -1051,6 +1047,10 @@
               {
                 "key": "sonstiges",
                 "label": "Sonstiges"
+              },
+              {
+                "key": "dienstleistungsangebot",
+                "label": "Dienstleistungsangebot"
               }
             ]
           },
@@ -1424,14 +1424,14 @@
           "label": "Abrechnungsmonat",
           "type": "lookup/select",
           "options": [
+            "August",
+            "September",
+            "Oktober",
+            "November",
+            "Dezember",
             "Januar",
             "Februar",
-            "März",
-            "April",
-            "Mai",
-            "Juni",
-            "Juli",
-            "August"
+            "März"
           ]
         },
         {
@@ -1540,6 +1540,26 @@
             "required": false,
             "options": [
               {
+                "key": "august",
+                "label": "August"
+              },
+              {
+                "key": "september",
+                "label": "September"
+              },
+              {
+                "key": "oktober",
+                "label": "Oktober"
+              },
+              {
+                "key": "november",
+                "label": "November"
+              },
+              {
+                "key": "dezember",
+                "label": "Dezember"
+              },
+              {
                 "key": "januar",
                 "label": "Januar"
               },
@@ -1550,26 +1570,6 @@
               {
                 "key": "maerz",
                 "label": "März"
-              },
-              {
-                "key": "april",
-                "label": "April"
-              },
-              {
-                "key": "mai",
-                "label": "Mai"
-              },
-              {
-                "key": "juni",
-                "label": "Juni"
-              },
-              {
-                "key": "juli",
-                "label": "Juli"
-              },
-              {
-                "key": "august",
-                "label": "August"
               }
             ]
           },

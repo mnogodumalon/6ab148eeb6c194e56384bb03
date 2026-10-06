@@ -10,8 +10,8 @@ import { t } from '@/i18n';
  * Mängel/Berichte/Fotos/…), the hub's overlay shows ONE of these per satellite
  * entity. The component bakes in the three mechanics that are easy to get wrong
  * by hand, so they're guaranteed by construction:
- *   1. it ALWAYS renders a "+" (the `onAdd` prop is required) — no read-only
- *      satellite sections;
+ *   1. it renders a "+" whenever the user may create (`onAdd` given — the
+ *      scaffold leaves it out for a list the user may not write);
  *   2. clicking a row calls `onOpen` (→ open the record's DETAIL overlay via
  *      overlay.push), NEVER the edit form — editing happens from inside that
  *      detail;
@@ -54,7 +54,7 @@ interface SatelliteSectionProps<T> {
   /** Row click → open the record's DETAIL overlay (overlay.push). NOT the edit form. */
   onOpen: (item: T) => void;
   /** REQUIRED — the contextual "+" that opens this entity's create dialog with the hub pre-set. */
-  onAdd: () => void;
+  onAdd?: () => void;
   /** Defaults to a localised "add ${title}" label. */
   addLabel?: string;
   /** Optional "choose existing" action — opens a picker that links an EXISTING record. */
@@ -90,6 +90,7 @@ export function SatelliteSection<T,>({ title, items, map, onOpen, onAdd, addLabe
           </p>
         )}
         <div className="flex flex-col gap-2 sm:flex-row">
+          {onAdd && (
           <button
             type="button"
             onClick={onAdd}
@@ -97,6 +98,7 @@ export function SatelliteSection<T,>({ title, items, map, onOpen, onAdd, addLabe
           >
             <IconPlus size={18} stroke={1.75} />{addLabel ?? t('sat_add', { title })}
           </button>
+          )}
           {onPick && (
             <button
               type="button"

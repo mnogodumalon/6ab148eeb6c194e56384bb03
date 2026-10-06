@@ -351,7 +351,7 @@ export function RechnungenDialog({ open, onClose, onSubmit, defaultValues, recor
         }
       }
       const photoContext = contextParts.length ? contextParts.join('\n') : undefined;
-      const schema = `{\n  "rechnungsnummer": string | null, // Rechnungsnummer\n  "rechnungsdatum": string | null, // YYYY-MM-DD\n  "faelligkeitsdatum": string | null, // YYYY-MM-DD\n  "rechnungsstatus": LookupValue | null, // Rechnungsstatus (select one key: "entwurf" | "versendet" | "bezahlt" | "ueberfaellig" | "storniert") mapping: entwurf=Entwurf, versendet=Versendet, bezahlt=Bezahlt, ueberfaellig=Überfällig, storniert=Storniert\n  "rechnungsmonat": LookupValue | null, // Abrechnungsmonat (select one key: "januar" | "februar" | "maerz" | "april" | "mai" | "juni" | "juli" | "august" | "september" | "oktober" | "november" | "dezember") mapping: januar=Januar, februar=Februar, maerz=März, april=April, mai=Mai, juni=Juni, juli=Juli, august=August, september=September, oktober=Oktober, november=November, dezember=Dezember\n  "rechnungsjahr": number | null, // Abrechnungsjahr\n  "kunde": string | null, // Display name from Kunden (see <available-records>)\n  "nettobetrag": number | null, // Nettobetrag (€)\n  "mehrwertsteuer": number | null, // Mehrwertsteuer (%)\n  "gesamtbetrag": number | null, // Gesamtbetrag (€)\n  "notizen": string | null, // Notizen\n  "projekt": string | null, // Display name from Projekte (see <available-records>)\n  "berater": string[] | null, // Display names from Berater, one per referenced record (see <available-records>)\n  "zeiterfassungseintraege": string[] | null, // Display names from Zeiterfassung, one per referenced record (see <available-records>)\n}`;
+      const schema = `{\n  "rechnungsnummer": string | null, // Rechnungsnummer\n  "rechnungsdatum": string | null, // YYYY-MM-DD\n  "faelligkeitsdatum": string | null, // YYYY-MM-DD\n  "rechnungsstatus": LookupValue | null, // Rechnungsstatus (select one key: "entwurf" | "versendet" | "bezahlt" | "ueberfaellig" | "storniert") mapping: entwurf=Entwurf, versendet=Versendet, bezahlt=Bezahlt, ueberfaellig=Überfällig, storniert=Storniert\n  "rechnungsmonat": LookupValue | null, // Abrechnungsmonat (select one key: "august" | "september" | "oktober" | "november" | "dezember" | "januar" | "februar" | "maerz" | "april" | "mai" | "juni" | "juli") mapping: august=August, september=September, oktober=Oktober, november=November, dezember=Dezember, januar=Januar, februar=Februar, maerz=März, april=April, mai=Mai, juni=Juni, juli=Juli\n  "rechnungsjahr": number | null, // Abrechnungsjahr\n  "kunde": string | null, // Display name from Kunden (see <available-records>)\n  "nettobetrag": number | null, // Nettobetrag (€)\n  "mehrwertsteuer": number | null, // Mehrwertsteuer (%)\n  "gesamtbetrag": number | null, // Gesamtbetrag (€)\n  "notizen": string | null, // Notizen\n  "projekt": string | null, // Display name from Projekte (see <available-records>)\n  "berater": string[] | null, // Display names from Berater, one per referenced record (see <available-records>)\n  "zeiterfassungseintraege": string[] | null, // Display names from Zeiterfassung, one per referenced record (see <available-records>)\n}`;
       const raw = await extractFromInput<Record<string, unknown>>(schema, {
         dataUri: uri,
         userText: aiText.trim() || undefined,
@@ -576,6 +576,11 @@ export function RechnungenDialog({ open, onClose, onSubmit, defaultValues, recor
           <SelectTrigger id="rechnungsmonat" className="max-sm:h-11"><SelectValue placeholder="" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="none">—</SelectItem>
+            <SelectItem value="august">{lookupLabel('rechnungen', 'rechnungsmonat', 'august') ?? 'August'}</SelectItem>
+            <SelectItem value="september">{lookupLabel('rechnungen', 'rechnungsmonat', 'september') ?? 'September'}</SelectItem>
+            <SelectItem value="oktober">{lookupLabel('rechnungen', 'rechnungsmonat', 'oktober') ?? 'Oktober'}</SelectItem>
+            <SelectItem value="november">{lookupLabel('rechnungen', 'rechnungsmonat', 'november') ?? 'November'}</SelectItem>
+            <SelectItem value="dezember">{lookupLabel('rechnungen', 'rechnungsmonat', 'dezember') ?? 'Dezember'}</SelectItem>
             <SelectItem value="januar">{lookupLabel('rechnungen', 'rechnungsmonat', 'januar') ?? 'Januar'}</SelectItem>
             <SelectItem value="februar">{lookupLabel('rechnungen', 'rechnungsmonat', 'februar') ?? 'Februar'}</SelectItem>
             <SelectItem value="maerz">{lookupLabel('rechnungen', 'rechnungsmonat', 'maerz') ?? 'März'}</SelectItem>
@@ -583,11 +588,6 @@ export function RechnungenDialog({ open, onClose, onSubmit, defaultValues, recor
             <SelectItem value="mai">{lookupLabel('rechnungen', 'rechnungsmonat', 'mai') ?? 'Mai'}</SelectItem>
             <SelectItem value="juni">{lookupLabel('rechnungen', 'rechnungsmonat', 'juni') ?? 'Juni'}</SelectItem>
             <SelectItem value="juli">{lookupLabel('rechnungen', 'rechnungsmonat', 'juli') ?? 'Juli'}</SelectItem>
-            <SelectItem value="august">{lookupLabel('rechnungen', 'rechnungsmonat', 'august') ?? 'August'}</SelectItem>
-            <SelectItem value="september">{lookupLabel('rechnungen', 'rechnungsmonat', 'september') ?? 'September'}</SelectItem>
-            <SelectItem value="oktober">{lookupLabel('rechnungen', 'rechnungsmonat', 'oktober') ?? 'Oktober'}</SelectItem>
-            <SelectItem value="november">{lookupLabel('rechnungen', 'rechnungsmonat', 'november') ?? 'November'}</SelectItem>
-            <SelectItem value="dezember">{lookupLabel('rechnungen', 'rechnungsmonat', 'dezember') ?? 'Dezember'}</SelectItem>
           </SelectContent>
         </Select>
       </div>

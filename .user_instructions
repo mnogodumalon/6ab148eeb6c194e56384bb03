@@ -82,3 +82,5 @@ Rechnungen
 Auf der Basis der Berater, der Zeiterfassung und der Projekte sollen Rechnungen generiert werden, die in einer zeitlich strukturierten Exceltabelle erfasst und dargestellt werden
 
 Füge bei Projekte ein optionales Textfeld „Kostenstelle“ hinzu. Ändere sonst nichts an der Struktur.
+
+Füge bei den Projekten ein optionales Textfeld „Kostenstelle“ hinzu. Ändere sonst nichts an der Struktur.
