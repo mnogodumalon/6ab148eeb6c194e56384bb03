@@ -69,7 +69,7 @@ createRecordUrl from the service. Note the lowercase `l` in the service path.
   ✚ EnrichedLeistungskatalog adds ONLY ausfuehrende_beraterName — via enrichLeistungskatalog(leistungskatalog, { beraterMap }), all maps required
   → ausfuehrende_berater links to app_id 6ab148ad9378ece97fb50ced
 - Projekte (projekte): kostenstelle[string/text], projektkennung!^[string/text], projektnummer![number], projektart![lookup/select: it_beratung|entwicklung|schulung|konzeption|support|sonstiges], projektstatus![lookup/select: in_bearbeitung|akquise|abgeschlossen], projektstart_monat[lookup/select: januar|februar|maerz|april|mai|juni|juli|august|september|oktober|november|dezember] "Startmonat", projektstart_jahr[number] "Startjahr", kunde![applookup/select], ansprechpartner_kunde[string/text] "Ansprechpartner beim Kunden", letzter_schritt[string/textarea] "Letzter Schritt / aktueller Stand", projektleitung[applookup/select]
-  ≡ 7 records at build time
+  ≡ 8 records at build time
   ◈ projektart → choice (6 options, ChoiceGroup) · projektstatus → choice (3 options, ChoiceGroup) · kunde → record (kunden, EntitySelectStep) · projektleitung → record (berater, EntitySelectStep)
   ⚙ getProjekte() · getProjekteEntry(id) · createProjekteEntry(fields) · updateProjekteEntry(id, fields) · deleteProjekteEntry(id) · queryProjekte({ filter, orderby, limit, offset, fields }) · countProjekte(filter?)
   ✚ EnrichedProjekte adds ONLY kundeName, projektleitungName — via enrichProjekte(projekte, { kundenMap, beraterMap }), all maps required

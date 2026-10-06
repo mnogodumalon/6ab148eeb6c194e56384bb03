@@ -120,6 +120,7 @@ export const UI_CATALOG: Record<CoreLocale, Record<string, string>> = {
     "profile_label": "Profil",
     "back": "Zurück",
     "display_section": "Darstellung",
+    "dashboard_nav": "Dashboard",
     "data_management": "Datenverwaltung",
     "apps_search": "Suche...",
     "apps_no_results": "Keine Apps gefunden",
@@ -878,6 +879,7 @@ export const UI_CATALOG: Record<CoreLocale, Record<string, string>> = {
     "profile_label": "Profile",
     "back": "Back",
     "display_section": "View",
+    "dashboard_nav": "Dashboard",
     "data_management": "Data management",
     "apps_search": "Search...",
     "apps_no_results": "No apps found",
@@ -1896,7 +1898,7 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
         "lookups": {
           "kundentyp": {
             "firma": "Company",
-            "behoerde": "Public Authority",
+            "behoerde": "Authority",
             "sonstiges": "Other",
             "einzelperson": "Individual"
           },
@@ -1952,7 +1954,7 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
           "beschreibung": "Description",
           "kostenvoranschlag": "Standard Cost Estimate (€)",
           "einheit": "Billing Unit",
-          "ausfuehrende_berater": "Performing Consultants"
+          "ausfuehrende_berater": "Executing Consultants"
         },
         "lookups": {
           "leistungstyp": {
@@ -1964,10 +1966,10 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
             "sonstiges": "Other"
           },
           "einheit": {
-            "pro_stunde": "per hour",
-            "pro_tag": "per day",
-            "pauschal": "flat rate",
-            "pro_monat": "per month"
+            "pro_stunde": "per Hour",
+            "pro_tag": "per Day",
+            "pauschal": "Flat Rate",
+            "pro_monat": "per Month"
           }
         }
       },
@@ -2052,7 +2054,7 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
           "kostentyp": {
             "einmalig": "One-time",
             "monatlich": "Monthly",
-            "jaehrlich": "Annually",
+            "jaehrlich": "Annual",
             "quartalsweise": "Quarterly",
             "sonstiges": "Other"
           }

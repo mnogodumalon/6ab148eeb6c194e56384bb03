@@ -5,8 +5,8 @@ import {
   RecordSection, RecordField, RecordRelation, RecordAttachments,
 } from '@/components/widgets/RecordView';
 import { t, appLabel, fieldLabel } from '@/i18n';
-import { usePermissions } from '@/lib/permissions';
 import { MediaThumbnail } from '@/components/widgets/MediaViewer';
+import { usePermissions } from '@/lib/permissions';
 
 export interface RechnungenDetailsProps {
   /** Der Record — enriched oder roh; alle Felder werden hier gerendert. */
