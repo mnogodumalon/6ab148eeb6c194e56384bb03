@@ -25,6 +25,8 @@ export interface NavRow {
   icon?: ReactNode;
   here?: boolean;
   pending?: boolean;
+  /** small marker after the title, e.g. „Beta“ */
+  badge?: string;
 }
 
 const ROW = 'flex items-center gap-2 rounded-full px-4 py-1 text-[length:var(--la-nav-text-size,1rem)] leading-none no-underline transition-colors';
@@ -64,6 +66,7 @@ export function NavRows({ rows, ariaLabel, onSelect }: NavRowsProps) {
           >
             {icon}
             {title}
+            {row.badge && <span className="shrink-0 rounded-full bg-[#fff4ed] px-1.5 py-0.5 text-[0.65rem] font-medium leading-none text-[#d24601]">{row.badge}</span>}
           </a>
         );
       })}

@@ -99,6 +99,7 @@ export function IntentsNav() {
         title: t('am_nav'),
         url: `#${MAP_PATH}`,
         icon: <IconMap size={16} />,
+        badge: t('am_beta'),
         here: location.pathname === MAP_PATH,
       });
     }

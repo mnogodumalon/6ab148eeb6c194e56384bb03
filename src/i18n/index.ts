@@ -120,7 +120,6 @@ export const UI_CATALOG: Record<CoreLocale, Record<string, string>> = {
     "profile_label": "Profil",
     "back": "Zurück",
     "display_section": "Darstellung",
-    "dashboard_nav": "Dashboard",
     "data_management": "Datenverwaltung",
     "apps_search": "Suche...",
     "apps_no_results": "Keine Apps gefunden",
@@ -444,6 +443,7 @@ export const UI_CATALOG: Record<CoreLocale, Record<string, string>> = {
     "ppa_list_hint": "Eine abgewählte Spalte bekommen Besucher gar nicht mehr geliefert. Nutzt die Seite sie für ihre Anzeige, zum Beispiel „Status“ für „verfügbar“, ändert sich die Seite. Prüfe das mit „Seite ansehen“.",
     "ppa_discard": "Verwerfen",
     "am_title": "Deine Anwendung",
+    "am_beta": "Beta",
     "am_create_heading": "Wenn du etwas anlegst",
     "am_find": "Finden",
     "am_find_placeholder": "Finden, zum Beispiel „Rechnung“ oder „6 Uhr“",
@@ -879,7 +879,6 @@ export const UI_CATALOG: Record<CoreLocale, Record<string, string>> = {
     "profile_label": "Profile",
     "back": "Back",
     "display_section": "View",
-    "dashboard_nav": "Dashboard",
     "data_management": "Data management",
     "apps_search": "Search...",
     "apps_no_results": "No apps found",
@@ -1203,6 +1202,7 @@ export const UI_CATALOG: Record<CoreLocale, Record<string, string>> = {
     "ppa_list_hint": "A column you untick is no longer delivered to visitors at all. If the page uses it for its display, e.g. \"Status\" for \"available\", the page changes. Check with \"View page\".",
     "ppa_discard": "Discard",
     "am_title": "Your application",
+    "am_beta": "Beta",
     "am_create_heading": "When you add something",
     "am_find": "Find",
     "am_find_placeholder": "Find, for example “invoice” or “6 am”",
@@ -1881,7 +1881,7 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
           "hausnummer": "House Number",
           "plz": "Postal Code",
           "ort": "City",
-          "rechnungsadresse_gleich": "Billing address is the same as the address",
+          "rechnungsadresse_gleich": "Billing address is the same as address",
           "rechnungsstrasse": "Billing Street",
           "rechnungshausnummer": "Billing House Number",
           "rechnungsplz": "Billing Postal Code",
@@ -1898,7 +1898,7 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
         "lookups": {
           "kundentyp": {
             "firma": "Company",
-            "behoerde": "Authority",
+            "behoerde": "Public Authority",
             "sonstiges": "Other",
             "einzelperson": "Individual"
           },
@@ -1921,8 +1921,8 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
           "hausnummer": "House Number",
           "plz": "Postal Code",
           "ort": "City",
-          "email_beruflich": "Email (work)",
-          "email_privat": "Email (personal)",
+          "email_beruflich": "Email (business)",
+          "email_privat": "Email (private)",
           "einstiegsdatum": "Start Date",
           "status": "Status",
           "stundensatz": "Hourly Rate (€/h)",
@@ -1954,7 +1954,7 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
           "beschreibung": "Description",
           "kostenvoranschlag": "Standard Cost Estimate (€)",
           "einheit": "Billing Unit",
-          "ausfuehrende_berater": "Executing Consultants"
+          "ausfuehrende_berater": "Performing Consultants"
         },
         "lookups": {
           "leistungstyp": {
@@ -1962,14 +1962,14 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
             "entwicklung": "Development",
             "schulung": "Training",
             "support": "Support",
-            "konzeption": "Conceptual Design",
+            "konzeption": "Conception",
             "sonstiges": "Other"
           },
           "einheit": {
-            "pro_stunde": "per Hour",
-            "pro_tag": "per Day",
-            "pauschal": "Flat Rate",
-            "pro_monat": "per Month"
+            "pro_stunde": "per hour",
+            "pro_tag": "per day",
+            "pauschal": "flat rate",
+            "pro_monat": "per month"
           }
         }
       },
@@ -1987,14 +1987,14 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
           "kunde": "Customer",
           "ansprechpartner_kunde": "Customer Contact Person",
           "letzter_schritt": "Last Step / Current Status",
-          "projektleitung": "Project Manager"
+          "projektleitung": "Project Lead"
         },
         "lookups": {
           "projektart": {
             "it_beratung": "IT Consulting",
             "entwicklung": "Development",
             "schulung": "Training",
-            "konzeption": "Conceptual Design",
+            "konzeption": "Conception",
             "support": "Support",
             "sonstiges": "Other"
           },
@@ -2054,7 +2054,7 @@ export const LABELS: Record<CoreLocale, LabelBundle> = {
           "kostentyp": {
             "einmalig": "One-time",
             "monatlich": "Monthly",
-            "jaehrlich": "Annual",
+            "jaehrlich": "Annually",
             "quartalsweise": "Quarterly",
             "sonstiges": "Other"
           }

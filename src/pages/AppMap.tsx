@@ -289,7 +289,7 @@ export default function AppMap() {
   }, [map, groups]);
 
   return (
-    <PageShell title={t('am_title')} subtitle={view === 'main' ? subtitle : ''}>
+    <PageShell title={t('am_title')} subtitle={view === 'main' ? subtitle : ''} badge={<span className="inline-flex items-center rounded-full bg-[#fff4ed] px-2 py-0.5 text-xs font-medium leading-none text-[#d24601]">{t('am_beta')}</span>}>
       {loading && <p className="text-sm text-muted-foreground">{t('am_loading')}</p>}
       {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
       {!loading && !error && !map && <p className="text-sm text-muted-foreground">{t('am_none')}</p>}
